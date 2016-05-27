@@ -1,3 +1,4 @@
+(function(){
 var _pyfunc_contains = function contains (a, b) { // nargs: 2
     if (b == null) {
     } else if (Array.isArray(b)) {
@@ -144,3 +145,4 @@ load = function (Jupyter, dialog, configmod, utils) {
 
 imports = ["base/js/namespace", "base/js/dialog", "services/config", "base/js/utils"];
 define(imports, load);
+})()

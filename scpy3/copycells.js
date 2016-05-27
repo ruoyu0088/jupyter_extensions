@@ -1,3 +1,4 @@
+(function(){
 var _pyfunc_equals = function equals (a, b) { // nargs: 2
     if (a == null || b == null) {
     } else if (Array.isArray(a) && Array.isArray(b)) {
@@ -169,3 +170,4 @@ load = function (Jupyter, configmod, utils) {
 
 imports = ["base/js/namespace", "services/config", "base/js/utils"];
 define(imports, load);
+})()

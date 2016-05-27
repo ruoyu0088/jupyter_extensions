@@ -1,3 +1,4 @@
+(function(){
 var _pyfunc_add = function (a, b) { // nargs: 2
     if (Array.isArray(a) && Array.isArray(b)) {
         return a.concat(b);
@@ -311,3 +312,4 @@ load = function (Jupyter, dialog, configmod, utils) {
 };
 
 define(imports, load);
+})()
