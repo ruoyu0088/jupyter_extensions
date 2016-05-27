@@ -113,7 +113,7 @@ def load(Jupyter, dialog, configmod, utils):
             "help_index": 'aa',
             "handler": lambda event: key_handler(Jupyter, event)
         }
-        Jupyter.keyboard_manager.edit_shortcuts.add_shortcut("shift-space", data, True)
+        Jupyter.keyboard_manager.edit_shortcuts.add_shortcut("Alt-m", data, True)
 
     return {"load_ipython_extension": main}
 

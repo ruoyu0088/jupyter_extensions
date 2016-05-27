@@ -152,7 +152,7 @@ load = function (Jupyter, configmod, utils) {
             return null;
         }).bind(this);
 
-        actions = {select_section_cells:{"help": " selected section cells", "icon": "fa-recycle", "help_index": "", "key": "Shift-s", "handler": select_handler}, copy_cells:{"help": " copy selected  cells", "icon": "fa-recycle", "help_index": "", "key": "Shift-c", "handler": copy_handler}, paste_cells:{"help": " paste cells", "icon": "fa-recycle", "help_index": "", "key": "Shift-v", "handler": paste_handler}, append_cells:{"help": " append cells", "icon": "fa-recycle", "help_index": "", "key": "Shift-a", "handler": append_handler}};
+        actions = {select_section_cells:{"help": " selected section cells", "icon": "fa-recycle", "help_index": "", "key": "Alt-s", "handler": select_handler}, copy_cells:{"help": " copy selected  cells", "icon": "fa-recycle", "help_index": "", "key": "Alt-c", "handler": copy_handler}, paste_cells:{"help": " paste cells", "icon": "fa-recycle", "help_index": "", "key": "Alt-v", "handler": paste_handler}, append_cells:{"help": " append cells", "icon": "fa-recycle", "help_index": "", "key": "Alt-a", "handler": append_handler}};
         km = Jupyter.keyboard_manager;
         dummy3_sequence = actions;
         for (key in dummy3_sequence) {

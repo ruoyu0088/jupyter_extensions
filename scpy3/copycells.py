@@ -75,28 +75,28 @@ def load(Jupyter, configmod, utils):
                 'help': ' selected section cells',
                 'icon': 'fa-recycle',
                 'help_index': '',
-                'key': 'Shift-s',
+                'key': 'Alt-s',
                 'handler': select_handler
             },
             copy_cells = {
                 'help': ' copy selected  cells',
                 'icon': 'fa-recycle',
                 'help_index': '',
-                'key': 'Shift-c',
+                'key': 'Alt-c',
                 'handler': copy_handler
             },
             paste_cells = {
                 'help': ' paste cells',
                 'icon': 'fa-recycle',
                 'help_index': '',
-                'key': 'Shift-v',
+                'key': 'Alt-v',
                 'handler': paste_handler
             },
             append_cells = {
                 'help': ' append cells',
                 'icon': 'fa-recycle',
                 'help_index': '',
-                'key': 'Shift-a',
+                'key': 'Alt-a',
                 'handler': append_handler
             }
         )

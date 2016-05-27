@@ -296,7 +296,7 @@ load = function (Jupyter, dialog, configmod, utils) {
             return null;
         }).bind(this);
 
-        actions = {save_cell_as_slice:{"help": "", "icon": "", "key": "Shift-i", handler: save_cell_as_slice}, load_slice:{"help": "", "icon": "", "key": "Shift-l", handler: load_slice}};
+        actions = {save_cell_as_slice:{"help": "", "icon": "", "key": "Alt-i", handler: save_cell_as_slice}, load_slice:{"help": "", "icon": "", "key": "Alt-l", handler: load_slice}};
         dummy9_sequence = actions;
         for (name in dummy9_sequence) {
             if (!dummy9_sequence.hasOwnProperty(name)){ continue; }

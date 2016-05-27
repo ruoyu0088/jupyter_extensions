@@ -202,14 +202,14 @@ def load(Jupyter, dialog, configmod, utils):
             save_cell_as_slice = {
                 'help': '',
                 'icon': '',
-                'key': 'Shift-i',
+                'key': 'Alt-i',
                 handler: save_cell_as_slice
             },
 
             load_slice = {
                 'help': '',
                 'icon': '',
-                'key': 'Shift-l',
+                'key': 'Alt-l',
                 handler: load_slice
             }
         )

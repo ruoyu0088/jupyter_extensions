@@ -135,7 +135,7 @@ load = function (Jupyter, dialog, configmod, utils) {
     main = (function () {
         var data;
         data = {"help": "macro", "help_index": "aa", "handler": (function (event) {return key_handler(Jupyter, event);}).bind(this)};
-        Jupyter.keyboard_manager.edit_shortcuts.add_shortcut("shift-space", data, true);
+        Jupyter.keyboard_manager.edit_shortcuts.add_shortcut("Alt-m", data, true);
         return null;
     }).bind(this);
 
