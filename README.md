@@ -27,8 +27,9 @@ To convert the code, run following command:
 ```
 python convert.py
 ```
+## Extensions
 
-## macro
+### macro
 
 This extension provides macros in edit mode. To edit macros, type `$` and then `Alt-m`, a dialog box will be popped up.
 
@@ -60,7 +61,7 @@ default_macros = {
 To input macros, type a macro name, and then `Alt-m`. If the macro name is ambiguous, add a `$` before the name.
 
 
-## copycells
+### copycells
 
 Copy cells between notebooks. 
 
@@ -68,7 +69,7 @@ Copy cells between notebooks.
 * Press `Alt-v` to paste cells in clipboard. 
 * Press `Alt-a` to append selected cells to the clipboard.
 
-## slice
+### slice
 
 Quick insert code slice in to current cell:
 
