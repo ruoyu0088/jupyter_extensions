@@ -16,6 +16,7 @@ jupyter nbextension enable scpy3/macro
 jupyter nbextension enable scpy3/copycells
 jupyter nbextension enable scpy3/slice
 jupyter nbextension enable scpy3/iconbox
+jupyter nbextension enable scpy3/maximize
 ```
 
 ## Convert code by `convert.py`
@@ -122,3 +123,10 @@ Render markdown cell as a box with icon. The cell must contain only a blockquote
 
 > This is a question
 ```
+
+### maximize
+
+Enlarge notebook edit area by hiding title, menubar and toolbar. In maximized mode the notification area will be moved to lower-left of the screen.
+
+* `Ctrl-↑`: Maximize notebook
+* `Ctrl-↓`: Return to normal mode 
