@@ -1,3 +1,5 @@
+from .utils import T
+
 imports = ['base/js/namespace',
            'base/js/dialog',
            'services/config',
@@ -15,16 +17,6 @@ def dummy_slices(n):
         slices.append(item)
     return slices
 
-def T(tagname, *args):
-    klass = None
-    if '.' in tagname:
-        tagname, klass = tagname.split('.')
-    el = jQuery("<%s/>" % tagname)
-    if klass is not None:
-        el.addClass(klass)
-    for child in args:
-        el.append(child)
-    return el
 
 def load(Jupyter, dialog, configmod, utils):
     config = configmod.ConfigSection('scpy3_slices',

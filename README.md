@@ -15,6 +15,7 @@ and then enable the extensions:
 jupyter nbextension enable scpy3/macro
 jupyter nbextension enable scpy3/copycells
 jupyter nbextension enable scpy3/slice
+jupyter nbextension enable scpy3/iconbox
 ```
 
 ## Convert code by `convert.py`
@@ -76,3 +77,48 @@ Quick insert code slice in to current cell:
 * To register a slice: Type some code into a cell, and then press `Alt-i`, input `slice group : slice name` and press the Ok button.
 
 * To insert a slice in to the current cell: Press `Alt-l`. If the current cell is not code type, a new cell will be inserted.
+
+### iconbox
+
+Render markdown cell as a box with icon. The cell must contain only a blockquote element, which is created by `>` in markdown. Here is a list of the five types:
+
+* a tip box
+
+```
+> **TIP**
+
+> This is a tip
+```
+
+* a link box
+
+```
+> **LINK**
+
+> http://google.com
+
+> This is google
+```
+
+* a warning box
+
+```
+> **WARNING**
+
+> This is a warning
+```
+
+* a source box
+
+```
+> **SOURCE**
+
+> This is a source code
+```
+* a question box
+
+```
+> **QUESTION**
+
+> This is a question
+```

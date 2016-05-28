@@ -1,0 +1,37 @@
+blockquote.icon_box{
+    border-width:1px;
+    border-color:#cccccc;
+    border-style: solid;
+    padding:5px;
+    min-height: 70px;
+}
+
+blockquote.icon_box .large_font{
+    font-size:60px;
+    color:#FF8C00;
+    float:left;
+    width:60px;
+    height:60px;
+}
+
+blockquote.icon_box td{
+    border-style:none;
+}
+
+blockquote.icon_box td.first-column{
+    width:70px;
+}
+
+blockquote.icon_box tr{
+    border-style:none;
+}
+
+blockquote.icon_box table{
+    border-style:none;
+    width: 100%;
+}
+
+    
+blockquote.icon_box p{
+    font-size:120%;
+}

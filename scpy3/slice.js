@@ -83,17 +83,6 @@ var _pymeth_strip = function (chars) { // nargs: 0 1
     } return s3;
 };
 var T, dummy_slices, imports, load;
-imports = ["base/js/namespace", "base/js/dialog", "services/config", "base/js/utils"];
-dummy_slices = function (n) {
-    var i, item, slices;
-    slices = [];
-    for (i = 0; i < n; i += 1) {
-        item = {"name": "name " + i + "", "group": "group " + (i % 10) + "", "code": "print(" + i + ")\nprint(" + i + " + 1)"};
-        _pymeth_append.call(slices, item);
-    }
-    return slices;
-};
-
 T = function (tagname) {
     var args, child, dummy1_, dummy2_sequence, dummy3_iter, el, klass;
     args = Array.prototype.slice.call(arguments).slice(1);
@@ -115,6 +104,17 @@ T = function (tagname) {
         _pymeth_append.call(el, child);
     }
     return el;
+};
+
+imports = ["base/js/namespace", "base/js/dialog", "services/config", "base/js/utils"];
+dummy_slices = function (n) {
+    var i, item, slices;
+    slices = [];
+    for (i = 0; i < n; i += 1) {
+        item = {"name": "name " + i + "", "group": "group " + (i % 10) + "", "code": "print(" + i + ")\nprint(" + i + " + 1)"};
+        _pymeth_append.call(slices, item);
+    }
+    return slices;
 };
 
 load = function (Jupyter, dialog, configmod, utils) {
