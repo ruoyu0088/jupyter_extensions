@@ -95,7 +95,7 @@ load = function (Jupyter, require) {
         }).bind(this);
 
         load_css("./iconbox.css");
-        jQuery([Jupyter.envets]).on("create.Cell", on_create_cell);
+        jQuery([Jupyter.events]).on("create.Cell", on_create_cell);
         dummy1_sequence = Jupyter.notebook.get_cells();
         if ((typeof dummy1_sequence === "object") && (!Array.isArray(dummy1_sequence))) {
             dummy1_sequence = Object.keys(dummy1_sequence);

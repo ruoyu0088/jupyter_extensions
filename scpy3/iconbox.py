@@ -35,7 +35,7 @@ def load(Jupyter, require):
         from .utils import load_css
         
         load_css('./iconbox.css')
-        jQuery([Jupyter.envets]).on('create.Cell', on_create_cell)
+        jQuery([Jupyter.events]).on('create.Cell', on_create_cell)
         for cell in Jupyter.notebook.get_cells():
             cell.events.on('rendered.MarkdownCell', format_block)
             cell.events.trigger('rendered.MarkdownCell', {'cell': cell})
