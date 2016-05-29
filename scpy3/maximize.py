@@ -1,7 +1,8 @@
 imports = ['base/js/namespace', 'base/js/events']
 
 def load(Jupyter, events):
-    header = jQuery('#header')    
+    header = jQuery('#header')
+    header_elements = '#maintoolbar,#header-container,.header-bar,#menubar-container,#header'
     
     def maximize():
          if header['is'](':visible'):
@@ -9,11 +10,7 @@ def load(Jupyter, events):
             notification.css({'position':'absolute', 'width':'500px', 'bottom':'0px'})
             notification.appendTo(jQuery('body'))
             jQuery('#notebook').css({'padding-top':'0px'})
-            jQuery('div#maintoolbar').hide()
-            jQuery('#header-container').hide()
-            jQuery('.header-bar').hide()
-            jQuery('#menubar-container').hide()
-            jQuery('#header').hide()
+            jQuery(header_elements).hide()
             events.trigger('resize-header.Page')
 
     def normalize():
@@ -22,11 +19,7 @@ def load(Jupyter, events):
             notification.removeAttr('style')
             notification.insertAfter(jQuery('#modal_indicator'))
             jQuery('#notebook').removeAttr('style')
-            jQuery('div#maintoolbar').show()
-            jQuery('#header-container').show()
-            jQuery('.header-bar').show()
-            jQuery('#menubar-container').show()
-            jQuery('#header').show()
+            jQuery(header_elements).show()
             events.trigger('resize-header.Page')
 
     def main():
