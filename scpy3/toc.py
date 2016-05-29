@@ -11,7 +11,7 @@ def load(Jupyter, events, require, _):
     toc.css({
         'position': 'absolute',
         'width': '200px',
-        'top': '110px',
+        'top': '0px',
         'right': '0px',
         'height': '600px',
         'background-color': 'rgba(128,128,128,0.1)'
@@ -31,6 +31,8 @@ def load(Jupyter, events, require, _):
             
     def update_toc():
         if toc['is'](':visible'):
+            top = jQuery("#header").height() if jQuery('#header')['is'](':visible') else 0
+            toc.css('top', '%dpx' % top)
             jQuery('#scpy3-toc').empty()
             Jupyter.notebook.element.sideMenu({
                 container: '#scpy3-toc',
@@ -42,12 +44,12 @@ def load(Jupyter, events, require, _):
         side_menu = nb.element.data('sideMenu')
         if not side_menu:
             return
-        cell = nb.get_selected_cell()
-        while True:
-            if is_head_cell(cell):
-                break
-            cell = nb.get_prev_cell(cell)
-            if cell is None:
+        start = nb.get_selected_index()
+        cell = None
+        for i in range(start, -1, -1):
+            c = nb.get_cell(i)
+            if is_head_cell(c):
+                cell = c
                 break
         if cell is not None:
             mark_head(cell)
@@ -60,28 +62,28 @@ def load(Jupyter, events, require, _):
         side_menu = nb.element.data('sideMenu')
         if not side_menu:
             return
-        id_ = jQuery(cell.get_rendered()).attr('id')
+        #id_ = jQuery(cell.get_rendered()).attr('id')
+        id_ = cell.element.find(".rendered_html").children(0).attr("id")
         side_menu.showPosition(id_)
 
-    def goto_head(method):
-        
-        cell = nb.get_selected_cell()
+    def goto_head(step):
+        i = nb.get_selected_index()
         while True:
-            cell = nb[method](cell)
+            i += step
+            cell = nb.get_cell(i)
             if cell is None:
                 break
             if is_head_cell(cell):
-                index = nb.find_cell_index(cell)
-                nb.select(index)
-                nb.scroll_to_cell(index)
+                nb.select(i)
+                nb.scroll_to_cell(i)
                 mark_head(cell)
                 break
             
     def prev_head():
-        goto_head('get_prev_cell')
+        goto_head(-1)
             
     def next_head():
-        goto_head('get_next_cell')
+        goto_head(1)
 
     def main():
         

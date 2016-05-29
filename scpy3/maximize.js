@@ -17,19 +17,22 @@ load = function (Jupyter) {
             notification.css({"position": "absolute", "width": "500px", "bottom": "0px"});
             notification.appendTo(jQuery("body"));
             jQuery("#notebook").css({"padding-top": "0px"});
+            jQuery("#scpy3-toc").css({"top": "0px"});
             header.hide();
         }
         return null;
     }).bind(this);
 
     normalize = (function () {
-        var header, notification;
+        var header, notification, top;
         header = jQuery("#header");
         if ((!_pyfunc_truthy(header["is"](":visible")))) {
             notification = jQuery("#notification_area");
             notification.removeAttr("style");
             notification.insertAfter(jQuery("#modal_indicator"));
             jQuery("#notebook").removeAttr("style");
+            top = jQuery("#header").height();
+            jQuery("#scpy3-toc").css({"top": "" + top + "px"});
             header.show();
         }
         return null;
