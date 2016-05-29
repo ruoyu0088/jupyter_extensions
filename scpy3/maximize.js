@@ -26,14 +26,13 @@ load = function (Jupyter) {
     }).bind(this);
 
     normalize = (function () {
-        var notification, top;
+        var notification;
         if ((!_pyfunc_truthy(header["is"](":visible")))) {
             notification = jQuery("#notification_area");
             notification.removeAttr("style");
             notification.insertAfter(jQuery("#modal_indicator"));
             jQuery("#notebook").removeAttr("style");
-            top = jQuery("#header").height();
-            jQuery("#scpy3-toc").css({"top": "" + top + "px"});
+            jQuery("#scpy3-toc").css({"top": "" + header_height + "px"});
             header.show().height(header_height);
             Jupyter.page._resize_site();
         }

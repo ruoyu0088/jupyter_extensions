@@ -21,8 +21,7 @@ def load(Jupyter):
             notification.removeAttr('style')
             notification.insertAfter(jQuery('#modal_indicator'))
             jQuery('#notebook').removeAttr('style')
-            top = jQuery("#header").height()
-            jQuery('#scpy3-toc').css({'top':'%dpx' % top})
+            jQuery('#scpy3-toc').css({'top':'%dpx' % header_height})
             header.show().height(header_height)
             Jupyter.page._resize_site()
 
