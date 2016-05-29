@@ -12,6 +12,7 @@ jupyter nbextension install scpy3 --user
 and then enable the extensions:
 
 ```
+jupyter nbextension enable scpy3/style
 jupyter nbextension enable scpy3/macro
 jupyter nbextension enable scpy3/copycells
 jupyter nbextension enable scpy3/slice
@@ -31,6 +32,13 @@ To convert the code, run following command:
 python convert.py
 ```
 ## Extensions
+
+### style
+
+Customize style sheet:
+
+* Hide prompt
+* More `padding-right` for TOC 
 
 ### macro
 

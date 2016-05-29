@@ -1,0 +1,7 @@
+.prompt {
+    display: none !important;
+}
+
+#notebook-container {
+    padding-right: 100px !important; 
+}
