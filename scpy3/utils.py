@@ -15,3 +15,6 @@ def T(tagname, *args):
     for child in args:
         el.append(child)
     return el
+
+def is_head_cell(cell):
+    return cell.cell_type == 'markdown' and cell.get_text().startswith('#')

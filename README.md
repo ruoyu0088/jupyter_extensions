@@ -137,3 +137,5 @@ Enlarge notebook edit area by hiding title, menubar and toolbar. In maximized mo
 This extension collects all running headers in the notebook and display them on the right side of the notebook.
 
 * `Alt-t`: Toggle table of content
+* `Crtrl-←`: Jump to previous head
+* `Crtrl-→`: Jump to next head
