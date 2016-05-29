@@ -17,6 +17,7 @@ jupyter nbextension enable scpy3/copycells
 jupyter nbextension enable scpy3/slice
 jupyter nbextension enable scpy3/iconbox
 jupyter nbextension enable scpy3/maximize
+jupyter nbextension enable scpy3/toc
 ```
 
 ## Convert code by `convert.py`
@@ -130,3 +131,9 @@ Enlarge notebook edit area by hiding title, menubar and toolbar. In maximized mo
 
 * `Ctrl-↑`: Maximize notebook
 * `Ctrl-↓`: Return to normal mode 
+
+### toc
+
+This extension collects all running headers in the notebook and display them on the right side of the notebook.
+
+* `Alt-t`: Toggle table of content
