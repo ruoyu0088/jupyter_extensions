@@ -55,7 +55,7 @@ var _pymeth_startswith = function (x) { // nargs: 1
 var imports, load;
 imports = ["base/js/namespace", "base/js/events", "require", "./jquery.side.menu"];
 load = function (Jupyter, events, require, _) {
-    var goto_head, is_head_cell, load_css, main, mark_head, nb, next_head, prev_head, remove_last_ch, toc, toggle_toc, update_marker, update_toc;
+    var goto_head, is_head_cell, load_css, main, mark_head, nb, next_head, prev_head, remove_last_ch, toc, toggle_toc, update_marker, update_toc, update_toc_top;
     load_css = (function (name) {
         var link;
         link = document.createElement("link");
@@ -91,14 +91,17 @@ load = function (Jupyter, events, require, _) {
     }).bind(this);
 
     update_toc = (function () {
-        var top;
         if (_pyfunc_truthy(toc["is"](":visible"))) {
-            top = (_pyfunc_truthy((jQuery("#header")["is"])(":visible")))? (jQuery("#header").height()) : (0);
-            toc.css("top", "" + top + "px");
+            update_toc_top();
             jQuery("#scpy3-toc").empty();
             Jupyter.notebook.element.sideMenu({container: "#scpy3-toc", hs: ["h1", "h2", "h3", "h4", "h5"]});
             _pymeth_find.call(toc, "span").each(remove_last_ch);
         }
+        return null;
+    }).bind(this);
+
+    update_toc_top = (function () {
+        toc.css("top", "" + (jQuery("#header").height()) + "px");
         return null;
     }).bind(this);
 
@@ -186,6 +189,7 @@ load = function (Jupyter, events, require, _) {
     events.on("create.Cell", update_toc);
     events.on("delete.Cell", update_toc);
     events.on("select.Cell", update_marker);
+    events.on("resize-header.Page", update_toc_top);
     events.on("command_mode.Notebook", update_toc);
     return {"load_ipython_extension": main};
 };

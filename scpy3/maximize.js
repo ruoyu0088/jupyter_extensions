@@ -6,11 +6,10 @@ var _pyfunc_truthy = function (v) {
     else {return Object.getOwnPropertyNames(v).length ? v : false;}
 };
 var imports, load;
-imports = ["base/js/namespace"];
-load = function (Jupyter) {
-    var header, header_height, main, maximize, normalize;
+imports = ["base/js/namespace", "base/js/events"];
+load = function (Jupyter, events) {
+    var header, main, maximize, normalize;
     header = jQuery("#header");
-    header_height = header.height();
     maximize = (function () {
         var notification;
         if (_pyfunc_truthy(header["is"](":visible"))) {
@@ -18,9 +17,12 @@ load = function (Jupyter) {
             notification.css({"position": "absolute", "width": "500px", "bottom": "0px"});
             notification.appendTo(jQuery("body"));
             jQuery("#notebook").css({"padding-top": "0px"});
-            jQuery("#scpy3-toc").css({"top": "0px"});
-            header.hide().height(0);
-            Jupyter.page._resize_site();
+            jQuery("div#maintoolbar").hide();
+            jQuery("#header-container").hide();
+            jQuery(".header-bar").hide();
+            jQuery("#menubar-container").hide();
+            jQuery("#header").hide();
+            events.trigger("resize-header.Page");
         }
         return null;
     }).bind(this);
@@ -32,9 +34,12 @@ load = function (Jupyter) {
             notification.removeAttr("style");
             notification.insertAfter(jQuery("#modal_indicator"));
             jQuery("#notebook").removeAttr("style");
-            jQuery("#scpy3-toc").css({"top": "" + header_height + "px"});
-            header.show().height(header_height);
-            Jupyter.page._resize_site();
+            jQuery("div#maintoolbar").show();
+            jQuery("#header-container").show();
+            jQuery(".header-bar").show();
+            jQuery("#menubar-container").show();
+            jQuery("#header").show();
+            events.trigger("resize-header.Page");
         }
         return null;
     }).bind(this);

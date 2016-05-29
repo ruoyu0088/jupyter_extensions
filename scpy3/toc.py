@@ -31,14 +31,16 @@ def load(Jupyter, events, require, _):
             
     def update_toc():
         if toc['is'](':visible'):
-            top = jQuery("#header").height() if jQuery('#header')['is'](':visible') else 0
-            toc.css('top', '%dpx' % top)
+            update_toc_top()
             jQuery('#scpy3-toc').empty()
             Jupyter.notebook.element.sideMenu({
                 container: '#scpy3-toc',
                 hs: ['h1', 'h2', 'h3', 'h4', 'h5']
             })
             toc.find('span').each(remove_last_ch)
+
+    def update_toc_top():
+        toc.css('top', '%dpx' % jQuery("#header").height())
             
     def update_marker():
         side_menu = nb.element.data('sideMenu')
@@ -113,6 +115,7 @@ def load(Jupyter, events, require, _):
     events.on('create.Cell', update_toc)
     events.on('delete.Cell', update_toc)
     events.on('select.Cell', update_marker)
+    events.on('resize-header.Page', update_toc_top)
     events.on('command_mode.Notebook', update_toc)
     return {"load_ipython_extension": main}
 
