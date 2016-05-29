@@ -5,3 +5,11 @@
 #notebook-container {
     padding-right: 100px !important; 
 }
+
+div.text_cell div.input_area{
+    background-color: white !important;
+}
+
+div.code_cell div.input_area{
+    Background-color: #f0f0f0 !important;
+}
