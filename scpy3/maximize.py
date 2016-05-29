@@ -1,28 +1,30 @@
 imports = ['base/js/namespace']
 
 def load(Jupyter):
-
+    header = jQuery('#header')    
+    header_height = header.height()
+    
     def maximize():
-        header = jQuery('#header')
-        if header['is'](':visible'):
+         if header['is'](':visible'):
             notification = jQuery('#notification_area')
             notification.css({'position':'absolute', 'width':'500px', 'bottom':'0px'})
             notification.appendTo(jQuery('body'))
             jQuery('#notebook').css({'padding-top':'0px'})
             jQuery('#scpy3-toc').css({'top':'0px'})
-            header.hide()
+            header.hide().height(0)
+            Jupyter.page._resize_site()
             
 
     def normalize():
-        header = jQuery('#header')
-        if not header['is'](':visible'):
+         if not header['is'](':visible'):
             notification = jQuery('#notification_area')
             notification.removeAttr('style')
             notification.insertAfter(jQuery('#modal_indicator'))
             jQuery('#notebook').removeAttr('style')
             top = jQuery("#header").height()
             jQuery('#scpy3-toc').css({'top':'%dpx' % top})
-            header.show()
+            header.show().height(header_height)
+            Jupyter.page._resize_site()
 
     def main():
         actions = dict(

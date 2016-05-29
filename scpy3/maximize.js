@@ -8,24 +8,25 @@ var _pyfunc_truthy = function (v) {
 var imports, load;
 imports = ["base/js/namespace"];
 load = function (Jupyter) {
-    var main, maximize, normalize;
+    var header, header_height, main, maximize, normalize;
+    header = jQuery("#header");
+    header_height = header.height();
     maximize = (function () {
-        var header, notification;
-        header = jQuery("#header");
+        var notification;
         if (_pyfunc_truthy(header["is"](":visible"))) {
             notification = jQuery("#notification_area");
             notification.css({"position": "absolute", "width": "500px", "bottom": "0px"});
             notification.appendTo(jQuery("body"));
             jQuery("#notebook").css({"padding-top": "0px"});
             jQuery("#scpy3-toc").css({"top": "0px"});
-            header.hide();
+            header.hide().height(0);
+            Jupyter.page._resize_site();
         }
         return null;
     }).bind(this);
 
     normalize = (function () {
-        var header, notification, top;
-        header = jQuery("#header");
+        var notification, top;
         if ((!_pyfunc_truthy(header["is"](":visible")))) {
             notification = jQuery("#notification_area");
             notification.removeAttr("style");
@@ -33,7 +34,8 @@ load = function (Jupyter) {
             jQuery("#notebook").removeAttr("style");
             top = jQuery("#header").height();
             jQuery("#scpy3-toc").css({"top": "" + top + "px"});
-            header.show();
+            header.show().height(header_height);
+            Jupyter.page._resize_site();
         }
         return null;
     }).bind(this);
