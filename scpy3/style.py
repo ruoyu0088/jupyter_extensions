@@ -1,8 +1,8 @@
-imports = ['base/js/namespace', 'require']
+imports = ['base/js/namespace', 'require', 'base/js/events']
 
 themes = ['default', 'oceans16', 'grade3', 'space-legos']
 
-def load(Jupyter, require):
+def load(Jupyter, require, events):
     from .utils import load_css, unload_css, get_metadata, set_metadata
     load_css('./style.css')
 
@@ -13,7 +13,7 @@ def load(Jupyter, require):
             if theme != 'default':
                 load_css('./themes/%s.css' % theme)
             set_metadata(Jupyter.notebook, 'theme', theme)
-                
+            events.trigger('theme-changed.scpy3')
         select = jQuery('<select/>').attr('id', 'scpy3-theme-selector')
         select.addClass('form-control select-xs')
         select.append(jQuery('<optgroup label = "Themes:">'))

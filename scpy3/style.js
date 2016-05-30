@@ -37,9 +37,9 @@ var _pymeth_append = function (x) { // nargs: 1
     this.push(x);
 };
 var imports, load, themes;
-imports = ["base/js/namespace", "require"];
+imports = ["base/js/namespace", "require", "base/js/events"];
 themes = ["default", "oceans16", "grade3", "space-legos"];
-load = function (Jupyter, require) {
+load = function (Jupyter, require, events) {
     var get_metadata, load_css, main, set_metadata, unload_css;
     load_css = (function (name) {
         var link;
@@ -115,6 +115,7 @@ load = function (Jupyter, require) {
                 load_css("./themes/" + theme + ".css");
             }
             set_metadata(Jupyter.notebook, "theme", theme);
+            events.trigger("theme-changed.scpy3");
             return null;
         }).bind(this);
 
