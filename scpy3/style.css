@@ -13,3 +13,7 @@ div.text_cell div.input_area{
 div.code_cell div.input_area{
     Background-color: #f0f0f0 !important;
 }
+
+.MathJax span{
+    border-left-width: 0px !important;b
+}
