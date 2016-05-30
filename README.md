@@ -39,6 +39,9 @@ Customize style sheet:
 
 * Hide prompt
 * More `padding-right` for TOC 
+* Add a theme selector in the toolbar
+
+> The themes are download from [jupyter-themes](https://github.com/dunovank/jupyter-themes).
 
 ### macro
 
@@ -147,3 +150,5 @@ This extension collects all running headers in the notebook and display them on 
 * `Alt-t`: Toggle table of content
 * `Crtrl-←`: Jump to previous head
 * `Crtrl-→`: Jump to next head
+
+> The TOC plugin is from https://github.com/wenzhixin/side-menu.
