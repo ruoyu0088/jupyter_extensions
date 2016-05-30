@@ -102,6 +102,7 @@ load = function (Jupyter, events, require, _) {
 
     update_toc_top = (function () {
         toc.css("top", "" + (jQuery("#header").height()) + "px");
+        _pymeth_find.call(toc, ".side-menu").height(toc.height() - 20);
         return null;
     }).bind(this);
 
@@ -129,6 +130,7 @@ load = function (Jupyter, events, require, _) {
     toggle_toc = (function () {
         toc.toggle();
         update_toc();
+        update_toc_top();
         handle_resize();
         return null;
     }).bind(this);
@@ -212,6 +214,7 @@ load = function (Jupyter, events, require, _) {
     events.on("resize-header.Page", update_toc_top);
     events.on("command_mode.Notebook", update_toc);
     jQuery(window).resize(handle_resize);
+    events.on("theme-changed.scpy3", update_toc_top);
     return {"load_ipython_extension": main};
 };
 

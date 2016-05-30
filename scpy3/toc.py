@@ -41,7 +41,8 @@ def load(Jupyter, events, require, _):
 
     def update_toc_top():
         toc.css('top', '%dpx' % jQuery("#header").height())
-            
+        toc.find('.side-menu').height(toc.height() - 20)
+        
     def update_marker():
         side_menu = nb.element.data('sideMenu')
         if not side_menu:
@@ -59,6 +60,7 @@ def load(Jupyter, events, require, _):
     def toggle_toc():
         toc.toggle()
         update_toc()
+        update_toc_top()
         handle_resize()
 
     def mark_head(cell):
@@ -134,6 +136,7 @@ def load(Jupyter, events, require, _):
     events.on('resize-header.Page', update_toc_top)
     events.on('command_mode.Notebook', update_toc)
     jQuery(window).resize(handle_resize)
+    events.on('theme-changed.scpy3', update_toc_top)
     return {"load_ipython_extension": main}
 
 define(imports, load)
