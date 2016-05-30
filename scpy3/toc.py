@@ -10,10 +10,10 @@ def load(Jupyter, events, require, _):
     toc = jQuery('<div id="scpy3-toc"></div>')
     toc.css({
         'position': 'absolute',
-        'width': '200px',
+        'width': '250px',
         'top': '0px',
         'right': '0px',
-        'height': '600px',
+        'bottom': '0px',
         'background-color': 'rgba(128,128,128,0.1)'
     })
     toc.appendTo(jQuery('body'))
@@ -23,10 +23,10 @@ def load(Jupyter, events, require, _):
     def remove_last_ch(index, el):
         el = jQuery(el)
         text = el.html()
-        if text and text.endswith('¶'):
+        if text and text.endswith('\u00b6'):
             el.html(text[:-1])
         title = el.attr('title')
-        if title and title.endswith('¶'):
+        if title and title.endswith('\u00b6'):
             el.attr('title', title[:-1])
             
     def update_toc():
@@ -59,6 +59,7 @@ def load(Jupyter, events, require, _):
     def toggle_toc():
         toc.toggle()
         update_toc()
+        handle_resize()
 
     def mark_head(cell):
         side_menu = nb.element.data('sideMenu')
@@ -87,6 +88,21 @@ def load(Jupyter, events, require, _):
     def next_head():
         goto_head(1)
 
+    def handle_resize():
+        if toc['is'](':visible'):            
+            el_cell = Jupyter.notebook.get_cell(0).element
+            el_right_edge = el_cell.width() + el_cell.offset().left
+            win_width = jQuery(window).width()
+            diff = 260 - (win_width - el_right_edge)
+            nc = jQuery("#notebook-container")
+            new_padding = parseInt(nc.css("padding-right")) + diff
+            padding_left = parseInt(nc.css("padding-left"))
+            new_padding = max(new_padding, padding_left)
+            nc.css("padding-right", new_padding)
+        else:
+            nc = jQuery("#notebook-container")
+            nc.css("padding-right", nc.css("padding-left"))
+               
     def main():
         
         actions = dict(
@@ -117,6 +133,7 @@ def load(Jupyter, events, require, _):
     events.on('select.Cell', update_marker)
     events.on('resize-header.Page', update_toc_top)
     events.on('command_mode.Notebook', update_toc)
+    jQuery(window).resize(handle_resize)
     return {"load_ipython_extension": main}
 
 define(imports, load)

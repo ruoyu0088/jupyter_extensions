@@ -55,7 +55,7 @@ var _pymeth_startswith = function (x) { // nargs: 1
 var imports, load;
 imports = ["base/js/namespace", "base/js/events", "require", "./jquery.side.menu"];
 load = function (Jupyter, events, require, _) {
-    var goto_head, is_head_cell, load_css, main, mark_head, nb, next_head, prev_head, remove_last_ch, toc, toggle_toc, update_marker, update_toc, update_toc_top;
+    var goto_head, handle_resize, is_head_cell, load_css, main, mark_head, nb, next_head, prev_head, remove_last_ch, toc, toggle_toc, update_marker, update_toc, update_toc_top;
     load_css = (function (name) {
         var link;
         link = document.createElement("link");
@@ -72,7 +72,7 @@ load = function (Jupyter, events, require, _) {
 
     load_css("./side-menu.css");
     toc = jQuery("<div id=\"scpy3-toc\"></div>");
-    toc.css({"position": "absolute", "width": "200px", "top": "0px", "right": "0px", "height": "600px", "background-color": "rgba(128,128,128,0.1)"});
+    toc.css({"position": "absolute", "width": "250px", "top": "0px", "right": "0px", "bottom": "0px", "background-color": "rgba(128,128,128,0.1)"});
     toc.appendTo(jQuery("body"));
     toc.hide();
     nb = Jupyter.notebook;
@@ -129,6 +129,7 @@ load = function (Jupyter, events, require, _) {
     toggle_toc = (function () {
         toc.toggle();
         update_toc();
+        handle_resize();
         return null;
     }).bind(this);
 
@@ -172,6 +173,25 @@ load = function (Jupyter, events, require, _) {
         return null;
     }).bind(this);
 
+    handle_resize = (function () {
+        var diff, el_cell, el_right_edge, nc, new_padding, padding_left, win_width;
+        if (_pyfunc_truthy(toc["is"](":visible"))) {
+            el_cell = Jupyter.notebook.get_cell(0).element;
+            el_right_edge = _pyfunc_add(el_cell.width(), (el_cell.offset().left));
+            win_width = jQuery(window).width();
+            diff = 260 - (win_width - el_right_edge);
+            nc = jQuery("#notebook-container");
+            new_padding = _pyfunc_add((parseInt(nc.css("padding-right"))), diff);
+            padding_left = parseInt(nc.css("padding-left"));
+            new_padding = Math.max(new_padding, padding_left);
+            nc.css("padding-right", new_padding);
+        } else {
+            nc = jQuery("#notebook-container");
+            nc.css("padding-right", nc.css("padding-left"));
+        }
+        return null;
+    }).bind(this);
+
     main = (function () {
         var action, actions, dummy1_sequence, km, name;
         actions = {toggle_toc:{"help": "", "icon": "", "key": "Alt-t", "handler": toggle_toc}, prev_head:{"handler": prev_head, "key": "Ctrl-left"}, next_head:{"handler": next_head, "key": "Ctrl-right"}};
@@ -191,6 +211,7 @@ load = function (Jupyter, events, require, _) {
     events.on("select.Cell", update_marker);
     events.on("resize-header.Page", update_toc_top);
     events.on("command_mode.Notebook", update_toc);
+    jQuery(window).resize(handle_resize);
     return {"load_ipython_extension": main};
 };
 

@@ -62,13 +62,16 @@
             this.$down = this.$menu.find('.side-scroll-down');
             this.$catalog = this.$menu.find('.side-catalog');
             this.$list = this.$menu.find('dl');
-
-            this.$el.find(this.options.hs.join(',')).each(function(i) {
+	    var heads = this.$el.find(this.options.hs.join(','));
+	    if(heads.length == 0) return;
+	    var first_level = $.inArray(heads.get(0).localName, that.options.hs);
+	    
+            heads.each(function(i) {
                 var $this = $(this),
                     $div,
                     name = $this[0].localName,
                     title = $this.text(),
-                    level = $.inArray(name, that.options.hs) + 1,
+                    level = $.inArray(name, that.options.hs) - first_level + 1,
                     nums = [],
                     index;
 

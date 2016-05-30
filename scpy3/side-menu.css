@@ -1,5 +1,5 @@
 .side-menu {
-	width: 200px;
+	width: 240px;
 	height: 500px;
 	overflow: hidden;
 	font-size: 14px;
@@ -98,6 +98,7 @@
 	font-family: Arail;
 	font-size: 14px;
 	padding-right: 5px;
+	display: none;
 }
 .side-menu a {
 	color: #555;
