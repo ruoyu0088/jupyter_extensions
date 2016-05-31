@@ -43,3 +43,19 @@ def get_metadata(target, key):
     if key not in meta.scpy3:
         return None
     return meta.scpy3[key]
+
+def replace(src, pattern, target):
+    """
+    return String.prototype.replace.bind(src)(pattern, target)
+    """
+
+def get_level(cell):
+    if cell.cell_type != "markdown":
+        return 1000
+    
+    text = cell.get_text()
+    if text.startswith("#"):
+        level = len(text) - len(text.lstrip("#"))
+        return level
+    return 1000
+    
