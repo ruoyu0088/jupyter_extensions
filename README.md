@@ -12,14 +12,20 @@ jupyter nbextension install scpy3 --user
 and then enable the extensions:
 
 ```
-jupyter nbextension enable scpy3/style
-jupyter nbextension enable scpy3/macro
-jupyter nbextension enable scpy3/copycells
-jupyter nbextension enable scpy3/slice
-jupyter nbextension enable scpy3/iconbox
-jupyter nbextension enable scpy3/maximize
-jupyter nbextension enable scpy3/toc
+jupyter nbextension enable scpy3/NAME
 ```
+
+where NAME is:
+
+* style: add theme selector to toolbar
+* macro: add macro key in edit mode
+* copycells: copy cells between notebooks
+* slice: manage cell snippet
+* iconbox: render box with icon
+* maximize: toggle notebook header
+* toc: add table of content
+* run_mdcell: run code in markdown cell and insert result into it
+
 
 ## Convert code by `convert.py`
 
@@ -95,6 +101,8 @@ Quick insert code slice in to current cell:
 
 Render markdown cell as a box with icon. The cell must contain only a blockquote element, which is created by `>` in markdown. Here is a list of the five types:
 
+![icon box](images/iconbox.png)
+
 * a tip box
 
 ```
@@ -136,6 +144,21 @@ Render markdown cell as a box with icon. The cell must contain only a blockquote
 > This is a question
 ```
 
+It can also render a round box, for example:
+
+```
+> What is NumPy
+
+NumPy is the fundamental package for scientific computing with Python. It contains among other things:
+
+...
+```
+
+is rendered as: 
+
+![icon box](images/infobox.png)
+
+
 ### maximize
 
 Enlarge notebook edit area by hiding title, menubar and toolbar. In maximized mode the notification area will be moved to lower-left of the screen.
@@ -152,3 +175,9 @@ This extension collects all running headers in the notebook and display them on 
 * `Crtrl-→`: Jump to next head
 
 > The TOC plugin is from https://github.com/wenzhixin/side-menu.
+
+### run mdcell
+
+Run python code block in markdown cell and insert the output below it:
+
+* `Alt-r`: Run the codes in markdown cell
