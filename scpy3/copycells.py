@@ -1,14 +1,10 @@
-def get_level(cell):
-    if cell.cell_type != "markdown":
-        return 1000
-    
-    text = cell.get_text()
-    if text.startswith("#"):
-        level = len(text) - len(text.lstrip("#"))
-        return level
-    return 1000
-    
+imports  = ['base/js/namespace',
+        'services/config',
+        'base/js/utils']
+
 def load(Jupyter, configmod, utils):
+    from .utils import get_level
+    
     base_url = utils.get_body_data("baseUrl")
     config = configmod.ConfigSection('scpy3_copycells', {'base_url': base_url})
     config.load()
@@ -107,9 +103,5 @@ def load(Jupyter, configmod, utils):
             km.command_shortcuts.add_shortcut(action.key, 'scpy3:' + key)
         
     return {"load_ipython_extension": main}
-
-imports  = ['base/js/namespace',
-        'services/config',
-        'base/js/utils']
 
 define(imports, load)

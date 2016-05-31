@@ -50,22 +50,23 @@ var _pymeth_startswith = function (x) { // nargs: 1
     if (this.constructor !== String) return this.startswith.apply(this, arguments);
     return this.indexOf(x) == 0;
 };
-var get_level, imports, load;
-get_level = function (cell) {
-    var level, text;
-    if ((!_pyfunc_equals(cell.cell_type, "markdown"))) {
-        return 1000;
-    }
-    text = cell.get_text();
-    if (_pyfunc_truthy(_pymeth_startswith.call(text, "#"))) {
-        level = text.length - (_pymeth_lstrip.call(text, "#").length);
-        return level;
-    }
-    return 1000;
-};
-
+var imports, load;
+imports = ["base/js/namespace", "services/config", "base/js/utils"];
 load = function (Jupyter, configmod, utils) {
-    var base_url, config, copy_config, main;
+    var base_url, config, copy_config, get_level, main;
+    get_level = (function (cell) {
+        var level, text;
+        if ((!_pyfunc_equals(cell.cell_type, "markdown"))) {
+            return 1000;
+        }
+        text = cell.get_text();
+        if (_pyfunc_truthy(_pymeth_startswith.call(text, "#"))) {
+            level = text.length - (_pymeth_lstrip.call(text, "#").length);
+            return level;
+        }
+        return 1000;
+    }).bind(this);
+
     base_url = utils.get_body_data("baseUrl");
     config = new configmod.ConfigSection("scpy3_copycells", {"base_url": base_url});
     config.load();
@@ -168,6 +169,5 @@ load = function (Jupyter, configmod, utils) {
     return {"load_ipython_extension": main};
 };
 
-imports = ["base/js/namespace", "services/config", "base/js/utils"];
 define(imports, load);
 })()
