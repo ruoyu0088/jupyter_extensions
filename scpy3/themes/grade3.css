@@ -6,16 +6,16 @@
 body {background-color: #fcfcfc;}
 
 a {color: #303030; font-family: 'Helvetica', sans-serif; }
-div#notebook, div.CodeMirror, div.output_area pre, div.output_wrapper, div.prompt, div.CodeMirror pre {font-family:'Hack', monospace; font-size: 11pt;}
+div#notebook, div.CodeMirror, div.output_area pre, div.output_wrapper, div.prompt, div.CodeMirror pre {font-family:'Hack', monospace;}
 
 /* Hiding the ipython log */
 /* div#ipython_notebook {display: none;} */
 
 /* INTRO PAGE */
-.toolbar_info {color: #2c2c2c; font-size: 12pt; border: 0; font-family: 'Helvetica', sans-serif; text-shadow: none !important; }
-.list_container {color: #2c2c2c; font-size: 12pt; border: 0; font-family: 'Helvetica', sans-serif;text-shadow: none !important; }
-.breadcrumb>li {text-shadow:0 0px 0; color:#2c2c2c; font-family: 'Helvetica', sans-serif; font-size: 12pt}
-.list_container a {color: #2c2c2c; font-family: 'Helvetica', sans-serif; font-size: 12pt; border: 0; text-shadow: none !important; }
+.toolbar_info {color: #2c2c2c; border: 0; font-family: 'Helvetica', sans-serif; text-shadow: none !important; }
+.list_container {color: #2c2c2c;  border: 0; font-family: 'Helvetica', sans-serif;text-shadow: none !important; }
+.breadcrumb>li {text-shadow:0 0px 0; color:#2c2c2c; font-family: 'Helvetica', sans-serif;}
+.list_container a {color: #2c2c2c; font-family: 'Helvetica', sans-serif;  border: 0; text-shadow: none !important; }
 .item_icon {color: #3572C6;}
 .item_buttons .kernel-name {
     color: #3572C6;
@@ -73,7 +73,6 @@ ul#selector-menu.dropdown-menu > li > a:hover {
     box-shadow: none;
     padding: none;
     list-style: outside none none;
-    font-size: 12pt;
     text-align: left;
     vertical-align: center;
 }
@@ -87,7 +86,6 @@ ul#selector-menu.dropdown-menu > li > a:hover {
 .dropdown-header {
     display: block;
     padding: 0px 10px;
-    font-size: 12pt;
     line-height: 1.5;
     color: #4c4c4c;
     text-decoration: underline;
@@ -95,7 +93,6 @@ ul#selector-menu.dropdown-menu > li > a:hover {
     white-space: nowrap;
 }
 .dropdown-menu > li > a {
-    font-size: 12pt;
     border: 0px solid #efefef;
     display: block;
     padding: none;
@@ -109,7 +106,6 @@ ul#selector-menu.dropdown-menu > li > a:hover {
     background: #efefef;
 }
 .dropdown-menu > li > a:hover {
-    font-size: 12pt;
     border: 0px solid rgba(184, 184, 184, 0.30);
     background-clip: padding-box;
     color: #222222;
@@ -148,7 +144,6 @@ ul#selector-menu.dropdown-menu > li > a:hover {
 }
 .panel {
     line-height: 22px;
-    fontsize: 12px;
     margin-bottom: 18px;
     background-color: #fcfcfc;
     color: #2c2c2c;
@@ -170,14 +165,12 @@ ul#selector-menu.dropdown-menu > li > a:hover {
     color: #ee8713;
 }
 .rendered_html pre, .rendered_html code {
-    font-size: 12pt;
     color: #2c2c2c;
-    line-height: 100%;
-    background: #dfdfdf;
+/*    line-height: 100%; */
+    background: #ececed;
 }
 body {
     font-family: "Helvetica", Helvetica, Arial, sans-serif;
-    font-size: 12pt;
     line-height: 1.42857;
     color: #2c2c2c;
 }
@@ -188,7 +181,6 @@ body {
 #kernel_indicator .kernel_indicator_name {
     padding-left: 5px;
     padding-right: 5px;
-    font-size: 13pt;
 }
 #modal_indicator {
     float: right !important;
@@ -246,7 +238,6 @@ div.output_html {color: #1e2429;}
 }
 .navbar-default .navbar-nav > li > a {
     color: #4c4c4c;
-    font-size: 14pt;
 }
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
     color: #222222;
@@ -260,7 +251,6 @@ div.output_html {color: #1e2429;}
     color: #4c4c4c;
     background: transparent;
     background-color: transparent;
-    font-size: 12pt;
     font-weight: normal;
     border: 0 none !important;
     box-shadow: none !important;
@@ -271,7 +261,6 @@ div.output_html {color: #1e2429;}
     color: #4c4c4c;
     background: transparent;
     background-color: transparent;
-    font-size: 11pt;
     border-radius: 2px;
     font-weight: normal;
     border: 0 none !important;
@@ -386,7 +375,6 @@ button.close {
 }
 .close {
     float: right;
-    font-size: 22px;
     font-weight: bold;
     line-height: 1;
     color: #ee8713;
@@ -403,7 +391,6 @@ button.close {
     width: 100%;
     height: 32px;
     padding: 6px 12px;
-    font-size: 13pt;
     line-height: 1.6;
     color: #4c4c4c;
     background-color: #ececed;
@@ -481,7 +468,7 @@ div.output_stderr pre {color: #000000;}
 /* Set CodeCell font-size*/
 /*div.CodeMirror pre {font-size: 11pt !important;}*/
 div.CodeMirror pre {line-height: 1.5 !important;}
-div.CodeMirror pre {font-family: 'Hack', monospace; font-size: 11pt;}
+div.CodeMirror pre {font-family: 'Hack', monospace;}
 
 div.CodeMirror span.CodeMirror-matchingbracket { color: #000000; background: rgba(53, 114, 198, .4) !important ; height: 120%; line-height: 1.5 !important; padding-top: 1px;}
 div.CodeMirror span.CodeMirror-nonmatchingbracket { color: #000000; background: rgba(191, 97, 106, .3) !important ; height: 120%; line-height: 1.5 !important; padding-top: 1px;}
@@ -498,7 +485,6 @@ div.prompt {
     text-align: left;
     line-height: 1.21429em;
     min-width: 11ex;
-    font-size: 9.5pt;
 }
 
 div.input_area {
@@ -511,7 +497,6 @@ div.prompt.input_prompt {
     font-family: 'Hack', monospace;
     border-right: 2px solid rgba(240, 147, 43, .4);
     font-weight: bold;
-    font-size: 9.5pt;
     color: #aaaaaa;
     background-color: #ececed;
     width: 1em;
@@ -524,7 +509,6 @@ div.prompt.output_prompt {
     font-weight: bold;
     background-color: #ffffff;
     color: #ffffff;
-    font-size: 9.5pt;
     width: 1em;
     margin-bottom: 8px;
     padding-top: 1em;
@@ -533,7 +517,6 @@ div.prompt.output_prompt {
 div.out_prompt_overlay.prompt {
     font-family: 'Hack', monospace;
     font-weight: bold;
-    font-size: 9.5pt;
     width: 1em;
     margin-bottom: 8px;
     background-color: #ffffff;
@@ -544,7 +527,6 @@ div.out_prompt_overlay.prompt {
 div.out_prompt_overlay.prompt:hover {
     font-family: 'Hack', monospace;
     font-weight: bold;
-    font-size: 9.5pt;
     width: 1em;
     border-radius: 4px;
     margin-bottom: 8px;
@@ -572,7 +554,6 @@ div.output_subarea.output_text.output_stream.output_stdout,div.output_subarea.ou
 
 div.output_area pre {
     color: #000000;
-    font-size: 10pt;
 }
 div.output_subarea {
     overflow-x: auto;

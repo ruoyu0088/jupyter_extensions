@@ -6,16 +6,16 @@
 body {background-color: #242B2F;}
 
 a {color: #E3E3E3; font-family: 'Helvetica', sans-serif; }
-div#notebook, div.CodeMirror, div.output_area pre, div.output_wrapper, div.prompt, div.CodeMirror pre {font-family:'Hack', monospace; font-size: 11pt;}
+div#notebook, div.CodeMirror, div.output_area pre, div.output_wrapper, div.prompt, div.CodeMirror pre {font-family:'Hack', monospace; }
 
 /* Hiding the ipython log */
 /* div#ipython_notebook {display: none;} */
 
 /* INTRO PAGE */
-.toolbar_info {color: #E3E3E3; font-size: 12pt; border: 0; font-family: 'Helvetica', sans-serif; text-shadow: none !important; }
-.list_container {color: #E3E3E3; font-size: 12pt; border: 0; font-family: 'Helvetica', sans-serif;text-shadow: none !important; }
-.breadcrumb>li {text-shadow:0 0px 0; color:#E3E3E3; font-family: 'Helvetica', sans-serif; font-size: 12pt}
-.list_container a {color: #E3E3E3; font-family: 'Helvetica', sans-serif; font-size: 12pt; border: 0; text-shadow: none !important; }
+.toolbar_info {color: #E3E3E3;  border: 0; font-family: 'Helvetica', sans-serif; text-shadow: none !important; }
+.list_container {color: #E3E3E3;  border: 0; font-family: 'Helvetica', sans-serif;text-shadow: none !important; }
+.breadcrumb>li {text-shadow:0 0px 0; color:#E3E3E3; font-family: 'Helvetica', sans-serif; }
+.list_container a {color: #E3E3E3; font-family: 'Helvetica', sans-serif;  border: 0; text-shadow: none !important; }
 .item_icon {color: #2c85f7;}
 .running_notebook_icon:before {
     color: #02ac65 !important;
@@ -48,7 +48,6 @@ div.notebook_list_header {
 /* PANELS // LISTS // DROPDOWN MENUS*/
 .list_container > div {
     border-bottom: 1px solid rgba(37, 176, 125, 0.4);
-    font-size: 12pt;
 }
 .panel-default {
     border-color: rgba(37, 176, 125, 0.3);
@@ -70,7 +69,6 @@ div.notebook_list_header {
     padding-top: 0px;
     padding-bottom: 0px;
     list-style: outside none none;
-    font-size: 12pt;
     text-align: left;
 }
 .dropdown-menu:hover{
@@ -92,7 +90,6 @@ div.notebook_list_header {
 .dropdown-header {
     display: block;
     padding: 3px 20px;
-    font-size: 12pt;
     line-height: 1.42857;
     color: #E3E3E3;
     text-decoration: underline;
@@ -149,14 +146,12 @@ div.notebook_list_header {
     color: #57B690;
 }
 .rendered_html pre, .rendered_html code {
-    font-size: 12pt;
     color: #E3E3E3;
     line-height: 100%;
     background: #333537;
 }
 body {
     font-family: "Helvetica", Helvetica, Arial, sans-serif;
-    font-size: 12pt;
     line-height: 1.42857;
     color: #E3E3E3;
 }
@@ -168,7 +163,6 @@ body {
 #kernel_indicator .kernel_indicator_name {
     padding-left: 5px;
     padding-right: 5px;
-    font-size: 13pt;
 }
 #modal_indicator {
     float: right !important;
@@ -228,7 +222,6 @@ div.output_html {color: #1e2429;}
 }
 .navbar-default .navbar-nav > li > a {
     color: #E3E3E3;
-    font-size: 13pt;
 }
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
     color: #FFFFFF;
@@ -241,7 +234,6 @@ div.output_html {color: #1e2429;}
 .btn {
     color: #E3E3E3;
     background: #242B2F;
-    font-size: 12pt;
     font-weight: normal;
     border: 0 none !important;
     box-shadow: none !important;
@@ -252,7 +244,6 @@ div.output_html {color: #1e2429;}
 .btn-group > .btn-mini {
     color: #E3E3E3;
     background: #242B2F;
-    font-size: 11pt;
     font-weight: normal;
     border: 0 none !important;
     box-shadow: none !important;
@@ -338,7 +329,6 @@ button.close {
 }
 .close {
     float: right;
-    font-size: 22px;
     font-weight: bold;
     line-height: 1;
     color: #57B690;
@@ -355,7 +345,6 @@ button.close {
     width: 100%;
     height: 32px;
     padding: 6px 12px;
-    font-size: 13pt;
     line-height: 1.6;
     color: #6EA3D4;
     background-color: #3D3E3E;
@@ -406,7 +395,7 @@ div.output_stderr pre {color: #D0D4E6;}
 .cm-s-ipython.CodeMirror {background: #363D44; color: #C0D4E6;}
 .cm-s-ipython div.CodeMirror-selected {background: #3e424a !important;}
 .cm-s-ipython .CodeMirror-gutters {background: #6F7998; border: 0px; border-radius:0px;}
-.cm-s-ipython .CodeMirror-linenumber {color: #C0D4E6 !important; font-size: 11pt;}
+.cm-s-ipython .CodeMirror-linenumber {color: #C0D4E6 !important; }
 .cm-s-ipython .CodeMirror-cursor {border-left: 2px solid #41D79C !important;}
 .cm-s-ipython span.cm-comment {color: #636D8A; font-style: italic !important;}
 .cm-s-ipython span.cm-atom {color: #46B5B7;}
@@ -435,7 +424,7 @@ div.output_stderr pre {color: #D0D4E6;}
 /* Set CodeCell font-size*/
 /*div.CodeMirror pre {font-size: 11pt !important;}*/
 div.CodeMirror pre {line-height: 1.5 !important;}
-div.CodeMirror pre {font-family: 'Hack', monospace; font-size: 11pt;}
+div.CodeMirror pre {font-family: 'Hack', monospace; }
 
 div.CodeMirror span.CodeMirror-matchingbracket { color: #ffffff; background: rgba(37, 176, 125, 0.9) !important ; height: 120%; line-height: 1.5 !important; padding-top: 1px;}
 div.CodeMirror span.CodeMirror-nonmatchingbracket { color: #ffffff; background: rgba(191, 97, 106, .5) !important ; height: 120%; line-height: 1.5 !important; padding-top: 1px;}
@@ -452,7 +441,6 @@ div.prompt {
     text-align: left;
     line-height: 1.21429em;
     min-width: 11ex;
-    font-size: 9.5pt;
 }
 div.input_area {
     margin-bottom: 0px;
@@ -464,7 +452,6 @@ div.prompt.input_prompt {
     font-family: 'Hack', monospace;
     border-right: 2px solid #57B690;
     font-weight: bold;
-    font-size: 9.5pt;
     color: #57B690;
     background-color: #363D44;
     width: 1em;
@@ -476,7 +463,6 @@ div.prompt.output_prompt {
     font-weight: bold;
     background-color: #494B4E;
     color: #494B4E;
-    font-size: 9.5pt;
     width: 1em;
     margin-bottom: 8px;
     padding-top: 1em;
@@ -485,7 +471,6 @@ div.prompt.output_prompt {
 div.out_prompt_overlay.prompt {
     font-family: 'Hack', monospace;
     font-weight: bold;
-    font-size: 9.5pt;
     width: 1em;
     margin-bottom: 8px;
     background-color: #494B4E;
@@ -496,7 +481,6 @@ div.out_prompt_overlay.prompt {
 div.out_prompt_overlay.prompt:hover {
     font-family: 'Hack', monospace;
     font-weight: bold;
-    font-size: 9pt;
     width: 1em;
     border-radius: 2px;
     margin-bottom: 8px;
@@ -522,7 +506,6 @@ div.output_subarea.output_text.output_stream.output_stdout,div.output_subarea.ou
 }
 div.output_area pre {
     color: #EEEEEE;
-    font-size: 10pt;
 }
 div.output_subarea {
     overflow-x: auto;

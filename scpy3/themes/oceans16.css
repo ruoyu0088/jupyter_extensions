@@ -6,16 +6,16 @@
 body {background-color: #262931;}
 
 a {color: #8997b0; font-family: 'Helvetica', sans-serif; }
-div#notebook, div.CodeMirror, div.output_area pre, div.output_wrapper, div.prompt, div.CodeMirror pre {font-family:'Hack', monospace; font-size: 11pt;}
+div#notebook, div.CodeMirror, div.output_area pre, div.output_wrapper, div.prompt, div.CodeMirror pre {font-family:'Hack', monospace; }
 
 /* Hiding the ipython log */in
 /* div#ipython_notebook {display: none;} */
 
 /* INTRO PAGE */
-.toolbar_info {color: #8997b0; font-size: 12pt; border: 0; font-family: 'Helvetica', sans-serif; text-shadow: none !important; }
-.list_container {color: #8997b0; font-size: 12pt; border: 0; font-family: 'Helvetica', sans-serif;text-shadow: none !important; }
-.breadcrumb>li {text-shadow:0 0px 0; color:#8997b0; font-family: 'Helvetica', sans-serif; font-size: 12pt}
-.list_container a {color: #8997b0; font-family: 'Helvetica', sans-serif; font-size: 12pt; border: 0; text-shadow: none !important; }
+.toolbar_info {color: #8997b0; border: 0; font-family: 'Helvetica', sans-serif; text-shadow: none !important; }
+.list_container {color: #8997b0; border: 0; font-family: 'Helvetica', sans-serif;text-shadow: none !important; }
+.breadcrumb>li {text-shadow:0 0px 0; color:#8997b0; font-family: 'Helvetica', sans-serif; }
+.list_container a {color: #8997b0; font-family: 'Helvetica', sans-serif; border: 0; text-shadow: none !important; }
 .item_icon {color: #3572C6;}
 .item_buttons .kernel-name {
     color: #3572C6;
@@ -55,7 +55,6 @@ div.list_item:hover {
 /* PANELS // LISTS // DROPDOWN MENUS*/
 .list_container > div {
     border-bottom: 1px solid rgba(53, 87, 120, 0.55);
-    font-size: 12pt;
 }
 .panel-default {
     border-color: rgba(53, 87, 120, 0.55);
@@ -85,7 +84,6 @@ div.list_item:hover {
     box-shadow: none;
     padding: none;
     list-style: outside none none;
-    font-size: 12pt;
     text-align: left;
     vertical-align: center;
 }
@@ -99,7 +97,6 @@ div.list_item:hover {
 .dropdown-header {
     display: block;
     padding: 0px 10px;
-    font-size: 12pt;
     line-height: 1.5;
     color: #8997b0;
     text-decoration: underline;
@@ -107,7 +104,6 @@ div.list_item:hover {
     white-space: nowrap;
 }
 .dropdown-menu > li > a {
-    font-size: 12pt;
     border: 0px solid #39414F;
     display: block;
     padding: none;
@@ -121,7 +117,6 @@ div.list_item:hover {
     background: #39414F;
 }
 .dropdown-menu > li > a:hover {
-    font-size: 12pt;
     background-clip: padding-box;
     border: 0px solid rgba(53, 87, 120, 0.90);
     color: #eeeeee;
@@ -165,14 +160,12 @@ div.list_item:hover {
     color: #2c85f7;
 }
 .rendered_html pre, .rendered_html code {
-    font-size: 12pt;
     color: #8997b0;
     line-height: 100%;
     background: #303845;
 }
 body {
     font-family: "Helvetica", Helvetica, Arial, sans-serif;
-    font-size: 12pt;
     line-height: 1.42857;
     color: #8997b0;
 }
@@ -184,7 +177,6 @@ body {
 #kernel_indicator .kernel_indicator_name {
     padding-left: 5px;
     padding-right: 5px;
-    font-size: 13pt;
 }
 #modal_indicator {
     float: right !important;
@@ -241,7 +233,6 @@ div.output_html {color: #1e2429;}
 }
 .navbar-default .navbar-nav > li > a {
     color: #8997b0;
-    font-size: 14pt;
 }
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
     color: #ffffff;
@@ -255,7 +246,6 @@ div.output_html {color: #1e2429;}
     color: #8997b0;
     background: transparent;
     background-color: transparent;
-    font-size: 12pt;
     font-weight: normal;
     border: 0 none !important;
     box-shadow: none !important;
@@ -267,7 +257,6 @@ div.output_html {color: #1e2429;}
     color: #8997b0;
     background: transparent;
     background-color: transparent;
-    font-size: 11pt;
     font-weight: normal;
     border: 0 none !important;
     box-shadow: none !important;
@@ -355,7 +344,6 @@ button.close {
 }
 .close {
     float: right;
-    font-size: 22px;
     font-weight: bold;
     line-height: 1;
     color: #3572C6;
@@ -372,7 +360,6 @@ button.close {
     width: 100%;
     height: 32px;
     padding: 6px 12px;
-    font-size: 13pt;
     line-height: 1.6;
     color: #6ea3d4;
     background-color: #303845;
@@ -423,7 +410,7 @@ div.output_stderr pre {color: #D0D4E6;}
 .cm-s-ipython.CodeMirror {background: #303845; color: #D0D4E6;}
 .cm-s-ipython div.CodeMirror-selected {background: #3C4555 !important;}
 .cm-s-ipython .CodeMirror-gutters {background: #39414F; border: 0px; border-radius:0px;}
-.cm-s-ipython .CodeMirror-linenumber {color: #5A647B !important; font-size: 11pt;}
+.cm-s-ipython .CodeMirror-linenumber {color: #5A647B !important; }
 .cm-s-ipython .CodeMirror-cursor {border-left: 2px solid #0095ff !important;}
 .cm-s-ipython span.cm-comment {color: #667FB1; font-style: italic !important;}
 .cm-s-ipython span.cm-atom {color: #CAA6EC;}
@@ -452,7 +439,7 @@ div.output_stderr pre {color: #D0D4E6;}
 /* Set CodeCell font-size*/
 /*div.CodeMirror pre {font-size: 11pt !important;}*/
 div.CodeMirror pre {line-height: 1.5 !important;}
-div.CodeMirror pre {font-family: 'Hack', monospace; font-size: 11pt;}
+div.CodeMirror pre {font-family: 'Hack', monospace; }
 
 div.CodeMirror span.CodeMirror-matchingbracket { color: #ffffff; background-color: rgb(53, 108, 180) !important ; height: 120%; line-height: 1.5 !important; padding-top: 1px;}
 div.CodeMirror span.CodeMirror-nonmatchingbracket { color: #ffffff; background: rgba(191, 97, 106, .5) !important ; height: 120%; line-height: 1.5 !important; padding-top: 1px;}
@@ -470,7 +457,6 @@ div.prompt {
     text-align: left;
     line-height: 1.21429em;
     min-width: 11ex;
-    font-size: 9.5pt;
 }
 div.input_area {
     margin-bottom: 0px;
@@ -482,7 +468,6 @@ div.prompt.input_prompt {
     font-family: 'Hack', monospace;
     border-right: 2px solid rgba(53, 108, 180, .4);
     font-weight: bold;
-    font-size: 9.5pt;
     color: #5A647B;
     background-color: #303845;
     width: 1em;
@@ -494,7 +479,6 @@ div.prompt.output_prompt {
     font-weight: bold;
     background-color: #39414F;
     color: #39414F;
-    font-size: 9.5pt;
     width: 1em;
     margin-bottom: 8px;
     padding-top: 1em;
@@ -503,7 +487,6 @@ div.prompt.output_prompt {
 div.out_prompt_overlay.prompt {
     font-family: 'Hack', monospace;
     font-weight: bold;
-    font-size: 9.5pt;
     width: 1em;
     margin-bottom: 8px;
     background-color: #39414F;
@@ -514,7 +497,6 @@ div.out_prompt_overlay.prompt {
 div.out_prompt_overlay.prompt:hover {
     font-family: 'Hack', monospace;
     font-weight: bold;
-    font-size: 9.5pt;
     width: 1em;
     border-radius: 4px;
     margin-bottom: 8px;
@@ -540,7 +522,6 @@ div.output_subarea.output_text.output_stream.output_stdout,div.output_subarea.ou
 }
 div.output_area pre {
     color: #CFD2D9;
-    font-size: 10pt;
 }
 div.output_subarea {
     overflow-x: auto;
