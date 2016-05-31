@@ -43,6 +43,6 @@ for fn_py in glob("*/*.py"):
 
         code_js = py2js(code_py, inline_stdlib=True)
 
-        with open(fn_js, "w") as f:
-            f.write(wrap_code % code_js)
+        with open(fn_js, "wb") as f:
+            f.write((wrap_code % code_js).encode('utf-8'))
     
