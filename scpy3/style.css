@@ -17,3 +17,24 @@ div.code_cell div.input_area{
 .MathJax span{
     border-left-width: 0px !important;b
 }
+
+pre.scpy3-output{
+    padding-left: 20px;
+    border-left: 2px solid rgba(184, 184, 184, 0.40);
+}
+
+div.scpy3-info-box {
+    margin-left:50px;
+    margin-right:50px;
+    border-radius: 5px;
+    border: 2px #ccc solid;
+    padding:10px;
+}
+
+div.scpy3-info-box blockquote{
+    border-bottom: 1px #ccc solid;
+    font-weight: bold;
+    border-left: none;
+    margin: 0px;
+    font-size: 110%;
+}

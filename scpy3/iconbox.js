@@ -52,23 +52,28 @@ block_types = {"TIP": "fa-lightbulb-o", "WARNING": "fa-warning", "LINK": "fa-lin
 load = function (Jupyter, require) {
     var format_block, main, on_create_cell;
     format_block = (function (cell, evt) {
-        var block, blockquote, content, mark, node, td_first;
+        var content, el, first_output, mark, output, td_first, wrap;
         cell = evt.cell;
         if ((!_pyfunc_equals(cell.cell_type, "markdown"))) {
             return null;
         }
-        block = jQuery(cell.get_rendered());
-        if ((_pyfunc_equals(block.prop("tagName"), "BLOCKQUOTE"))) {
-            mark = _pymeth_find.call(block, "p strong").text();
-            if (_pyfunc_truthy(_pyfunc_contains(mark, block_types))) {
-                node = _pymeth_find.call(cell.element, "div.text_cell_render");
-                content = _pymeth_find.call(node, "p:not(:first)");
-                blockquote = _pymeth_find.call(cell.element, "blockquote");
-                blockquote.addClass("icon_box");
-                blockquote.html("<table class=\"icon_box\"><tr><td class=\"first-column\"></td><td></td></tr></table>");
-                td_first = _pymeth_find.call(cell.element, "td:first");
+        el = cell.element;
+        output = _pymeth_find.call(el, "div.text_cell_render");
+        first_output = output.children();
+        if ((_pyfunc_equals(first_output.prop("tagName"), "BLOCKQUOTE"))) {
+            mark = _pymeth_find.call(first_output, "p strong").text();
+            console.log(mark);
+            if ((_pyfunc_equals(mark, "") && ((!_pyfunc_equals(first_output.attr("class"), "icon_box"))))) {
+                wrap = jQuery("<div/>").addClass("scpy3-info-box");
+                wrap.html(cell.get_rendered());
+                output.html(wrap);
+            } else if (_pyfunc_truthy(_pyfunc_contains(mark, block_types))) {
+                content = _pymeth_find.call(output, "p:not(:first)");
+                first_output.addClass("icon_box");
+                first_output.html("<table class=\"icon_box\"><tr><td class=\"first-column\"></td><td></td></tr></table>");
+                td_first = _pymeth_find.call(first_output, "td:first");
                 td_first.html("<div class=\"fa large_font " + block_types[mark] + "\"></div>");
-                _pymeth_append.call(_pymeth_find.call(cell.element, "td:last"), content);
+                _pymeth_append.call(_pymeth_find.call(first_output, "td:last"), content);
             }
         }
         return null;
@@ -103,7 +108,7 @@ load = function (Jupyter, require) {
         for (dummy2_iter = 0; dummy2_iter < dummy1_sequence.length; dummy2_iter += 1) {
             cell = dummy1_sequence[dummy2_iter];
             cell.events.on("rendered.MarkdownCell", format_block);
-            cell.events.trigger("rendered.MarkdownCell", {"cell": cell});
+            format_block(cell, {"cell": cell});
         }
         return null;
     }).bind(this);

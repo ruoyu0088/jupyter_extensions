@@ -12,18 +12,23 @@ def load(Jupyter, require):
         cell = evt.cell
         if cell.cell_type != 'markdown':
             return
-        block = jQuery(cell.get_rendered())
-        if block.prop('tagName') == 'BLOCKQUOTE':
-            mark = block.find('p strong').text()
-            if mark in block_types:
-                node = cell.element.find('div.text_cell_render')
-                content = node.find('p:not(:first)')
-                blockquote = cell.element.find('blockquote')
-                blockquote.addClass('icon_box')
-                blockquote.html('<table class="icon_box"><tr><td class="first-column"></td><td></td></tr></table>')
-                td_first = cell.element.find('td:first')
+        el = cell.element
+        output = el.find('div.text_cell_render')
+        first_output = output.children()
+        if first_output.prop('tagName') == 'BLOCKQUOTE':
+            mark = first_output.find('p strong').text()
+            console.log(mark)
+            if mark == "" and first_output.attr('class') != 'icon_box':
+                wrap = jQuery('<div/>').addClass('scpy3-info-box')
+                wrap.html(cell.get_rendered())
+                output.html(wrap)
+            elif mark in block_types:
+                content = output.find('p:not(:first)')
+                first_output.addClass('icon_box')
+                first_output.html('<table class="icon_box"><tr><td class="first-column"></td><td></td></tr></table>')
+                td_first = first_output.find('td:first')
                 td_first.html('<div class="fa large_font %s"></div>' % block_types[mark])
-                cell.element.find('td:last').append(content)
+                first_output.find('td:last').append(content)
                 
     
     def on_create_cell(notebook, evt):
@@ -38,7 +43,8 @@ def load(Jupyter, require):
         jQuery([Jupyter.events]).on('create.Cell', on_create_cell)
         for cell in Jupyter.notebook.get_cells():
             cell.events.on('rendered.MarkdownCell', format_block)
-            cell.events.trigger('rendered.MarkdownCell', {'cell': cell})
+            format_block(cell, {'cell': cell})
+            #cell.events.trigger('rendered.MarkdownCell', {'cell': cell})
 
     return {"load_ipython_extension": main}
 
