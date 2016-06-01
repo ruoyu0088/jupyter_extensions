@@ -5,7 +5,7 @@ div.cell-bookmark:after{
     width: 10px;
     height:10px;
     top:8px;
-    right:12px;
+    right:-8px;
     font-size:18px;
     color:#42A5F5;
 }
