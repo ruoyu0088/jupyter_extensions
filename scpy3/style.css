@@ -14,9 +14,7 @@ div.code_cell div.input_area{
     Background-color: #f0f0f0 !important;
 }
 
-.MathJax span{
-    border-left-width: 0px !important;b
-}
+.MathJax nobr>span.math>span{border-left-width:0 !important}
 
 pre.scpy3-output{
     padding-left: 20px;
