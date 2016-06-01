@@ -1,0 +1,16 @@
+div.cell-bookmark:after{
+    content:'\f02e';
+    font:normal normal normal 14px/1 FontAwesome;
+    position: absolute;
+    width: 10px;
+    height:10px;
+    top:8px;
+    right:12px;
+    font-size:18px;
+    color:#42A5F5;
+}
+
+
+div.cell{
+    position:relative;
+}

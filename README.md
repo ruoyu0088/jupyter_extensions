@@ -25,7 +25,7 @@ where NAME is:
 * maximize: toggle notebook header
 * toc: add table of content
 * run_mdcell: run code in markdown cell and insert result into it
-
+* bookmark: add bookmark to cell
 
 ## Convert code by `convert.py`
 
@@ -181,3 +181,11 @@ This extension collects all running headers in the notebook and display them on 
 Run python code block in markdown cell and insert the output below it:
 
 * `Alt-r`: Run the codes in markdown cell
+
+### bookmark
+
+Add bookmark to cell, and jump to bookmarked cells quickly. Bookmarks are saved in cell's metadata.
+
+* `Alt-b`: Toggle bookmark for current selected cell
+* `Shfit-←`: Jump to previous bookmark
+* `Shfit-→`: Jump to next bookmark
