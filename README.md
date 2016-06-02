@@ -186,6 +186,7 @@ Run python code block in markdown cell and insert the output below it:
 
 Add bookmark to cell, and jump to bookmarked cells quickly. Bookmarks are saved in cell's metadata.
 
-* `Alt-b`: Toggle bookmark for current selected cell
+* `Shift-1`, `Shift-2`, `Shift-3`: Toggle bookmark type for current selected cell
+* `Ctrl-Shift-1`, `Ctrl-Shift-2`, `Ctrl-Shift-3`: run makered cell
 * `Shfit-←`: Jump to previous bookmark
 * `Shfit-→`: Jump to next bookmark
