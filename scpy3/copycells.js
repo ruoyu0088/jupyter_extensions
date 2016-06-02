@@ -53,7 +53,7 @@ var _pymeth_startswith = function (x) { // nargs: 1
 var imports, load;
 imports = ["base/js/namespace", "services/config", "base/js/utils"];
 load = function (Jupyter, configmod, utils) {
-    var base_url, config, copy_config, get_level, main;
+    var base_url, config, copy_config, get_level, main, show_message;
     get_level = (function (cell) {
         var level, text;
         if ((!_pyfunc_equals(cell.cell_type, "markdown"))) {
@@ -67,19 +67,19 @@ load = function (Jupyter, configmod, utils) {
         return 1000;
     }).bind(this);
 
+    show_message = (function (message, wait) {
+        var notification_widget;
+        notification_widget = Jupyter.notification_area.widget("notebook");
+        notification_widget.set_message(message, wait);
+        return null;
+    }).bind(this);
+
     base_url = utils.get_body_data("baseUrl");
     config = new configmod.ConfigSection("scpy3_copycells", {"base_url": base_url});
     config.load();
     copy_config = new configmod.ConfigWithDefaults(config, {"cells": []});
     main = (function () {
-        var action, actions, append_handler, copy_handler, dummy3_sequence, key, km, paste_handler, select_handler, show_mssage;
-        show_mssage = (function (message) {
-            var notification_widget;
-            notification_widget = Jupyter.notification_area.widget("notebook");
-            notification_widget.set_message(message, 2000);
-            return null;
-        }).bind(this);
-
+        var action, actions, append_handler, copy_handler, dummy3_sequence, key, km, paste_handler, select_handler;
         select_handler = (function (event) {
             var cell, current_level, nb;
             nb = Jupyter.notebook;
@@ -106,7 +106,7 @@ load = function (Jupyter, configmod, utils) {
             cells = nb.get_selected_cells();
             json = (function list_comprehenson () {var res = [];var cell, iter0, i0;iter0 = cells;if ((typeof iter0 === "object") && (!Array.isArray(iter0))) {iter0 = Object.keys(iter0);}for (i0=0; i0<iter0.length; i0++) {cell = iter0[i0];{res.push(cell.toJSON());}}return res;}).apply(this);
             copy_config.set("cells", json);
-            show_mssage("" + json.length + " cells copied");
+            show_message("" + json.length + " cells copied");
             return null;
         }).bind(this);
 

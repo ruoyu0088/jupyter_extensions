@@ -3,7 +3,7 @@ imports  = ['base/js/namespace',
         'base/js/utils']
 
 def load(Jupyter, configmod, utils):
-    from .utils import get_level
+    from .utils import get_level, show_message
     
     base_url = utils.get_body_data("baseUrl")
     config = configmod.ConfigSection('scpy3_copycells', {'base_url': base_url})
@@ -12,10 +12,6 @@ def load(Jupyter, configmod, utils):
     copy_config = configmod.ConfigWithDefaults(config, {'cells':[]})
     
     def main():
-        def show_mssage(message):
-            notification_widget = Jupyter.notification_area.widget("notebook")            
-            notification_widget.set_message(message, 2000)
-            
         def select_handler(event):
             nb = Jupyter.notebook
             cell = nb.get_selected_cell()
@@ -35,7 +31,7 @@ def load(Jupyter, configmod, utils):
             cells = nb.get_selected_cells()
             json = [cell.toJSON() for cell in cells]
             copy_config.set('cells', json)
-            show_mssage("%d cells copied" % len(json))
+            show_message("%d cells copied" % len(json))
 
         def paste_handler(event):
             nb = Jupyter.notebook

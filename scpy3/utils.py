@@ -58,4 +58,10 @@ def get_level(cell):
         level = len(text) - len(text.lstrip("#"))
         return level
     return 1000
+
+
+def show_message(message, wait):
+    notification_widget = Jupyter.notification_area.widget("notebook")            
+    notification_widget.set_message(message, wait)
+
     
