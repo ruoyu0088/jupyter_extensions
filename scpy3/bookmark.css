@@ -1,4 +1,4 @@
-div.cell-bookmark:after{
+div.cell-bookmark-1:after{
     content:'\f02e';
     font:normal normal normal 14px/1 FontAwesome;
     position: absolute;
@@ -7,7 +7,32 @@ div.cell-bookmark:after{
     top:8px;
     right:-8px;
     font-size:18px;
-    color:#42A5F5;
+    color:#02c8f0;
+}
+
+div.cell-bookmark-2:after{
+    content:'\f02e';
+    font:normal normal normal 14px/1 FontAwesome;
+    position: absolute;
+    width: 10px;
+    height:10px;
+    top:8px;
+    right:-8px;
+    font-size:18px;
+    color:#fdbf0d;
+}
+
+
+div.cell-bookmark-3:after{
+    content:'\f02e';
+    font:normal normal normal 14px/1 FontAwesome;
+    position: absolute;
+    width: 10px;
+    height:10px;
+    top:8px;
+    right:-8px;
+    font-size:18px;
+    color:#f44545;
 }
 
 
