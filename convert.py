@@ -5,14 +5,44 @@ import re
 import runpy
 import inspect
 import textwrap
+import ast
 from flexx.pyscript import py2js
 
 wrap_code = """(function(){
 %s
 })()"""
 
+
+def get_function_call_dependency(filename):
+    with open(filename) as f:
+        root = ast.parse(f.read())
+
+    calls = {}
+    
+    for node in root.body:
+        if isinstance(node, ast.FunctionDef):
+            calls[node.name] = set()
+            for node2 in ast.walk(node):
+                if isinstance(node2, ast.Call) and isinstance(node2.func, ast.Name):
+                    calls[node.name].add(node2.func.id)
+    return calls
+
+
+def expand_functions(calls, functions):
+    res = set()
+    todo = set(functions)
+    while todo:
+        func = todo.pop()
+        if func in calls:
+            res.add(func)
+            todo.update(calls[func])
+    return list(res)
+
+
 def get_functions(fn, functions):
-    global env
+    calls = get_function_call_dependency(fn)
+    functions = expand_functions(calls, functions)
+    
     env = runpy.run_path(fn)
     for func in functions:
         func_code = inspect.getsource(env[func])
