@@ -73,9 +73,8 @@ default_macros = {
     "source":'> **SOURCE**\n\n> ',
     "warning":'> **WARNING**\n\n> ',
     "question":'> **QUESTION**\n\n> ',
-    "link":'> **LINK**\n\n> \n\n> ',        
- }
-
+    "link":'> **LINK**\n\n> \n\n> '
+}
 ```
 
 To input macros, type a macro name, and then `Alt-m`. If the macro name is ambiguous, add a `$` before the name.
@@ -88,6 +87,7 @@ Copy cells between notebooks.
 * Select the cells and then press `Alt-c` to copy it. 
 * Press `Alt-v` to paste cells in clipboard. 
 * Press `Alt-a` to append selected cells to the clipboard.
+* Press `Alt-Shift-v` to paste a selected cell, this will popup a typeahead form.
 
 ### slice
 
@@ -96,6 +96,8 @@ Quick insert code slice in to current cell:
 * To register a slice: Type some code into a cell, and then press `Alt-i`, input `slice group : slice name` and press the Ok button.
 
 * To insert a slice in to the current cell: Press `Alt-l`. If the current cell is not code type, a new cell will be inserted.
+
+* To remove a slice: Press `Alt-l`, select the slice and press `Alt-delete`. 
 
 ### iconbox
 
