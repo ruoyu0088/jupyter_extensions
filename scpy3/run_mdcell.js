@@ -69,14 +69,29 @@ var _pymeth_replace = function (s1, s2, count) {  // nargs: 2 3
 var imports, load;
 imports = ["base/js/namespace", "require", "base/js/events"];
 load = function (Jupyter, require, events) {
-    var main, nb, replace, run_md_cell;
+    var main, nb, register_actions, replace, run_md_cell;
+    register_actions = (function (actions, target) {
+        var action, dummy1_sequence, key, km;
+        target = (target === undefined) ? "command": target;
+        km = Jupyter.keyboard_manager;
+        dummy1_sequence = actions;
+        for (key in dummy1_sequence) {
+            if (!dummy1_sequence.hasOwnProperty(key)){ continue; }
+            action = dummy1_sequence[key];
+            key = _pymeth_replace.call(key, "_", "-");
+            km.actions.register(action, key, "scpy3");
+            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
+        }
+        return null;
+    }).bind(this);
+
     replace = (function (src, pattern, target) {
         return String.prototype.replace.bind(src)(pattern, target)
     }).bind(this);
 
     nb = Jupyter.notebook;
     run_md_cell = (function () {
-        var callbacks, cell, code, dummy1_sequence, dummy2_iter, execute_reply_callback, md_code, options, output_callback, outputs, pattern, src;
+        var callbacks, cell, code, dummy2_sequence, dummy3_iter, execute_reply_callback, md_code, options, output_callback, outputs, pattern, src;
         cell = nb.get_selected_cell();
         if ((!_pyfunc_equals(cell.cell_type, "markdown"))) {
             return null;
@@ -117,12 +132,12 @@ load = function (Jupyter, require, events) {
 
         callbacks = {"shell": {"reply": execute_reply_callback}, "iopub": {"output": output_callback}};
         options = {"allow_stdin": false, "silent": false};
-        dummy1_sequence = _pymeth_find.call(cell.element, "code.language-python").toArray();
-        if ((typeof dummy1_sequence === "object") && (!Array.isArray(dummy1_sequence))) {
-            dummy1_sequence = Object.keys(dummy1_sequence);
+        dummy2_sequence = _pymeth_find.call(cell.element, "code.language-python").toArray();
+        if ((typeof dummy2_sequence === "object") && (!Array.isArray(dummy2_sequence))) {
+            dummy2_sequence = Object.keys(dummy2_sequence);
         }
-        for (dummy2_iter = 0; dummy2_iter < dummy1_sequence.length; dummy2_iter += 1) {
-            code = dummy1_sequence[dummy2_iter];
+        for (dummy3_iter = 0; dummy3_iter < dummy2_sequence.length; dummy3_iter += 1) {
+            code = dummy2_sequence[dummy3_iter];
             src = jQuery(code).text();
             outputs = [];
             nb.kernel.execute(src, callbacks, options);
@@ -131,16 +146,9 @@ load = function (Jupyter, require, events) {
     }).bind(this);
 
     main = (function () {
-        var action, actions, dummy3_sequence, key, km;
-        actions = {run_md_cell:{"help": "run code in markdown cell", "icon": "fa-recycle", "help_index": "", "key": "Alt-r", "handler": run_md_cell}};
-        km = Jupyter.keyboard_manager;
-        dummy3_sequence = actions;
-        for (key in dummy3_sequence) {
-            if (!dummy3_sequence.hasOwnProperty(key)){ continue; }
-            action = dummy3_sequence[key];
-            km.actions.register(action, key, "scpy3");
-            km.command_shortcuts.add_shortcut(action.key, "scpy3:" + key);
-        }
+        var actions;
+        actions = {run_code_block_in_markdown_cell:{"help": "run code block in markdown cell", "key": "Alt-r", "icon": "fa-play-circle-o", "handler": run_md_cell}};
+        register_actions(actions);
         return null;
     }).bind(this);
 

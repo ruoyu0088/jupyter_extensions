@@ -1,7 +1,7 @@
 imports = ['base/js/namespace', 'require', 'base/js/events']
 
 def load(Jupyter, require, events):
-    from .utils import replace
+    from .utils import replace, register_actions
     nb = Jupyter.notebook
 
     def run_md_cell():
@@ -50,20 +50,15 @@ def load(Jupyter, require, events):
     
     def main():
         actions = dict(
-            run_md_cell = {
-                'help': 'run code in markdown cell',
-                'icon': 'fa-recycle',
-                'help_index': '',
+            run_code_block_in_markdown_cell = {
+                'help': 'run code block in markdown cell',
                 'key': 'Alt-r',
+                'icon': 'fa-play-circle-o',
                 'handler': run_md_cell
             },
         )
-        
-        km = Jupyter.keyboard_manager
-        for key, action in actions.items():
-            km.actions.register(action, key, 'scpy3')
-            km.command_shortcuts.add_shortcut(action.key, 'scpy3:' + key)
-        
+
+        register_actions(actions)
     
     return {"load_ipython_extension": main}
 
