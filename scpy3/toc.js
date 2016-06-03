@@ -48,6 +48,22 @@ var _pymeth_find = function (x, start, stop) { // nargs: 1 2 3
     if (i >= 0) return i + start;
     return -1;
 };
+var _pymeth_replace = function (s1, s2, count) {  // nargs: 2 3
+    if (this.constructor !== String) return this.replace.apply(this, arguments);
+    var i = 0, i2, parts = [];
+    count = (count === undefined) ? 1e20 : count;
+    while (count > 0) {
+        i2 = this.indexOf(s1, i);
+        if (i2 >= 0) {
+            parts.push(this.slice(i, i2));
+            parts.push(s2);
+            i = i2 + s1.length;
+            count -= 1;
+        } else break;
+    }
+    parts.push(this.slice(i));
+    return parts.join('');
+};
 var _pymeth_startswith = function (x) { // nargs: 1
     if (this.constructor !== String) return this.startswith.apply(this, arguments);
     return this.indexOf(x) == 0;
@@ -55,7 +71,7 @@ var _pymeth_startswith = function (x) { // nargs: 1
 var imports, load;
 imports = ["base/js/namespace", "base/js/events", "require", "./jquery.side.menu"];
 load = function (Jupyter, events, require, _) {
-    var goto_head, handle_resize, is_head_cell, load_css, main, mark_head, nb, next_head, prev_head, remove_last_ch, toc, toggle_toc, update_marker, update_toc, update_toc_top;
+    var goto_head, handle_resize, is_head_cell, load_css, main, mark_head, nb, next_head, prev_head, register_actions, remove_last_ch, toc, toggle_toc, update_marker, update_toc, update_toc_top;
     load_css = (function (name) {
         var link;
         link = document.createElement("link");
@@ -63,6 +79,21 @@ load = function (Jupyter, events, require, _) {
         link.rel = "stylesheet";
         link.href = require.toUrl(name);
         (document.getElementsByTagName("head")[0]).appendChild(link);
+        return null;
+    }).bind(this);
+
+    register_actions = (function (actions, target) {
+        var action, dummy1_sequence, key, km;
+        target = (target === undefined) ? "command": target;
+        km = Jupyter.keyboard_manager;
+        dummy1_sequence = actions;
+        for (key in dummy1_sequence) {
+            if (!dummy1_sequence.hasOwnProperty(key)){ continue; }
+            action = dummy1_sequence[key];
+            key = _pymeth_replace.call(key, "_", "-");
+            km.actions.register(action, key, "scpy3");
+            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
+        }
         return null;
     }).bind(this);
 
@@ -195,16 +226,9 @@ load = function (Jupyter, events, require, _) {
     }).bind(this);
 
     main = (function () {
-        var action, actions, dummy1_sequence, km, name;
-        actions = {toggle_toc:{"help": "", "icon": "", "key": "Alt-t", "handler": toggle_toc}, prev_head:{"handler": prev_head, "key": "Ctrl-left"}, next_head:{"handler": next_head, "key": "Ctrl-right"}};
-        km = Jupyter.keyboard_manager;
-        dummy1_sequence = actions;
-        for (name in dummy1_sequence) {
-            if (!dummy1_sequence.hasOwnProperty(name)){ continue; }
-            action = dummy1_sequence[name];
-            km.actions.register(action, name, "scpy3");
-            km.command_shortcuts.add_shortcut(action.key, "scpy3:" + name);
-        }
+        var actions;
+        actions = {toggle_table_of_contents:{"help": "toggle table of contents", "icon": "fa-list-alt", "key": "Alt-t", "handler": toggle_toc}, jump_to_previous_header:{"help": "jump to previous header", "icon": "fa-arrow-circle-left", "handler": prev_head, "key": "Ctrl-left"}, jump_to_next_header:{"help": "jump to next header", "icon": "fa-arrow-circle-right", "handler": next_head, "key": "Ctrl-right"}};
+        register_actions(actions);
         return null;
     }).bind(this);
 

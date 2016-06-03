@@ -51,6 +51,28 @@ load = function (Jupyter, require, events) {
         return null;
     }).bind(this);
 
+    get_metadata = (function (target, key) {
+        var meta;
+        meta = target.metadata;
+        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
+            return null;
+        }
+        if (_pyfunc_truthy(!_pyfunc_contains(key, meta.scpy3))) {
+            return null;
+        }
+        return meta.scpy3[key];
+    }).bind(this);
+
+    set_metadata = (function (target, key, value) {
+        var meta;
+        meta = target.metadata;
+        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
+            meta.scpy3 = {};
+        }
+        meta.scpy3[key] = value;
+        return null;
+    }).bind(this);
+
     unload_css = (function (names) {
         var dummy1_sequence, dummy2_iter, dummy3_sequence, dummy4_sequence, dummy5_iter, el, href, name, to_remove;
         to_remove = [];
@@ -79,28 +101,6 @@ load = function (Jupyter, require, events) {
             el = dummy4_sequence[dummy5_iter];
             el.parentNode.removeChild(el);
         }
-        return null;
-    }).bind(this);
-
-    get_metadata = (function (target, key) {
-        var meta;
-        meta = target.metadata;
-        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
-            return null;
-        }
-        if (_pyfunc_truthy(!_pyfunc_contains(key, meta.scpy3))) {
-            return null;
-        }
-        return meta.scpy3[key];
-    }).bind(this);
-
-    set_metadata = (function (target, key, value) {
-        var meta;
-        meta = target.metadata;
-        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
-            meta.scpy3 = {};
-        }
-        meta.scpy3[key] = value;
         return null;
     }).bind(this);
 

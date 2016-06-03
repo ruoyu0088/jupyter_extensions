@@ -138,3 +138,10 @@ def config_save(config):
         'data': JSON.stringify(config.data),
         'contentType': 'application/json'
     })
+
+def register_actions(actions, target="command"):
+    km = Jupyter.keyboard_manager
+    for key, action in actions.items():
+        key = key.replace('_', '-')
+        km.actions.register(action, key, 'scpy3')
+        km[target + "_shortcuts"].add_shortcut(action.key, 'scpy3:' + key)

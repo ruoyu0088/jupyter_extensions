@@ -3,7 +3,7 @@ imports  = ['base/js/namespace',
         'base/js/utils']
 
 def load(Jupyter, configmod, utils):
-    from .utils import get_level, show_message, typeahead_form
+    from .utils import get_level, show_message, typeahead_form, register_actions
     
     base_url = utils.get_body_data("baseUrl")
     config = configmod.ConfigSection('scpy3_copycells', {'base_url': base_url})
@@ -99,44 +99,38 @@ def load(Jupyter, configmod, utils):
             copy_config.get('cells').then(show_clipboard)
             
         actions = dict(
-            select_section_cells = {
-                'help': ' selected section cells',
-                'icon': 'fa-recycle',
-                'help_index': '',
+            select_all_cells_in_current_section = {
+                'help': 'select all cells in current section',
+                'icon': 'fa-header',
                 'key': 'Alt-s',
                 'handler': select_section_cells
             },
-            copy_cells = {
-                'help': ' copy selected  cells',
-                'icon': 'fa-recycle',
-                'help_index': '',
+            copy_selected_cells_to_clipboard = {
+                'help': 'copy selected cells to clipboard',
+                'icon': 'fa-files-o',
                 'key': 'Alt-c',
                 'handler': copy_cells
             },
-            paste_cells = {
-                'help': ' paste cells',
-                'icon': 'fa-recycle',
-                'help_index': '',
+            paste_cells_from_clipboard = {
+                'help': 'paste cells from clipboard',
+                'icon': 'fa-clipboard',
                 'key': 'Alt-v',
                 'handler': paste_cells
             },
-            paste_selected_cell = {
+            paste_selected_cell_from_clipboard = {
+                'help': 'paste selected cell from clipboard',
                 'key': 'Alt-Shift-v',
                 'handler': paste_selected_cell
             },
-            append_cells = {
-                'help': ' append cells',
-                'icon': 'fa-recycle',
-                'help_index': '',
+            append_selected_cells_to_clipboard = {
+                'help': 'append selected cells to clipboard',
+                'icon': 'fa-plus-square',
                 'key': 'Alt-a',
                 'handler': append_cells
             }
         )
-        
-        km = Jupyter.keyboard_manager
-        for key, action in actions.items():
-            km.actions.register(action, key, 'scpy3')
-            km.command_shortcuts.add_shortcut(action.key, 'scpy3:' + key)
+
+        register_actions(actions)
         
     return {"load_ipython_extension": main}
 

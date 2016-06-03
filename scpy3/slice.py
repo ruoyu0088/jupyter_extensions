@@ -6,7 +6,7 @@ imports = ['base/js/namespace',
 
 
 def load(Jupyter, dialog, configmod, utils, require):
-    from .utils import T, typeahead_form, show_dialog, show_message, config_save
+    from .utils import T, typeahead_form, show_dialog, show_message, config_save, register_actions
 
     config = configmod.ConfigSection('scpy3_slices',
                                      {base_url: utils.get_body_data("baseUrl")});
@@ -154,24 +154,22 @@ def load(Jupyter, dialog, configmod, utils, require):
             slice_config.get('slices').then(show_search)
             
         actions = dict(
-            save_cell_as_slice = {
-                'help': '',
-                'icon': '',
+            save_current_cell_as_slice = {
+                'help': 'save current cell as slice',
+                'icon': 'fa-star',
                 'key': 'Alt-i',
                 handler: save_cell_as_slice
             },
 
-            load_slice = {
-                'help': '',
-                'icon': '',
+            insert_a_slice = {
+                'help': 'insert a slice',
+                'icon': 'fa-book',
                 'key': 'Alt-l',
                 handler: load_slice
             }
         )
 
-        for name, action in actions.items():
-            km.actions.register(action, name, 'scpy3')
-            km.command_shortcuts.add_shortcut(action.key, 'scpy3:' + name)
+        register_actions(actions)
 
     return {"load_ipython_extension": main}
 

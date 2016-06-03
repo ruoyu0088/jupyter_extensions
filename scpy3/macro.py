@@ -26,6 +26,8 @@ def text_to_macros(text):
     return JSON.parse(text)
     
 def load(Jupyter, dialog, configmod, utils):
+    from .utils import register_actions
+    
     base_url = utils.get_body_data("baseUrl")
     config = configmod.ConfigSection('scpy3_macros', {'base_url': base_url})
     config.load()
@@ -108,12 +110,15 @@ def load(Jupyter, dialog, configmod, utils):
         return True
 
     def main():
-        data = {
-            "help": 'macro',
-            "help_index": 'aa',
-            "handler": lambda event: key_handler(Jupyter, event)
-        }
-        Jupyter.keyboard_manager.edit_shortcuts.add_shortcut("Alt-m", data, True)
+        actions = dict(
+            expand_macro = {
+                "help": 'expand macro',
+                "key": 'Alt-m',
+                "handler": lambda event: key_handler(Jupyter, event)
+            }
+        )
+
+        register_actions(actions, "edit")
 
     return {"load_ipython_extension": main}
 

@@ -42,6 +42,22 @@ var _pymeth_get = function (key, d) { // nargs: 1 2
     else if (d !== undefined) {return d;}
     else {return null;}
 };
+var _pymeth_replace = function (s1, s2, count) {  // nargs: 2 3
+    if (this.constructor !== String) return this.replace.apply(this, arguments);
+    var i = 0, i2, parts = [];
+    count = (count === undefined) ? 1e20 : count;
+    while (count > 0) {
+        i2 = this.indexOf(s1, i);
+        if (i2 >= 0) {
+            parts.push(this.slice(i, i2));
+            parts.push(s2);
+            i = i2 + s1.length;
+            count -= 1;
+        } else break;
+    }
+    parts.push(this.slice(i));
+    return parts.join('');
+};
 var default_macros, imports, load, macros_to_text, text_to_macros;
 default_macros = {"1": "\u2776", "2": "\u2777", "3": "\u2778", "4": "\u2779", "5": "\u277a", "6": "\u277b", "7": "\u277c", "8": "\u277d", "9": "\u277e", "fig": "![](/files/images/.png \"\")", "next": "`ref:fig-next`", "prev": "`ref:fig-prev`", "tip": "> **TIP**\n\n> ", "source": "> **SOURCE**\n\n> ", "warning": "> **WARNING**\n\n> ", "question": "> **QUESTION**\n\n> ", "link": "> **LINK**\n\n> \n\n> "};
 macros_to_text = function (macros) {
@@ -53,7 +69,22 @@ text_to_macros = function (text) {
 };
 
 load = function (Jupyter, dialog, configmod, utils) {
-    var base_url, config, key_handler, macros_config, main, on_ok, show_macro_box;
+    var base_url, config, key_handler, macros_config, main, on_ok, register_actions, show_macro_box;
+    register_actions = (function (actions, target) {
+        var action, dummy1_sequence, key, km;
+        target = (target === undefined) ? "command": target;
+        km = Jupyter.keyboard_manager;
+        dummy1_sequence = actions;
+        for (key in dummy1_sequence) {
+            if (!dummy1_sequence.hasOwnProperty(key)){ continue; }
+            action = dummy1_sequence[key];
+            key = _pymeth_replace.call(key, "_", "-");
+            km.actions.register(action, key, "scpy3");
+            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
+        }
+        return null;
+    }).bind(this);
+
     base_url = utils.get_body_data("baseUrl");
     config = new configmod.ConfigSection("scpy3_macros", {"base_url": base_url});
     config.load();
@@ -134,9 +165,9 @@ load = function (Jupyter, dialog, configmod, utils) {
     }).bind(this);
 
     main = (function () {
-        var data;
-        data = {"help": "macro", "help_index": "aa", "handler": (function (event) {return key_handler(Jupyter, event);}).bind(this)};
-        Jupyter.keyboard_manager.edit_shortcuts.add_shortcut("Alt-m", data, true);
+        var actions;
+        actions = {expand_macro:({"help": "expand macro", "key": "Alt-m", "handler": (function (event) {return key_handler(Jupyter, event);}).bind(this)})};
+        register_actions(actions, "edit");
         return null;
     }).bind(this);
 

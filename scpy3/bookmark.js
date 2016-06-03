@@ -37,11 +37,27 @@ var _pyfunc_truthy = function (v) {
     else if (v.byteLength !== undefined) {return v.byteLength ? v : false;} 
     else {return Object.getOwnPropertyNames(v).length ? v : false;}
 };
+var _pymeth_replace = function (s1, s2, count) {  // nargs: 2 3
+    if (this.constructor !== String) return this.replace.apply(this, arguments);
+    var i = 0, i2, parts = [];
+    count = (count === undefined) ? 1e20 : count;
+    while (count > 0) {
+        i2 = this.indexOf(s1, i);
+        if (i2 >= 0) {
+            parts.push(this.slice(i, i2));
+            parts.push(s2);
+            i = i2 + s1.length;
+            count -= 1;
+        } else break;
+    }
+    parts.push(this.slice(i));
+    return parts.join('');
+};
 var N, imports, load;
 imports = ["base/js/namespace", "base/js/events", "require"];
 N = 3;
 load = function (Jupyter, events, require) {
-    var load_css, main, nb, next_bookmark, prev_bookmark, run_bookmark, search_bookmark, show_message, toggle_bookmark;
+    var load_css, main, nb, next_bookmark, prev_bookmark, register_actions, run_bookmark, search_bookmark, show_message, toggle_bookmark;
     load_css = (function (name) {
         var link;
         link = document.createElement("link");
@@ -49,6 +65,21 @@ load = function (Jupyter, events, require) {
         link.rel = "stylesheet";
         link.href = require.toUrl(name);
         (document.getElementsByTagName("head")[0]).appendChild(link);
+        return null;
+    }).bind(this);
+
+    register_actions = (function (actions, target) {
+        var action, dummy1_sequence, key, km;
+        target = (target === undefined) ? "command": target;
+        km = Jupyter.keyboard_manager;
+        dummy1_sequence = actions;
+        for (key in dummy1_sequence) {
+            if (!dummy1_sequence.hasOwnProperty(key)){ continue; }
+            action = dummy1_sequence[key];
+            key = _pymeth_replace.call(key, "_", "-");
+            km.actions.register(action, key, "scpy3");
+            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
+        }
         return null;
     }).bind(this);
 
@@ -80,15 +111,15 @@ load = function (Jupyter, events, require) {
     }).bind(this);
 
     run_bookmark = (function (mark_id) {
-        var cell, cells, count, dummy1_sequence, dummy2_iter;
+        var cell, cells, count, dummy2_sequence, dummy3_iter;
         cells = nb.get_cells();
         count = 0;
-        dummy1_sequence = cells;
-        if ((typeof dummy1_sequence === "object") && (!Array.isArray(dummy1_sequence))) {
-            dummy1_sequence = Object.keys(dummy1_sequence);
+        dummy2_sequence = cells;
+        if ((typeof dummy2_sequence === "object") && (!Array.isArray(dummy2_sequence))) {
+            dummy2_sequence = Object.keys(dummy2_sequence);
         }
-        for (dummy2_iter = 0; dummy2_iter < dummy1_sequence.length; dummy2_iter += 1) {
-            cell = dummy1_sequence[dummy2_iter];
+        for (dummy3_iter = 0; dummy3_iter < dummy2_sequence.length; dummy3_iter += 1) {
+            cell = dummy2_sequence[dummy3_iter];
             if ((_pyfunc_equals(cell.cell_type, "code") && _pyfunc_equals(cell.metadata.scpy3_bookmark, mark_id))) {
                 cell.execute();
                 count=_pyfunc_add(count, 1)
@@ -99,7 +130,7 @@ load = function (Jupyter, events, require) {
     }).bind(this);
 
     search_bookmark = (function (step) {
-        var cell, cells, dummy3_else, dummy4_sequence, dummy5_iter, i, indexes, start;
+        var cell, cells, dummy4_else, dummy5_sequence, dummy6_iter, i, indexes, start;
         console.log("next_bookmark");
         cells = nb.get_cells();
         start = nb.get_selected_index();
@@ -108,20 +139,20 @@ load = function (Jupyter, events, require) {
         } else {
             indexes = _pyfunc_add((_pyfunc_range((start - 1), (-1), (-1))), (_pyfunc_range((cells.length - 1), start, (-1))));
         }
-        dummy3_else = true;
-        dummy4_sequence = indexes;
-        if ((typeof dummy4_sequence === "object") && (!Array.isArray(dummy4_sequence))) {
-            dummy4_sequence = Object.keys(dummy4_sequence);
+        dummy4_else = true;
+        dummy5_sequence = indexes;
+        if ((typeof dummy5_sequence === "object") && (!Array.isArray(dummy5_sequence))) {
+            dummy5_sequence = Object.keys(dummy5_sequence);
         }
-        for (dummy5_iter = 0; dummy5_iter < dummy4_sequence.length; dummy5_iter += 1) {
-            i = dummy4_sequence[dummy5_iter];
+        for (dummy6_iter = 0; dummy6_iter < dummy5_sequence.length; dummy6_iter += 1) {
+            i = dummy5_sequence[dummy6_iter];
             cell = cells[i];
             if (_pyfunc_truthy(cell.metadata.scpy3_bookmark)) {
                 nb.select(i);
                 nb.scroll_to_cell(i);
-                dummy3_else = false; break;
+                dummy4_else = false; break;
             }
-        } if (dummy3_else) {
+        } if (dummy4_else) {
             show_message("No bookmark", 2000);
         }
         return null;
@@ -138,16 +169,9 @@ load = function (Jupyter, events, require) {
     }).bind(this);
 
     main = (function () {
-        var action, actions, cell, dummy6_sequence, dummy7_sequence, dummy8_iter, km, name;
-        actions = {toggle_bookmark_1:({"help": "", "icon": "", "key": "Shift-1", handler: (function () {return toggle_bookmark(1);}).bind(this)}), toggle_bookmark_2:({"help": "", "icon": "", "key": "Shift-2", handler: (function () {return toggle_bookmark(2);}).bind(this)}), toggle_bookmark_3:({"help": "", "icon": "", "key": "Shift-3", handler: (function () {return toggle_bookmark(3);}).bind(this)}), run_bookmark_1:({"help": "", "icon": "", "key": "Ctrl-Shift-1", handler: (function () {return run_bookmark(1);}).bind(this)}), run_bookmark_2:({"help": "", "icon": "", "key": "Ctrl-Shift-2", handler: (function () {return run_bookmark(2);}).bind(this)}), run_bookmark_3:({"help": "", "icon": "", "key": "Ctrl-Shift-3", handler: (function () {return run_bookmark(3);}).bind(this)}), next_bookmark:{"help": "", "icon": "", "key": "Shift-right", handler: next_bookmark}, prev_bookmark:{"help": "", "icon": "", "key": "Shift-left", handler: prev_bookmark}};
-        km = Jupyter.keyboard_manager;
-        dummy6_sequence = actions;
-        for (name in dummy6_sequence) {
-            if (!dummy6_sequence.hasOwnProperty(name)){ continue; }
-            action = dummy6_sequence[name];
-            km.actions.register(action, name, "scpy3");
-            km.command_shortcuts.add_shortcut(action.key, "scpy3:" + name);
-        }
+        var actions, cell, dummy7_sequence, dummy8_iter;
+        actions = {toggle_bookmark_1:({"help": "toogle bookmark 1", "icon": "fa-bookmark", "key": "Shift-1", handler: (function () {return toggle_bookmark(1);}).bind(this)}), toggle_bookmark_2:({"help": "toggle bookmark 2", "icon": "fa-bookmark", "key": "Shift-2", handler: (function () {return toggle_bookmark(2);}).bind(this)}), toggle_bookmark_3:({"help": "toggle bookmark 3", "icon": "fa-bookmark", "key": "Shift-3", handler: (function () {return toggle_bookmark(3);}).bind(this)}), run_cells_with_bookmark_1:({"help": "run cells with bookmark 1", "icon": "fa-play-circle", "key": "Ctrl-Shift-1", handler: (function () {return run_bookmark(1);}).bind(this)}), run_cells_with_bookmark_2:({"help": "run cells with bookmark 2", "icon": "fa-play-circle", "key": "Ctrl-Shift-2", handler: (function () {return run_bookmark(2);}).bind(this)}), run_cells_with_bookmark_3:({"help": "run cells with bookmark 3", "icon": "fa-play-circle", "key": "Ctrl-Shift-3", handler: (function () {return run_bookmark(3);}).bind(this)}), jump_to_next_bookmark:{"help": "jump to next bookmark", "icon": "fa-hand-o-right", "key": "Shift-right", handler: next_bookmark}, jump_to_previous_bookmark:{"help": "jump to previous bookmark", "icon": "fa-hand-o-left", "key": "Shift-left", handler: prev_bookmark}};
+        register_actions(actions);
         dummy7_sequence = nb.get_cells();
         if ((typeof dummy7_sequence === "object") && (!Array.isArray(dummy7_sequence))) {
             dummy7_sequence = Object.keys(dummy7_sequence);

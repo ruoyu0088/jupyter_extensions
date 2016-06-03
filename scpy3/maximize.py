@@ -1,6 +1,8 @@
 imports = ['base/js/namespace', 'base/js/events']
 
 def load(Jupyter, events):
+    from .utils import register_actions
+    
     header = jQuery('#header')
     header_elements = '#maintoolbar,#header-container,.header-bar,#menubar-container,#header'
     
@@ -35,26 +37,22 @@ def load(Jupyter, events):
 
     def main():
         actions = dict(
-            maximize = {
-                'help': '',
-                'icon': '',
+            maximize_edit_area = {
+                'help': 'maximize edit area',
+                'icon': 'fa-caret-square-o-up',
                 'key': 'Ctrl-up',
                 handler: maximize
             },
 
-            normalize = {
-                'help': '',
-                'icon': '',
+            restore_edit_area_to_normal = {
+                'help': 'restore edit area to normal',
+                'icon': 'fa-caret-square-o-down',
                 'key': 'Ctrl-down',
                 handler: normalize
             }
         )
-        
-        km = Jupyter.keyboard_manager
-        for name, action in actions.items():
-            km.actions.register(action, name, 'scpy3')
-            km.command_shortcuts.add_shortcut(action.key, 'scpy3:' + name)
 
+        register_actions(actions)
 
     return {"load_ipython_extension": main}
 

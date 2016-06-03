@@ -5,10 +5,41 @@ var _pyfunc_truthy = function (v) {
     else if (v.byteLength !== undefined) {return v.byteLength ? v : false;} 
     else {return Object.getOwnPropertyNames(v).length ? v : false;}
 };
+var _pymeth_replace = function (s1, s2, count) {  // nargs: 2 3
+    if (this.constructor !== String) return this.replace.apply(this, arguments);
+    var i = 0, i2, parts = [];
+    count = (count === undefined) ? 1e20 : count;
+    while (count > 0) {
+        i2 = this.indexOf(s1, i);
+        if (i2 >= 0) {
+            parts.push(this.slice(i, i2));
+            parts.push(s2);
+            i = i2 + s1.length;
+            count -= 1;
+        } else break;
+    }
+    parts.push(this.slice(i));
+    return parts.join('');
+};
 var imports, load;
 imports = ["base/js/namespace", "base/js/events"];
 load = function (Jupyter, events) {
-    var header, header_elements, main, maximize, normalize;
+    var header, header_elements, main, maximize, normalize, register_actions;
+    register_actions = (function (actions, target) {
+        var action, dummy1_sequence, key, km;
+        target = (target === undefined) ? "command": target;
+        km = Jupyter.keyboard_manager;
+        dummy1_sequence = actions;
+        for (key in dummy1_sequence) {
+            if (!dummy1_sequence.hasOwnProperty(key)){ continue; }
+            action = dummy1_sequence[key];
+            key = _pymeth_replace.call(key, "_", "-");
+            km.actions.register(action, key, "scpy3");
+            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
+        }
+        return null;
+    }).bind(this);
+
     header = jQuery("#header");
     header_elements = "#maintoolbar,#header-container,.header-bar,#menubar-container,#header";
     maximize = (function () {
@@ -49,16 +80,9 @@ load = function (Jupyter, events) {
     }).bind(this);
 
     main = (function () {
-        var action, actions, dummy1_sequence, km, name;
-        actions = {maximize:{"help": "", "icon": "", "key": "Ctrl-up", handler: maximize}, normalize:{"help": "", "icon": "", "key": "Ctrl-down", handler: normalize}};
-        km = Jupyter.keyboard_manager;
-        dummy1_sequence = actions;
-        for (name in dummy1_sequence) {
-            if (!dummy1_sequence.hasOwnProperty(name)){ continue; }
-            action = dummy1_sequence[name];
-            km.actions.register(action, name, "scpy3");
-            km.command_shortcuts.add_shortcut(action.key, "scpy3:" + name);
-        }
+        var actions;
+        actions = {maximize_edit_area:{"help": "maximize edit area", "icon": "fa-caret-square-o-up", "key": "Ctrl-up", handler: maximize}, restore_edit_area_to_normal:{"help": "restore edit area to normal", "icon": "fa-caret-square-o-down", "key": "Ctrl-down", handler: normalize}};
+        register_actions(actions);
         return null;
     }).bind(this);
 

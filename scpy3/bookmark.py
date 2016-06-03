@@ -3,7 +3,7 @@ imports = ['base/js/namespace', 'base/js/events', 'require']
 N = 3
 
 def load(Jupyter, events, require):
-    from .utils import load_css, show_message
+    from .utils import load_css, show_message, register_actions
 
     load_css('./bookmark.css')
     
@@ -58,68 +58,64 @@ def load(Jupyter, events, require):
     def main():
         actions = dict(
             toggle_bookmark_1 = {
-                'help': '',
-                'icon': '',
+                'help': 'toogle bookmark 1',
+                'icon': 'fa-bookmark',
                 'key': 'Shift-1',
                 handler: lambda :toggle_bookmark(1)
             },
             
             toggle_bookmark_2 = {
-                'help': '',
-                'icon': '',
+                'help': 'toggle bookmark 2',
+                'icon': 'fa-bookmark',
                 'key': 'Shift-2',
                 handler: lambda :toggle_bookmark(2)
             },
             
             toggle_bookmark_3 = {
-                'help': '',
-                'icon': '',
+                'help': 'toggle bookmark 3',
+                'icon': 'fa-bookmark',
                 'key': 'Shift-3',
                 handler: lambda :toggle_bookmark(3)
             },
 
-            run_bookmark_1 = {
-                'help': '',
-                'icon': '',
+            run_cells_with_bookmark_1 = {
+                'help': 'run cells with bookmark 1',
+                'icon': 'fa-play-circle',
                 'key': 'Ctrl-Shift-1',
                 handler: lambda :run_bookmark(1)
             },
             
-            run_bookmark_2 = {
-                'help': '',
-                'icon': '',
+            run_cells_with_bookmark_2 = {
+                'help': 'run cells with bookmark 2',
+                'icon': 'fa-play-circle',
                 'key': 'Ctrl-Shift-2',
                 handler: lambda :run_bookmark(2)
             },
             
-            run_bookmark_3 = {
-                'help': '',
-                'icon': '',
+            run_cells_with_bookmark_3 = {
+                'help': 'run cells with bookmark 3',
+                'icon': 'fa-play-circle',
                 'key': 'Ctrl-Shift-3',
                 handler: lambda :run_bookmark(3)
             },
 
-            
-            next_bookmark = {
-                'help': '',
-                'icon': '',
+            jump_to_next_bookmark = {
+                'help': 'jump to next bookmark',
+                'icon': 'fa-hand-o-right',
                 'key': 'Shift-right',
                 handler: next_bookmark
             },
 
-            prev_bookmark = {
-                'help': '',
-                'icon': '',
+            jump_to_previous_bookmark = {
+                'help': 'jump to previous bookmark',
+                'icon': 'fa-hand-o-left',
                 'key': 'Shift-left',
                 handler: prev_bookmark
             }
 
         )
-        
-        km = Jupyter.keyboard_manager
-        for name, action in actions.items():
-            km.actions.register(action, name, 'scpy3')
-            km.command_shortcuts.add_shortcut(action.key, 'scpy3:' + name)
+
+        register_actions(actions)
 
         for cell in nb.get_cells():
             if cell.metadata.scpy3_bookmark:

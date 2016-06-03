@@ -4,7 +4,7 @@ imports = ['base/js/namespace',
            './jquery.side.menu']
 
 def load(Jupyter, events, require, _):
-    from .utils import load_css, is_head_cell
+    from .utils import load_css, is_head_cell, register_actions
 
     load_css('./side-menu.css')
     toc = jQuery('<div id="scpy3-toc"></div>')
@@ -108,26 +108,27 @@ def load(Jupyter, events, require, _):
     def main():
         
         actions = dict(
-            toggle_toc = {
-                'help': '',
-                'icon': '',
+            toggle_table_of_contents = {
+                'help': 'toggle table of contents',
+                'icon': 'fa-list-alt',
                 'key': 'Alt-t',
                 'handler': toggle_toc
             },
-            prev_head = {
+            jump_to_previous_header = {
+                'help': 'jump to previous header',
+                'icon': 'fa-arrow-circle-left',
                 'handler': prev_head,
                 'key': 'Ctrl-left'
             },
-            next_head = {
+            jump_to_next_header = {
+                'help': 'jump to next header',
+                'icon': 'fa-arrow-circle-right',
                 'handler': next_head,
                 'key': 'Ctrl-right'
             }
         )
-        
-        km = Jupyter.keyboard_manager
-        for name, action in actions.items():
-            km.actions.register(action, name, 'scpy3')
-            km.command_shortcuts.add_shortcut(action.key, 'scpy3:' + name)
+
+        register_actions(actions)
 
     #events.on('kernel_ready.Kernel', toggle_toc)
     events.on('create.Cell', update_toc)
