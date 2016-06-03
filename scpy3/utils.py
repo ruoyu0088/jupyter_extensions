@@ -64,4 +64,77 @@ def show_message(message, wait):
     notification_widget = Jupyter.notification_area.widget("notebook")            
     notification_widget.set_message(message, wait)
 
-    
+
+def typeahead_form():
+    nb = Jupyter.notebook
+    form = T('form')
+    container = T('div.typeahead-container')
+    field = T('div.typeahead-field')
+    input_ = T('input').attr('type', 'search')
+    search_button = T('button', T('span.typeahead-search-icon')).attr('type', 'submit')
+    field.append(T('span.typeahead-query', input_))
+    field.append(T('span.typeahead-button', search_button))
+
+    container.append(field)
+    form.append(container)
+
+    mod = T('div.modal cmd-palette',
+            T('div.modal-dialog',
+              T('div.modal-content',
+                T('div.modal-body', form))))
+
+    mod.modal({'show': False, 'backdrop': True})
+
+    def on_show():
+        def focus():
+            input_.focus()
+        setTimeout(focus, 100)
+
+    mod.on('show.bs.modal', on_show)
+
+    nb.keyboard_manager.disable()
+
+    def before_close():
+        if before_close.ok:
+            return
+        cell = nb.get_selected_cell()
+        if cell:
+            cell.select()
+        if nb.keyboard_manager:
+            nb.keyboard_manager.enable()
+            nb.keyboard_manager.command_mode()
+        before_close.ok = True
+
+    mod.on('hide.bs.modal', before_close)
+    return mod, input_
+
+def show_dialog(title, body, open_callback=None, buttons=None):
+    dialog_settings = {
+        'notebook': Jupyter.notebook,
+        'keyboard_manager': Jupyter.keyboard_manager,
+        'title' : title,
+        'body' : body,
+    }
+
+    if open_callback is not None:
+        dialog_settings['open'] = open_callback
+
+    if buttons is not None:
+        buttons_setting = {}
+        for button, callback in buttons:
+            buttons_setting[button] = {
+                'class': 'btn-primary',
+                'click': callback
+            }
+        dialog_settings['buttons'] = buttons_setting
+
+    dialog.modal(dialog_settings)
+
+def config_save(config):
+    url = config.api_url()
+    utils.promising_ajax(url, {
+        'cache': False,
+        'type': 'PUT',
+        'data': JSON.stringify(config.data),
+        'contentType': 'application/json'
+    })
