@@ -1,50 +1,17 @@
-from .utils import T
-
 imports = ['base/js/namespace',
            'base/js/dialog',
            'services/config',
-           'base/js/utils']
+           'base/js/utils',
+           'require']
 
 
-def dummy_slices(n):
-    slices = []
-    for i in range(n):
-        item = {
-            "name": "name %d" % i,
-            "group": "group %d" % (i % 10),
-            "code": "print(%d)\nprint(%d + 1)" % (i, i)
-        }
-        slices.append(item)
-    return slices
+def load(Jupyter, dialog, configmod, utils, require):
+    from .utils import T, typeahead_form, show_dialog, show_message, config_save
 
-
-def load(Jupyter, dialog, configmod, utils):
     config = configmod.ConfigSection('scpy3_slices',
                                      {base_url: utils.get_body_data("baseUrl")});
     config.load()
     slice_config = configmod.ConfigWithDefaults(config, {'slices':{}})
-
-    def show_dialog(title, body, open_callback=None, buttons=None):
-        dialog_settings = {
-            'notebook': Jupyter.notebook,
-            'keyboard_manager': Jupyter.keyboard_manager,
-            'title' : title,
-            'body' : body,
-        }
-
-        if open_callback is not None:
-            dialog_settings['open'] = open_callback
-
-        if buttons is not None:
-            buttons_setting = {}
-            for button, callback in buttons:
-                buttons_setting[button] = {
-                    'class': 'btn-primary',
-                    'click': callback
-                }
-            dialog_settings['buttons'] = buttons_setting
-            
-        dialog.modal(dialog_settings)
     
     def main():
         km = Jupyter.keyboard_manager
@@ -69,60 +36,55 @@ def load(Jupyter, dialog, configmod, utils):
                 code = el_code.text()
 
                 def add_slice(slices):
-                    slices[group + ":" + name] = {'name':name,
+                    key = group + ":" + name
+                    slices[key] = {'name':name,
                                                   'group':group,
                                                   'code':code}
                     slice_config.set('slices', slices)
+                    show_message('slice %s added' % key, 2000)
                 
                 slice_config.get('slices').then(add_slice)
                 
-            el_name = T('input')
+            el_name = T('input').attr('id', 'scpy3-slice-name')
+            
+            def on_key(event):
+                if event.which == 13:
+                    jQuery("#scpy3-slice-name").parents("div.modal-dialog").find("button.btn-default").click()
+                    
+            el_name.on('keypress', on_key)
             el_code = T('pre').text(code)
             el_body = T('div', el_name, jQuery('<br/>'), el_code)
             show_dialog("Save as Slice", el_body, on_open, [['Ok', on_ok]])
 
         def load_slice():
+            typeahead = None
             nb = Jupyter.notebook
-            form = T('form')
-            container = T('div.typeahead-container')
-            field = T('div.typeahead-field')
-            input_ = T('input').attr('type', 'search')
-            search_button = T('button', T('span.typeahead-search-icon')).attr('type', 'submit')
-            field.append(T('span.typeahead-query', input_))
-            field.append(T('span.typeahead-button', search_button))
-            
-            container.append(field)
-            form.append(container)
 
-            mod = T('div.modal cmd-palette',
-                    T('div.modal-dialog',
-                      T('div.modal-content',
-                        T('div.modal-body', form))))
-            
-            mod.modal({'show': False, 'backdrop': True})
+            mod, input_ = typeahead_form()
+            input_.attr('id', 'scpy3-slice-typeahead')
 
-            def on_show():
-                def focus():
-                    input_.focus()
-                setTimeout(focus, 100)
+            def on_key(event):
+                console.log(event)
+                if event.altKey == True and event.key == 'Delete':
+                    items = typeahead.resultContainer.find("li:not(.typeahead-group)").toArray()
+                    for i, item in enumerate(items):
+                        if jQuery(item).hasClass('active'):
+                            res = typeahead.result[i]
+                            jQuery(item).fadeTo('fast', 0.4)
+                            break
+                    else:
+                        return
+                    key = res.group + ':' + res.display
 
-            mod.on('show.bs.modal', on_show)
+                    def remove_slice(slices):
+                        del config.data.slices[key]
+                        config_save(config)
+                        show_message('slice %s removed' % key, 2000)
 
-            nb.keyboard_manager.disable()
-
-            def before_close():
-                print("before_close")
-                if before_close.ok:
-                    return
-                cell = nb.get_selected_cell()
-                if cell:
-                    cell.select()
-                if nb.keyboard_manager:
-                    nb.keyboard_manager.enable()
-                    nb.keyboard_manager.command_mode()
-                before_close.ok = True
-
-            mod.on('hide.bs.modal', before_close)
+                    slice_config.get('slices').then(remove_slice)
+                    
+                
+            input_.on('keypress', on_key)
 
             def on_submit(node, query, result, result_count):
                 mod.modal('hide')
@@ -150,6 +112,7 @@ def load(Jupyter, dialog, configmod, utils):
                 console.log(node, lis, a, item, query, event)
                 
             def show_search(slices):
+                nonlocal typeahead
                 src = {}
 
                 for item in slices.values():
@@ -164,7 +127,7 @@ def load(Jupyter, dialog, configmod, utils):
                         'firstline': item.code.split('\n')[0]
                     })
 
-                input_.typeahead({
+                typeahead  = input_.typeahead({
                     'emptyTemplate': "No result",
                     'maxItem': 1000,
                     'minLength': 0,
@@ -172,7 +135,7 @@ def load(Jupyter, dialog, configmod, utils):
                     'group': ['group', '{{group}}'],
                     'searchOnFocus': True,
                     'mustSelectItem': True,
-                    'template': '{{display}}<br/><pre>{{firstline}}</pre>',
+                    'template': '<strong>{{display}}</strong><br/><pre style="background-color: transparent;">{{firstline}}</pre>',
                     'order': 'asc',
                     'source': src,
                     'callback': {
@@ -183,7 +146,7 @@ def load(Jupyter, dialog, configmod, utils):
                         'onMouseLeave': on_mouse_leave,
                         'onNavigateAfter': on_navigate_after
                     },                
-                    'debug': True
+                    'debug': False
                 })
 
                 mod.modal('show')
