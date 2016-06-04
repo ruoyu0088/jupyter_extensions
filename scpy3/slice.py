@@ -6,7 +6,7 @@ imports = ['base/js/namespace',
 
 
 def load(Jupyter, dialog, configmod, utils, require):
-    from .utils import T, typeahead_form, show_dialog, show_message, config_save, register_actions
+    from .utils import T, typeahead_form, show_dialog, show_message, config_save, register_actions, firstline, remove_firstline
 
     config = configmod.ConfigSection('scpy3_slices',
                                      {base_url: utils.get_body_data("baseUrl")});
@@ -52,8 +52,17 @@ def load(Jupyter, dialog, configmod, utils, require):
                     jQuery("#scpy3-slice-name").parents("div.modal-dialog").find("button.btn-default").click()
                     
             el_name.on('keypress', on_key)
+            el_help = jQuery('<p>input slice name as "group name : slice name"</p>')
+            
+            if code.startswith('#%'):
+                console.log(firstline(code))
+                key = firstline(code)[2:]
+                el_name.val(key)
+                code = remove_firstline(code)
+                
             el_code = T('pre').text(code)
-            el_body = T('div', el_name, jQuery('<br/>'), el_code)
+            el_body = T('div', el_help, el_name, jQuery('<br/>'), el_code)
+                
             show_dialog("Save as Slice", el_body, on_open, [['Ok', on_ok]])
 
         def load_slice():
@@ -65,7 +74,7 @@ def load(Jupyter, dialog, configmod, utils, require):
 
             def on_key(event):
                 console.log(event)
-                if event.altKey == True and event.key == 'Delete':
+                if event.shiftKey == True and event.ctrlKey == True and event.keyCode == 11:
                     items = typeahead.resultContainer.find("li:not(.typeahead-group)").toArray()
                     for i, item in enumerate(items):
                         if jQuery(item).hasClass('active'):
@@ -82,7 +91,7 @@ def load(Jupyter, dialog, configmod, utils, require):
                         show_message('slice %s removed' % key, 2000)
 
                     slice_config.get('slices').then(remove_slice)
-                    
+                    return True
                 
             input_.on('keypress', on_key)
 

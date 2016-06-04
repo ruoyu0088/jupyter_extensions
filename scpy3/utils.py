@@ -145,3 +145,9 @@ def register_actions(actions, target="command"):
         key = key.replace('_', '-')
         km.actions.register(action, key, 'scpy3')
         km[target + "_shortcuts"].add_shortcut(action.key, 'scpy3:' + key)
+
+def firstline(text):
+    return text.split('\n')[0]
+
+def remove_firstline(text):
+    return text[text.find('\n')+1:]

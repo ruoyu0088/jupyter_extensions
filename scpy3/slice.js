@@ -94,6 +94,10 @@ var _pymeth_split = function (sep, count) { // nargs: 0, 1 2
     if (count < parts.length) res.push(parts.slice(limit).join(sep));
     return res;
 };
+var _pymeth_startswith = function (x) { // nargs: 1
+    if (this.constructor !== String) return this.startswith.apply(this, arguments);
+    return this.indexOf(x) == 0;
+};
 var _pymeth_strip = function (chars) { // nargs: 0 1
     if (this.constructor !== String) return this.strip.apply(this, arguments);
     chars = (chars === undefined) ? ' \t\r\n' : chars;
@@ -107,7 +111,25 @@ var _pymeth_strip = function (chars) { // nargs: 0 1
 var imports, load;
 imports = ["base/js/namespace", "base/js/dialog", "services/config", "base/js/utils", "require"];
 load = function (Jupyter, dialog, configmod, utils, require) {
-    var T, config, config_save, main, register_actions, show_dialog, show_message, slice_config, typeahead_form;
+    var T, config, config_save, firstline, main, register_actions, remove_firstline, show_dialog, show_message, slice_config, typeahead_form;
+    show_message = (function (message, wait) {
+        var notification_widget;
+        notification_widget = Jupyter.notification_area.widget("notebook");
+        notification_widget.set_message(message, wait);
+        return null;
+    }).bind(this);
+
+    remove_firstline = (function (text) {
+        return text.slice(_pymeth_find.call(text, "\n") + 1);
+    }).bind(this);
+
+    config_save = (function (config) {
+        var url;
+        url = config.api_url();
+        utils.promising_ajax(url, {"cache": false, "type": "PUT", "data": JSON.stringify(config.data), "contentType": "application/json"});
+        return null;
+    }).bind(this);
+
     T = (function (tagname) {
         var args, child, dummy1_, dummy2_sequence, dummy3_iter, el, klass;
         args = Array.prototype.slice.call(arguments).slice(1);
@@ -131,58 +153,8 @@ load = function (Jupyter, dialog, configmod, utils, require) {
         return el;
     }).bind(this);
 
-    config_save = (function (config) {
-        var url;
-        url = config.api_url();
-        utils.promising_ajax(url, {"cache": false, "type": "PUT", "data": JSON.stringify(config.data), "contentType": "application/json"});
-        return null;
-    }).bind(this);
-
-    show_message = (function (message, wait) {
-        var notification_widget;
-        notification_widget = Jupyter.notification_area.widget("notebook");
-        notification_widget.set_message(message, wait);
-        return null;
-    }).bind(this);
-
-    register_actions = (function (actions, target) {
-        var action, dummy4_sequence, key, km;
-        target = (target === undefined) ? "command": target;
-        km = Jupyter.keyboard_manager;
-        dummy4_sequence = actions;
-        for (key in dummy4_sequence) {
-            if (!dummy4_sequence.hasOwnProperty(key)){ continue; }
-            action = dummy4_sequence[key];
-            key = _pymeth_replace.call(key, "_", "-");
-            km.actions.register(action, key, "scpy3");
-            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
-        }
-        return null;
-    }).bind(this);
-
-    show_dialog = (function (title, body, open_callback, buttons) {
-        var button, buttons_setting, callback, dialog_settings, dummy5_sequence, dummy6_iter, dummy7_target;
-        open_callback = (open_callback === undefined) ? null: open_callback;
-        buttons = (buttons === undefined) ? null: buttons;
-        dialog_settings = {"notebook": Jupyter.notebook, "keyboard_manager": Jupyter.keyboard_manager, "title": title, "body": body};
-        if ((open_callback !== null)) {
-            dialog_settings["open"] = open_callback;
-        }
-        if ((buttons !== null)) {
-            buttons_setting = {};
-            dummy5_sequence = buttons;
-            if ((typeof dummy5_sequence === "object") && (!Array.isArray(dummy5_sequence))) {
-                dummy5_sequence = Object.keys(dummy5_sequence);
-            }
-            for (dummy6_iter = 0; dummy6_iter < dummy5_sequence.length; dummy6_iter += 1) {
-                dummy7_target = dummy5_sequence[dummy6_iter];
-                button = dummy7_target[0]; callback = dummy7_target[1];
-                buttons_setting[button] = {"class": "btn-primary", "click": callback};
-            }
-            dialog_settings["buttons"] = buttons_setting;
-        }
-        dialog.modal(dialog_settings);
-        return null;
+    firstline = (function (text) {
+        return _pymeth_split.call(text, "\n")[0];
     }).bind(this);
 
     typeahead_form = (function () {
@@ -233,6 +205,46 @@ load = function (Jupyter, dialog, configmod, utils, require) {
         return [mod, input_];
     }).bind(this);
 
+    register_actions = (function (actions, target) {
+        var action, dummy4_sequence, key, km;
+        target = (target === undefined) ? "command": target;
+        km = Jupyter.keyboard_manager;
+        dummy4_sequence = actions;
+        for (key in dummy4_sequence) {
+            if (!dummy4_sequence.hasOwnProperty(key)){ continue; }
+            action = dummy4_sequence[key];
+            key = _pymeth_replace.call(key, "_", "-");
+            km.actions.register(action, key, "scpy3");
+            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
+        }
+        return null;
+    }).bind(this);
+
+    show_dialog = (function (title, body, open_callback, buttons) {
+        var button, buttons_setting, callback, dialog_settings, dummy5_sequence, dummy6_iter, dummy7_target;
+        open_callback = (open_callback === undefined) ? null: open_callback;
+        buttons = (buttons === undefined) ? null: buttons;
+        dialog_settings = {"notebook": Jupyter.notebook, "keyboard_manager": Jupyter.keyboard_manager, "title": title, "body": body};
+        if ((open_callback !== null)) {
+            dialog_settings["open"] = open_callback;
+        }
+        if ((buttons !== null)) {
+            buttons_setting = {};
+            dummy5_sequence = buttons;
+            if ((typeof dummy5_sequence === "object") && (!Array.isArray(dummy5_sequence))) {
+                dummy5_sequence = Object.keys(dummy5_sequence);
+            }
+            for (dummy6_iter = 0; dummy6_iter < dummy5_sequence.length; dummy6_iter += 1) {
+                dummy7_target = dummy5_sequence[dummy6_iter];
+                button = dummy7_target[0]; callback = dummy7_target[1];
+                buttons_setting[button] = {"class": "btn-primary", "click": callback};
+            }
+            dialog_settings["buttons"] = buttons_setting;
+        }
+        dialog.modal(dialog_settings);
+        return null;
+    }).bind(this);
+
     config = new configmod.ConfigSection("scpy3_slices", {base_url: utils.get_body_data("baseUrl")});
     config.load();
     slice_config = new configmod.ConfigWithDefaults(config, {"slices": {}});
@@ -240,7 +252,7 @@ load = function (Jupyter, dialog, configmod, utils, require) {
         var actions, km, load_slice, save_cell_as_slice;
         km = Jupyter.keyboard_manager;
         save_cell_as_slice = (function () {
-            var cell, code, el_body, el_code, el_name, nb, on_key, on_ok, on_open;
+            var cell, code, el_body, el_code, el_help, el_name, key, nb, on_key, on_ok, on_open;
             nb = Jupyter.notebook;
             cell = nb.get_selected_cell();
             code = cell.get_text();
@@ -284,8 +296,15 @@ load = function (Jupyter, dialog, configmod, utils, require) {
             }).bind(this);
 
             el_name.on("keypress", on_key);
+            el_help = jQuery("<p>input slice name as \"group name : slice name\"</p>");
+            if (_pyfunc_truthy(_pymeth_startswith.call(code, "#%"))) {
+                console.log(firstline(code));
+                key = firstline(code).slice(2);
+                el_name.val(key);
+                code = remove_firstline(code);
+            }
             el_code = T("pre").text(code);
-            el_body = T("div", el_name, jQuery("<br/>"), el_code);
+            el_body = T("div", el_help, el_name, jQuery("<br/>"), el_code);
             show_dialog("Save as Slice", el_body, on_open, [["Ok", on_ok]]);
             return null;
         }).bind(this);
@@ -300,7 +319,7 @@ load = function (Jupyter, dialog, configmod, utils, require) {
             on_key = (function (event) {
                 var dummy10_else, dummy11_sequence, dummy12_iter, dummy13_target, i, item, items, key, remove_slice, res;
                 console.log(event);
-                if ((_pyfunc_equals(event.altKey, true) && _pyfunc_equals(event.key, "Delete"))) {
+                if ((_pyfunc_equals(event.shiftKey, true) && _pyfunc_equals(event.ctrlKey, true) && _pyfunc_equals(event.keyCode, 11))) {
                     items = (_pymeth_find.call(typeahead.resultContainer, "li:not(.typeahead-group)")).toArray();
                     dummy10_else = true;
                     dummy11_sequence = _pyfunc_enumerate(items);
@@ -327,6 +346,7 @@ load = function (Jupyter, dialog, configmod, utils, require) {
                     }).bind(this);
 
                     _pymeth_get.call(slice_config, "slices").then(remove_slice);
+                    return true;
                 }
                 return null;
             }).bind(this);
