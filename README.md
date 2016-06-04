@@ -1,5 +1,7 @@
 # Jupyter Notebook Extensions
 
+> The notebook `scpy3-nbextensions-demo.ipynb` demonstrates the usage of these extensions.
+
 This repository contains a collection of extensions that add functionality to the Jupyter notebook for the book 
 "Scientific Computing with Python".
 
