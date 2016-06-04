@@ -4,6 +4,8 @@ blockquote.icon_box{
     border-style: solid;
     padding:5px;
     min-height: 70px;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 blockquote.icon_box .large_font{
