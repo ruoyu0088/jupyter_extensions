@@ -151,3 +151,40 @@ def firstline(text):
 
 def remove_firstline(text):
     return text[text.find('\n')+1:]
+
+def format_table(table):
+    def format_split(text, size):
+        text = text.strip()
+        if text[0] == '-' and text[-1] == '-':
+            return '-' * size
+        elif text[0] == ':' and text[-1] == ':':
+            return ':' + '-' * (size - 2) + ':'
+        elif text[0] == ':':
+            return ':' + '-' * (size - 1)
+        elif text[-1] == ':':
+            return '-' * (size - 1) + ':'
+        
+    rows = []
+    for line in table.split('\n'):
+        if line.startswith('|'):
+            line = line.strip().strip('|')
+            row = [text.strip() for text in line.split('|')]
+            rows.append(row)
+
+    console.log(rows)
+    
+    if len(rows) == 0:
+        return table
+    
+    ncol = len(rows[0])
+    nrow = len(rows)
+    col_sizes = [max([len(row[i]) for j, row in enumerate(rows) if j != 1]) for i in range(ncol)]
+    
+    res = []
+    for i, row in enumerate(rows):
+        if i != 1:
+            row_text = '|' + '|'.join([text.center(col_sizes[j] + 2) for j, text in enumerate(row)]) + '|'
+        else:
+            row_text = '|' + '|'.join([format_split(text, col_sizes[j] + 2) for j, text in enumerate(row)]) + '|'                
+        res.append(row_text)
+    return '\n'.join(res)
