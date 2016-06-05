@@ -1,5 +1,5 @@
 div#notebook{
-    font-size:130%;
+    font-size:16px;
     background: #272822; color: #f8f8f2;
 }
 
@@ -44,7 +44,8 @@ pre{
 }
 
 .rendered_html pre, .rendered_html code{
-    font-size:14px;
+    /*    font-size:14px; */
+    color: inherit;
 }
 
 a {

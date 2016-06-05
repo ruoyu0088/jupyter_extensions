@@ -1,5 +1,5 @@
 body, div#notebook{
-    font-size:130%;
+    font-size:16px;
 }
 
 .notebook_app {
@@ -30,9 +30,26 @@ pre{
 }
 
 .rendered_html pre, .rendered_html code{
-    font-size:14px;
+    /*    font-size:14px; */
+    color: inherit;
 }
 
 blockquote.icon_box .large_font{
     color:#42A5F5 !important;
+}
+
+h1, h2, h3, h4, h5, h6{
+    color:#22527b;
+}
+
+div.input_area{
+    border: none;
+}
+
+.rendered_html h1:first-child,
+.rendered_html h2:first-child,
+.rendered_html h3:first-child,
+.rendered_html h4:first-child,
+.rendered_html h5:first-child{
+    margin-top: 1px;
 }
