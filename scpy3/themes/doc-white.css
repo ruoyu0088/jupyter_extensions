@@ -32,3 +32,7 @@ pre{
 .rendered_html pre, .rendered_html code{
     font-size:14px;
 }
+
+blockquote.icon_box .large_font{
+    color:#42A5F5 !important;
+}

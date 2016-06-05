@@ -1,9 +1,5 @@
-body, div#notebook{
+div#notebook{
     font-size:130%;
-    background: #272822; color: #f8f8f2;
-}
-
-.notebook_app {
     background: #272822; color: #f8f8f2;
 }
 
@@ -86,6 +82,10 @@ a:hover{
 
 div.input_area{
     border: none;
+}
+
+blockquote.icon_box .large_font{
+    color:#42A5F5 !important;
 }
 
 /* Based on Sublime Text's Monokai theme */
