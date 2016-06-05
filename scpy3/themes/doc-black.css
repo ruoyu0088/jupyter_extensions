@@ -51,6 +51,43 @@ pre{
     font-size:14px;
 }
 
+a {
+    color: #83b3dc;
+}
+
+
+a:hover{
+    color: #91bde1;
+}
+
+.cm-s-default .cm-link{
+    color: #83b3dc;
+}
+
+.cm-s-default .cm-comment{
+    color: #ffe390;
+}
+.cm-s-default .cm-quote{
+    color: #68ff68;
+}
+
+.CodeMirror{
+    background-color: #34362e;
+    color: #f8f8f2;
+}
+
+.cm-s-default .cm-header{
+    color: #f8f8f2;    
+}
+
+.CodeMirror-cursor{
+    border-left: 1px solid #f0f0f0;
+}
+
+div.input_area{
+    border: none;
+}
+
 /* Based on Sublime Text's Monokai theme */
 
 .cm-s-ipython.CodeMirror { background: #272822; color: #f8f8f2; }
@@ -87,3 +124,23 @@ pre{
   text-decoration: underline;
   color: white !important;
 }
+
+
+/*.cm-s-default span.cm-comment { color: #75715e; }*/
+.cm-s-default span.cm-atom { color: #ae81ff; }
+.cm-s-default span.cm-number { color: #ae81ff; }
+
+.cm-s-default span.cm-property, .cm-s-default span.cm-attribute { color: #a6e22e; }
+.cm-s-default span.cm-keyword { color: #f92672; }
+.cm-s-default span.cm-builtin { color: #f92672; }
+.cm-s-default span.cm-string { color: #e6db74; }
+
+.cm-s-default span.cm-variable { color: #f8f8f2; }
+.cm-s-default span.cm-variable-2 { color: #9effff; }
+.cm-s-default span.cm-variable-3 { color: #66d9ef; }
+.cm-s-default span.cm-def { color: #fd971f; }
+.cm-s-default span.cm-bracket { color: #f8f8f2; }
+.cm-s-default span.cm-tag { color: #f92672; }
+.cm-s-default span.cm-header { color: #ae81ff; }
+.cm-s-default span.cm-link { color: #ae81ff; }
+.cm-s-default span.cm-error { background: #f92672; color: #f8f8f0; }
