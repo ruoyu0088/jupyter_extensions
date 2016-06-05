@@ -38,7 +38,7 @@ var _pymeth_append = function (x) { // nargs: 1
 };
 var imports, load, themes;
 imports = ["base/js/namespace", "require", "base/js/events"];
-themes = ["default", "oceans16", "grade3", "space-legos"];
+themes = ["default", "oceans16", "grade3", "space-legos", "doc-white", "doc-black"];
 load = function (Jupyter, require, events) {
     var get_metadata, load_css, main, set_metadata, unload_css;
     load_css = (function (name) {
@@ -48,28 +48,6 @@ load = function (Jupyter, require, events) {
         link.rel = "stylesheet";
         link.href = require.toUrl(name);
         (document.getElementsByTagName("head")[0]).appendChild(link);
-        return null;
-    }).bind(this);
-
-    get_metadata = (function (target, key) {
-        var meta;
-        meta = target.metadata;
-        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
-            return null;
-        }
-        if (_pyfunc_truthy(!_pyfunc_contains(key, meta.scpy3))) {
-            return null;
-        }
-        return meta.scpy3[key];
-    }).bind(this);
-
-    set_metadata = (function (target, key, value) {
-        var meta;
-        meta = target.metadata;
-        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
-            meta.scpy3 = {};
-        }
-        meta.scpy3[key] = value;
         return null;
     }).bind(this);
 
@@ -101,6 +79,28 @@ load = function (Jupyter, require, events) {
             el = dummy4_sequence[dummy5_iter];
             el.parentNode.removeChild(el);
         }
+        return null;
+    }).bind(this);
+
+    get_metadata = (function (target, key) {
+        var meta;
+        meta = target.metadata;
+        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
+            return null;
+        }
+        if (_pyfunc_truthy(!_pyfunc_contains(key, meta.scpy3))) {
+            return null;
+        }
+        return meta.scpy3[key];
+    }).bind(this);
+
+    set_metadata = (function (target, key, value) {
+        var meta;
+        meta = target.metadata;
+        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
+            meta.scpy3 = {};
+        }
+        meta.scpy3[key] = value;
         return null;
     }).bind(this);
 

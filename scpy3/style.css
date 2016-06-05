@@ -11,7 +11,7 @@ div.text_cell div.input_area{
 }
 
 div.code_cell div.input_area{
-    Background-color: #f0f0f0 !important;
+    Background-color: #f0f0f0;
 }
 
 .MathJax nobr>span.math>span{border-left-width:0 !important}
@@ -35,4 +35,8 @@ div.scpy3-info-box blockquote{
     border-left: none;
     margin: 0px;
     font-size: 110%;
+}
+
+.rendered_html h1{
+    text-align:center;
 }

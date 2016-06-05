@@ -1,6 +1,6 @@
 imports = ['base/js/namespace', 'require', 'base/js/events']
 
-themes = ['default', 'oceans16', 'grade3', 'space-legos']
+themes = ['default', 'oceans16', 'grade3', 'space-legos', 'doc-white', 'doc-black']
 
 def load(Jupyter, require, events):
     from .utils import load_css, unload_css, get_metadata, set_metadata

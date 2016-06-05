@@ -1,0 +1,34 @@
+body, div#notebook{
+    font-size:130%;
+}
+
+.notebook_app {
+    background-color:#fff;
+}
+
+#notebook-container {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+div.cell.selected {
+    border-color: transparent;
+}
+
+div.code_cell div.input_area{
+    border: none;
+    background-color: transparent;
+}
+
+div.output_area{
+    margin-left:10px;
+    border-left: 2px solid rgba(184, 184, 184, 0.40);   
+}
+
+pre{
+    font-size:14px;
+}
+
+.rendered_html pre, .rendered_html code{
+    font-size:14px;
+}

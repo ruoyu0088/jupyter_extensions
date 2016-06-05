@@ -1,0 +1,89 @@
+body, div#notebook{
+    font-size:130%;
+    background: #272822; color: #f8f8f2;
+}
+
+.notebook_app {
+    background: #272822; color: #f8f8f2;
+}
+
+#notebook-container {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background: #272822; color: #f8f8f2;
+}
+
+.rendered_html{
+    color: #f8f8f2;
+}
+
+div.text_cell_render{
+    color: #f8f8f2;
+}
+
+.rendered_html pre, .rendered_html code{
+    background: #272822; color: #f8f8f2;
+}
+
+div.output_area pre{
+    background: #272822; color: #f8f8f2;    
+}
+
+div.cell.selected {
+    border-color: transparent;
+}
+
+div.code_cell div.input_area{
+    border: none;
+    background-color: transparent;
+}
+
+div.output_area{
+    margin-left:10px;
+    border-left: 2px solid rgba(184, 184, 184, 0.40);   
+}
+
+pre{
+    font-size:14px;
+}
+
+.rendered_html pre, .rendered_html code{
+    font-size:14px;
+}
+
+/* Based on Sublime Text's Monokai theme */
+
+.cm-s-ipython.CodeMirror { background: #272822; color: #f8f8f2; }
+.cm-s-ipython div.CodeMirror-selected { background: #49483E; }
+.cm-s-ipython .CodeMirror-line::selection, .cm-s-ipython .CodeMirror-line > span::selection, .cm-s-ipython .CodeMirror-line > span > span::selection { background: rgba(73, 72, 62, .99); }
+.cm-s-ipython .CodeMirror-line::-moz-selection, .cm-s-ipython .CodeMirror-line > span::-moz-selection, .cm-s-ipython .CodeMirror-line > span > span::-moz-selection { background: rgba(73, 72, 62, .99); }
+.cm-s-ipython .CodeMirror-gutters { background: #272822; border-right: 0px; }
+.cm-s-ipython .CodeMirror-guttermarker { color: white; }
+.cm-s-ipython .CodeMirror-guttermarker-subtle { color: #d0d0d0; }
+.cm-s-ipython .CodeMirror-linenumber { color: #d0d0d0; }
+.cm-s-ipython .CodeMirror-cursor { border-left: 1px solid #f8f8f0; }
+
+.cm-s-ipython span.cm-comment { color: #75715e; }
+.cm-s-ipython span.cm-atom { color: #ae81ff; }
+.cm-s-ipython span.cm-number { color: #ae81ff; }
+
+.cm-s-ipython span.cm-property, .cm-s-ipython span.cm-attribute { color: #a6e22e; }
+.cm-s-ipython span.cm-keyword { color: #f92672; }
+.cm-s-ipython span.cm-builtin { color: #f92672; }
+.cm-s-ipython span.cm-string { color: #e6db74; }
+
+.cm-s-ipython span.cm-variable { color: #f8f8f2; }
+.cm-s-ipython span.cm-variable-2 { color: #9effff; }
+.cm-s-ipython span.cm-variable-3 { color: #66d9ef; }
+.cm-s-ipython span.cm-def { color: #fd971f; }
+.cm-s-ipython span.cm-bracket { color: #f8f8f2; }
+.cm-s-ipython span.cm-tag { color: #f92672; }
+.cm-s-ipython span.cm-header { color: #ae81ff; }
+.cm-s-ipython span.cm-link { color: #ae81ff; }
+.cm-s-ipython span.cm-error { background: #f92672; color: #f8f8f0; }
+
+.cm-s-ipython .CodeMirror-activeline-background { background: #373831; }
+.cm-s-ipython .CodeMirror-matchingbracket {
+  text-decoration: underline;
+  color: white !important;
+}
