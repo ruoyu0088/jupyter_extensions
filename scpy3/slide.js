@@ -1,4 +1,9 @@
 (function(){
+var _pyfunc_add = function (a, b) { // nargs: 2
+    if (Array.isArray(a) && Array.isArray(b)) {
+        return a.concat(b);
+    } return a + b;
+};
 var _pyfunc_contains = function contains (a, b) { // nargs: 2
     if (b == null) {
     } else if (Array.isArray(b)) {
@@ -11,6 +16,12 @@ var _pyfunc_contains = function contains (a, b) { // nargs: 2
     } else if (b.constructor == String) {
         return b.indexOf(a) >= 0;
     } var e = Error('Not a container: ' + b); e.name='TypeError'; throw e;
+};
+var _pyfunc_enumerate = function (iter) { // nargs: 1
+    var i, res=[];
+    if ((typeof iter==="object") && (!Array.isArray(iter))) {iter = Object.keys(iter);}
+    for (i=0; i<iter.length; i++) {res.push([i, iter[i]]);}
+    return res;
 };
 var _pyfunc_equals = function equals (a, b) { // nargs: 2
     if (a == null || b == null) {
@@ -25,6 +36,9 @@ var _pyfunc_equals = function equals (a, b) { // nargs: 2
         while (iseq && i < akeys.length) {k=akeys[i]; iseq = equals(a[k], b[k]); i+=1;}
         return iseq;
     } return a == b;
+};
+var _pyfunc_int = function (x) { // nargs: 1
+    return x<0 ? Math.ceil(x): Math.floor(x);
 };
 var _pyfunc_truthy = function (v) {
     if (v === null || typeof v !== "object") {return v;}
@@ -101,7 +115,7 @@ Themes = ["default", "beige", "blood", "night", "serif", "simple", "sky", "solar
 Transitions = ["none", "fade", "slide", "convex", "concave", "zoom"];
 Speeds = ["default", "slow", "fast"];
 load = function (Jupyter, dialog, configmod, utils, marked, require) {
-    var T, config_dialog, end_slide, get_level, get_metadata, get_option, header_flag, is_new_section, is_new_subsection, load_css, main, make_selector, register_actions, revealjs_loaded, set_metadata, show_dialog, start_slide, unload_css;
+    var T, config_dialog, end_slide, get_level, get_metadata, get_option, header_flag, is_new_section, is_new_subsection, load_css, main, make_selector, register_actions, revealjs_loaded, set_metadata, show_dialog, start_section, start_slide, toc_flag, unload_css;
     T = (function (tagname) {
         var args, child, dummy1_, dummy2_sequence, dummy3_iter, el, klass;
         args = Array.prototype.slice.call(arguments).slice(1);
@@ -264,6 +278,8 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
 
     require((function list_comprehenson () {var res = [];var url, iter0, i0;iter0 = revealjs;if ((typeof iter0 === "object") && (!Array.isArray(iter0))) {iter0 = Object.keys(iter0);}for (i0=0; i0<iter0.length; i0++) {url = iter0[i0];{res.push(require.toUrl(url));}}return res;}).apply(this), revealjs_loaded);
     header_flag = null;
+    toc_flag = null;
+    start_section = null;
     get_option = (function (name) {
         var options;
         options = get_metadata(Jupyter.notebook, "slide");
@@ -328,8 +344,9 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
     }).bind(this);
 
     end_slide = (function () {
-        var nb;
+        var cell_index, nb;
         nb = Jupyter.notebook;
+        cell_index = _pyfunc_int((jQuery("section.present:last").attr("cellid")));
         nb.keyboard_manager.enable();
         unload_css("reveal.js/css/reveal.css");
         unload_css("reveal.js/css/theme/" + get_option("theme") + ".css");
@@ -338,25 +355,35 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
         if (_pyfunc_truthy(header_flag)) {
             jQuery("#header").show();
         }
+        if (_pyfunc_truthy(toc_flag)) {
+            jQuery("#scpy3-toc").show();
+        }
         jQuery("#site").show();
+        nb.select(cell_index);
+        nb.scroll_to_cell(cell_index);
         return null;
     }).bind(this);
 
     start_slide = (function () {
-        var cell, cells, dummy16_sequence, dummy17_iter, el_reveal, el_section, el_slides, el_subsection, nb, on_ready, process_code, process_markdown;
+        var cell, cells, cnt_section, cnt_subsection, dummy16_sequence, dummy17_iter, dummy18_target, el_reveal, el_section, el_slides, el_subsection, idx, nb, on_ready, process_code, process_markdown, selected_index;
         nb = Jupyter.notebook;
         nb.keyboard_manager.disable();
         load_css("./reveal.js/css/reveal.css");
         load_css("./reveal.js/css/theme/" + get_option("theme") + ".css");
         load_css("./slide.css");
         header_flag = (jQuery("#header")["is"])(":visible");
+        toc_flag = (jQuery("#scpy3-toc")["is"])(":visible");
         jQuery("#header").hide();
         jQuery("#site").hide();
+        jQuery("#scpy3-toc").hide();
         cells = nb.get_cells();
         el_reveal = T("div.reveal").appendTo(jQuery("body"));
         el_slides = T("div.slides").appendTo(el_reveal);
         el_section = null;
         el_subsection = null;
+        cnt_section = -1;
+        cnt_subsection = -1;
+        selected_index = nb.get_selected_index();
         process_code = (function (cell) {
             var _append_code_html, _append_code_output, code, mdcode;
             _append_code_output = (function () {
@@ -389,17 +416,25 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
             return null;
         }).bind(this);
 
-        dummy16_sequence = cells;
+        dummy16_sequence = _pyfunc_enumerate(cells);
         if ((typeof dummy16_sequence === "object") && (!Array.isArray(dummy16_sequence))) {
             dummy16_sequence = Object.keys(dummy16_sequence);
         }
         for (dummy17_iter = 0; dummy17_iter < dummy16_sequence.length; dummy17_iter += 1) {
-            cell = dummy16_sequence[dummy17_iter];
+            dummy18_target = dummy16_sequence[dummy17_iter];
+            idx = dummy18_target[0]; cell = dummy18_target[1];
             if (_pyfunc_truthy(is_new_section(cell))) {
                 el_section = T("section").appendTo(el_slides);
+                cnt_section=_pyfunc_add(cnt_section, 1)
+                cnt_subsection = -1;
             }
             if (_pyfunc_truthy(is_new_subsection(cell))) {
                 el_subsection = T("section").appendTo(el_section);
+                cnt_subsection=_pyfunc_add(cnt_subsection, 1)
+            }
+            if (_pyfunc_equals(selected_index, idx)) {
+                start_section = [cnt_section, cnt_subsection];
+                console.log(start_section);
             }
             if ((el_subsection !== null)) {
                 if (_pyfunc_equals(cell.cell_type, "markdown")) {
@@ -407,12 +442,15 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
                 } else if (_pyfunc_equals(cell.cell_type, "code")) {
                     process_code(cell);
                 }
+                if ((_pyfunc_equals(el_subsection.attr("cellid"), undefined))) {
+                    el_subsection.attr("cellid", idx);
+                }
             }
         }
         Reveal.initialize({"controls": true, "progress": true, "history": true, "center": true, "transition": get_option("transition"), "keyboard": {81: end_slide}});
         on_ready = (function (event) {
             Reveal.layout();
-            Reveal.slide(0, 0, 0);
+            Reveal.slide(start_section[0], start_section[1], 0);
             return null;
         }).bind(this);
 

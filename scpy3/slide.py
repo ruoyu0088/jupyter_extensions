@@ -29,6 +29,7 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
     require([require.toUrl(url) for url in revealjs], revealjs_loaded)
     header_flag = None
     toc_flag = None
+    start_section = None
     
     def get_option(name):
         options = get_metadata(Jupyter.notebook, 'slide')
@@ -77,6 +78,7 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
 
     def end_slide():
         nb = Jupyter.notebook
+        cell_index = int(jQuery('section.present:last').attr('cellid'))
         nb.keyboard_manager.enable()
         unload_css('reveal.js/css/reveal.css')
         unload_css('reveal.js/css/theme/%s.css' % get_option('theme'))
@@ -88,9 +90,11 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
         if toc_flag:
             jQuery('#scpy3-toc').show()
         jQuery('#site').show()
+        nb.select(cell_index)
+        nb.scroll_to_cell(cell_index)
  
     def start_slide():
-        nonlocal header_flag, toc_flag
+        nonlocal header_flag, toc_flag, start_section
         nb = Jupyter.notebook
         nb.keyboard_manager.disable()
 
@@ -110,7 +114,11 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
         
         el_section = None
         el_subsection = None
-
+        cnt_section = -1
+        cnt_subsection = -1
+        selected_index = nb.get_selected_index()
+        start_section = 0, 0
+        
         def process_code(cell):
             def _append_code_output():
                 el = cell.element.find('.output_area').clone()
@@ -131,18 +139,25 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
             el = cell.element.find('.rendered_html').clone()
             el.children().appendTo(el_subsection)
             
-        for cell in cells:
+        for idx, cell in enumerate(cells):
             if is_new_section(cell):
                 el_section = T('section').appendTo(el_slides)
-
+                cnt_section += 1
+                cnt_subsection = -1
             if is_new_subsection(cell):
                 el_subsection = T('section').appendTo(el_section)
-
+                cnt_subsection += 1
+            if selected_index == idx:
+                start_section = cnt_section, cnt_subsection
+                console.log(start_section)
             if el_subsection is not None:
                 if cell.cell_type == 'markdown':
                     process_markdown(cell)
                 elif cell.cell_type == 'code':
                     process_code(cell)
+
+                if el_subsection.attr('cellid') == undefined:
+                    el_subsection.attr('cellid', idx)
 
         Reveal.initialize({
             'controls': True,
@@ -157,8 +172,8 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
 
         def on_ready(event):
             Reveal.layout()
-            Reveal.slide(0, 0, 0)
-
+            Reveal.slide(start_section[0], start_section[1], 0)
+                
         Reveal.addEventListener( 'ready', on_ready)
     
     def main():
