@@ -77,6 +77,54 @@ div#notebook{
     background: #272822; color: #f8f8f2;
 }
 
+#kernel_indicator{
+    color: #f8f8f2;
+}
+
+#modal_indicator{
+    color: #f8f8f2;    
+}
+
+#readonly-indicator{
+    color: #f8f8f2;
+}
+
+.typeahead-dropdown, .typeahead-list{
+    background: #424439;
+    color: #f8f8f2;
+}
+
+.typeahead-dropdown>li>a, .typeahead-list>li>a{
+    color: #f8f8f2;
+}
+
+.typeahead-field input, .typeahead-select{
+    color: #f8f8f2;
+    background: #424439;
+}
+
+.typeahead-container button{
+    color: #f8f8f2;
+    background: #777;    
+}
+
+.typeahead-field input:last-child, .typeahead-hint{
+    color: #f8f8f2;
+    background: #424439;        
+}
+
+.command-shortcut:before{
+    color: #dfdfd9;
+}
+
+.edit-shortcut:before{
+    color: #dfdfd9;
+}
+
+kbd{
+    color: #dfdfd9;
+}
+
 .rendered_html{
     color: #f8f8f2;
 }
