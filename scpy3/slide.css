@@ -4,6 +4,15 @@
     overflow-y:hidden !important;
 }
 
+.reveal p code{
+    padding-left:5px;
+    padding-right:5px;
+}
+
+.reveal-theme-blood code{
+    color: #c7254e;
+}
+
 .reveal pre code{
     padding: 0px !important;
 }

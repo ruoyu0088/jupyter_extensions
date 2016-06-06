@@ -378,12 +378,14 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
         jQuery("#scpy3-toc").hide();
         cells = nb.get_cells();
         el_reveal = T("div.reveal").appendTo(jQuery("body"));
+        el_reveal.addClass("reveal-theme-" + get_option("theme") + "");
         el_slides = T("div.slides").appendTo(el_reveal);
         el_section = null;
         el_subsection = null;
         cnt_section = -1;
         cnt_subsection = -1;
         selected_index = nb.get_selected_index();
+        start_section = [0, 0];
         process_code = (function (cell) {
             var _append_code_html, _append_code_output, code, mdcode;
             _append_code_output = (function () {
@@ -447,7 +449,7 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
                 }
             }
         }
-        Reveal.initialize({"controls": true, "progress": true, "history": true, "center": true, "transition": get_option("transition"), "keyboard": {81: end_slide}});
+        Reveal.initialize({"controls": true, "progress": true, "history": true, "center": true, "transition": get_option("transition"), "transitionSpeed": get_option("speed"), "keyboard": {81: end_slide}});
         on_ready = (function (event) {
             Reveal.layout();
             Reveal.slide(start_section[0], start_section[1], 0);

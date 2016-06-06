@@ -110,8 +110,9 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
         
         cells = nb.get_cells()
         el_reveal = T('div.reveal').appendTo(jQuery('body'))
+        el_reveal.addClass('reveal-theme-%s' % get_option('theme'))
         el_slides = T('div.slides').appendTo(el_reveal)
-        
+    
         el_section = None
         el_subsection = None
         cnt_section = -1
@@ -165,6 +166,7 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
             'history': True,
             'center': True,
             'transition': get_option('transition'),
+            'transitionSpeed': get_option('speed'),
             'keyboard': {
                 81: end_slide
             }
