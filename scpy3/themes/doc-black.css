@@ -27,6 +27,10 @@ body > #header{
 }
 
 .dropdown-submenu:hover > a:after{
+    color: #272822;
+}
+
+.dropdown-submenu > a:after{
     color: #f8f8f2;
 }
 
