@@ -6,8 +6,10 @@ def load_css(name):
     document.getElementsByTagName('head')[0].appendChild(link)
 
 def unload_css(names):
+    if isinstance(names, str):
+        names = [names]
     to_remove = []
-    for el in document.getElementsByTagName('link').values():
+    for el in jQuery('link').toArray():
         href = el.getAttribute('href')
         for name in names:
             if "scpy3" in href and name in href:
