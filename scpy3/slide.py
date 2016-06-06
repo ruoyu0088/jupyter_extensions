@@ -63,7 +63,7 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
         show_dialog('Reveal.js configuration', dlg_body, None, [["Ok", on_ok]])        
     
     def revealjs_loaded():
-        console.log('revealjs loaded3')
+        console.log('revealjs loaded')
     
     def is_new_section(cell):
         return get_level(cell) <= 2
@@ -77,9 +77,9 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
     def end_slide():
         nb = Jupyter.notebook
         nb.keyboard_manager.enable()
-        unload_css('./reveal.js/css/reveal.css')
-        unload_css('./reveal.js/css/theme/%s.css' % get_option('theme'))
-        unload_css('./slide.css')
+        unload_css('reveal.js/css/reveal.css')
+        unload_css('reveal.js/css/theme/%s.css' % get_option('theme'))
+        unload_css('slide.css')
 
         jQuery('.reveal').remove()
         if header_flag:

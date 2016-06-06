@@ -310,7 +310,7 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
     }).bind(this);
 
     revealjs_loaded = (function () {
-        console.log("revealjs loaded3");
+        console.log("revealjs loaded");
         return null;
     }).bind(this);
 
@@ -331,9 +331,9 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
         var nb;
         nb = Jupyter.notebook;
         nb.keyboard_manager.enable();
-        unload_css("./reveal.js/css/reveal.css");
-        unload_css("./reveal.js/css/theme/" + get_option("theme") + ".css");
-        unload_css("./slide.css");
+        unload_css("reveal.js/css/reveal.css");
+        unload_css("reveal.js/css/theme/" + get_option("theme") + ".css");
+        unload_css("slide.css");
         jQuery(".reveal").remove();
         if (_pyfunc_truthy(header_flag)) {
             jQuery("#header").show();
