@@ -28,6 +28,7 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
     
     require([require.toUrl(url) for url in revealjs], revealjs_loaded)
     header_flag = None
+    toc_flag = None
     
     def get_option(name):
         options = get_metadata(Jupyter.notebook, 'slide')
@@ -84,10 +85,12 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
         jQuery('.reveal').remove()
         if header_flag:
             jQuery('#header').show()
+        if toc_flag:
+            jQuery('#scpy3-toc').show()
         jQuery('#site').show()
  
     def start_slide():
-        nonlocal header_flag
+        nonlocal header_flag, toc_flag
         nb = Jupyter.notebook
         nb.keyboard_manager.disable()
 
@@ -96,8 +99,10 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
         load_css('./slide.css')
 
         header_flag = jQuery('#header')['is'](':visible')
+        toc_flag = jQuery('#scpy3-toc')['is'](':visible')
         jQuery('#header').hide()
         jQuery('#site').hide()
+        jQuery('#scpy3-toc').hide()
         
         cells = nb.get_cells()
         el_reveal = T('div.reveal').appendTo(jQuery('body'))
