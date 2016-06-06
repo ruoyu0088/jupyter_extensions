@@ -1,3 +1,63 @@
+#ipython_notebook img {
+    -webkit-filter: invert(1);
+    filter: invert(1);
+}
+
+body{
+    background: #272822; color: #f8f8f2;    
+}
+
+body > #header{
+    background: #272822; color: #f8f8f2;
+}
+
+.navbar-default{
+    background: #272822; color: #f8f8f2;
+    border-color: #272822;
+}
+
+.navbar-default .navbar-collapse, .navbar-default .navbar-form{
+    border-color: #272822;
+    color: #f8f8f2;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus{
+    color: #f8f8f2;
+}
+
+.dropdown-submenu:hover > a:after{
+    color: #f8f8f2;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus{
+    color: #272822;				   
+}
+
+.dropdown-menu > li > a {
+    color: #f8f8f2;				       
+}
+
+.dropdown-menu{
+    background: #424439;
+    color: #f8f8f2;
+}
+
+.btn-default, .form-control{
+    background: #424439;
+    color: #f8f8f2;
+    border-color: #57594b;    
+}
+
+body > #header .header-bar{
+    background: #424439;    
+}
+
+.navbar-default .navbar-nav > li > a{
+    color: #ddddc0;
+}
+
 div#notebook{
     font-size:16px;
     background: #272822; color: #f8f8f2;
