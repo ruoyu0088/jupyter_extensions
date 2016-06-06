@@ -58,6 +58,10 @@ body > #header .header-bar{
     color: #ddddc0;
 }
 
+.modal-content{
+    background: #272822; color: #f8f8f2;    
+}
+
 div#notebook{
     font-size:16px;
     background: #272822; color: #f8f8f2;
@@ -147,6 +151,14 @@ div.input_area{
 
 blockquote.icon_box .large_font{
     color:#42A5F5 !important;
+}
+
+.rendered_html h1:first-child,
+.rendered_html h2:first-child,
+.rendered_html h3:first-child,
+.rendered_html h4:first-child,
+.rendered_html h5:first-child{
+    margin-top: 1px;
 }
 
 /* Based on Sublime Text's Monokai theme */
