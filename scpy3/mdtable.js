@@ -122,23 +122,8 @@ var imports, load;
 imports = ["base/js/namespace", "base/js/dialog", "services/config", "base/js/utils", "components/marked/lib/marked"];
 load = function (Jupyter, dialog, configmod, utils, marked) {
     var format_markdown_table, format_table, main, register_actions;
-    register_actions = (function (actions, target) {
-        var action, dummy1_sequence, key, km;
-        target = (target === undefined) ? "command": target;
-        km = Jupyter.keyboard_manager;
-        dummy1_sequence = actions;
-        for (key in dummy1_sequence) {
-            if (!dummy1_sequence.hasOwnProperty(key)){ continue; }
-            action = dummy1_sequence[key];
-            key = _pymeth_replace.call(key, "_", "-");
-            km.actions.register(action, key, "scpy3");
-            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
-        }
-        return null;
-    }).bind(this);
-
     format_table = (function (table) {
-        var col_sizes, dummy2_sequence, dummy3_iter, dummy4_sequence, dummy5_iter, dummy6_target, format_split, i, line, ncol, nrow, res, row, row_text, rows;
+        var col_sizes, dummy1_sequence, dummy2_iter, dummy3_sequence, dummy4_iter, dummy5_target, format_split, i, line, ncol, nrow, res, row, row_text, rows;
         format_split = (function (text, size) {
             text = _pymeth_strip.call(text);
             if ((_pyfunc_equals(text[0], "-") && _pyfunc_equals(text[text.length -1], "-"))) {
@@ -154,12 +139,12 @@ load = function (Jupyter, dialog, configmod, utils, marked) {
         }).bind(this);
 
         rows = [];
-        dummy2_sequence = _pymeth_split.call(table, "\n");
-        if ((typeof dummy2_sequence === "object") && (!Array.isArray(dummy2_sequence))) {
-            dummy2_sequence = Object.keys(dummy2_sequence);
+        dummy1_sequence = _pymeth_split.call(table, "\n");
+        if ((typeof dummy1_sequence === "object") && (!Array.isArray(dummy1_sequence))) {
+            dummy1_sequence = Object.keys(dummy1_sequence);
         }
-        for (dummy3_iter = 0; dummy3_iter < dummy2_sequence.length; dummy3_iter += 1) {
-            line = dummy2_sequence[dummy3_iter];
+        for (dummy2_iter = 0; dummy2_iter < dummy1_sequence.length; dummy2_iter += 1) {
+            line = dummy1_sequence[dummy2_iter];
             if (_pyfunc_truthy(_pymeth_startswith.call(line, "|"))) {
                 line = _pymeth_strip.call(_pymeth_strip.call(line), "|");
                 row = (function list_comprehenson () {var res = [];var text, iter0, i0;iter0 = _pymeth_split.call(line, "|");if ((typeof iter0 === "object") && (!Array.isArray(iter0))) {iter0 = Object.keys(iter0);}for (i0=0; i0<iter0.length; i0++) {text = iter0[i0];{res.push(_pymeth_strip.call(text));}}return res;}).apply(this);
@@ -174,13 +159,13 @@ load = function (Jupyter, dialog, configmod, utils, marked) {
         nrow = rows.length;
         col_sizes = (function list_comprehenson () {var res = [];var i, iter0, i0;iter0 = _pyfunc_range(0, ncol, 1);if ((typeof iter0 === "object") && (!Array.isArray(iter0))) {iter0 = Object.keys(iter0);}for (i0=0; i0<iter0.length; i0++) {i = iter0[i0];{res.push(Math.max.apply(null, (function list_comprehenson () {var res = [];var j, row, iter0, i0;iter0 = _pyfunc_enumerate(rows);if ((typeof iter0 === "object") && (!Array.isArray(iter0))) {iter0 = Object.keys(iter0);}for (i0=0; i0<iter0.length; i0++) {j = iter0[i0][0]; row = iter0[i0][1];if (!((!_pyfunc_equals(j, 1)))) {continue;}{res.push(row[i].length);}}return res;}).apply(this)));}}return res;}).apply(this);
         res = [];
-        dummy4_sequence = _pyfunc_enumerate(rows);
-        if ((typeof dummy4_sequence === "object") && (!Array.isArray(dummy4_sequence))) {
-            dummy4_sequence = Object.keys(dummy4_sequence);
+        dummy3_sequence = _pyfunc_enumerate(rows);
+        if ((typeof dummy3_sequence === "object") && (!Array.isArray(dummy3_sequence))) {
+            dummy3_sequence = Object.keys(dummy3_sequence);
         }
-        for (dummy5_iter = 0; dummy5_iter < dummy4_sequence.length; dummy5_iter += 1) {
-            dummy6_target = dummy4_sequence[dummy5_iter];
-            i = dummy6_target[0]; row = dummy6_target[1];
+        for (dummy4_iter = 0; dummy4_iter < dummy3_sequence.length; dummy4_iter += 1) {
+            dummy5_target = dummy3_sequence[dummy4_iter];
+            i = dummy5_target[0]; row = dummy5_target[1];
             if ((!_pyfunc_equals(i, 1))) {
                 row_text = ("|" + (_pymeth_join.call("|", ((function list_comprehenson () {var res = [];var j, text, iter0, i0;iter0 = _pyfunc_enumerate(row);if ((typeof iter0 === "object") && (!Array.isArray(iter0))) {iter0 = Object.keys(iter0);}for (i0=0; i0<iter0.length; i0++) {j = iter0[i0][0]; text = iter0[i0][1];{res.push(_pymeth_center.call(text, (col_sizes[j] + 2)));}}return res;}).apply(this))))) + "|";
             } else {
@@ -189,6 +174,21 @@ load = function (Jupyter, dialog, configmod, utils, marked) {
             _pymeth_append.call(res, row_text);
         }
         return _pymeth_join.call("\n", res);
+    }).bind(this);
+
+    register_actions = (function (actions, target) {
+        var action, dummy6_sequence, key, km;
+        target = (target === undefined) ? "command": target;
+        km = Jupyter.keyboard_manager;
+        dummy6_sequence = actions;
+        for (key in dummy6_sequence) {
+            if (!dummy6_sequence.hasOwnProperty(key)){ continue; }
+            action = dummy6_sequence[key];
+            key = _pymeth_replace.call(key, "_", "-");
+            km.actions.register(action, key, "scpy3");
+            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
+        }
+        return null;
     }).bind(this);
 
     format_markdown_table = (function (event) {

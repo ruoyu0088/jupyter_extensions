@@ -41,44 +41,13 @@ imports = ["base/js/namespace", "require", "base/js/events"];
 themes = ["default", "oceans16", "grade3", "space-legos", "doc-white", "doc-black"];
 load = function (Jupyter, require, events) {
     var get_metadata, load_css, main, set_metadata, unload_css;
-    load_css = (function (name) {
-        var link;
-        link = document.createElement("link");
-        link.type = "text/css";
-        link.rel = "stylesheet";
-        link.href = require.toUrl(name);
-        (document.getElementsByTagName("head")[0]).appendChild(link);
-        return null;
-    }).bind(this);
-
-    unload_css = (function (names) {
-        var dummy1_sequence, dummy2_iter, dummy3_sequence, dummy4_sequence, dummy5_iter, el, href, name, to_remove;
-        to_remove = [];
-        dummy3_sequence = document.getElementsByTagName("link");
-        for (el in dummy3_sequence) {
-            if (!dummy3_sequence.hasOwnProperty(el)){ continue; }
-            el = dummy3_sequence[el];
-            href = el.getAttribute("href");
-            dummy1_sequence = names;
-            if ((typeof dummy1_sequence === "object") && (!Array.isArray(dummy1_sequence))) {
-                dummy1_sequence = Object.keys(dummy1_sequence);
-            }
-            for (dummy2_iter = 0; dummy2_iter < dummy1_sequence.length; dummy2_iter += 1) {
-                name = dummy1_sequence[dummy2_iter];
-                if (((_pyfunc_truthy(_pyfunc_contains("scpy3", href))) && (_pyfunc_truthy(_pyfunc_contains(name, href))))) {
-                    _pymeth_append.call(to_remove, el);
-                    break;
-                }
-            }
+    set_metadata = (function (target, key, value) {
+        var meta;
+        meta = target.metadata;
+        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
+            meta.scpy3 = {};
         }
-        dummy4_sequence = to_remove;
-        if ((typeof dummy4_sequence === "object") && (!Array.isArray(dummy4_sequence))) {
-            dummy4_sequence = Object.keys(dummy4_sequence);
-        }
-        for (dummy5_iter = 0; dummy5_iter < dummy4_sequence.length; dummy5_iter += 1) {
-            el = dummy4_sequence[dummy5_iter];
-            el.parentNode.removeChild(el);
-        }
+        meta.scpy3[key] = value;
         return null;
     }).bind(this);
 
@@ -94,19 +63,55 @@ load = function (Jupyter, require, events) {
         return meta.scpy3[key];
     }).bind(this);
 
-    set_metadata = (function (target, key, value) {
-        var meta;
-        meta = target.metadata;
-        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
-            meta.scpy3 = {};
+    load_css = (function (name) {
+        var link;
+        link = document.createElement("link");
+        link.type = "text/css";
+        link.rel = "stylesheet";
+        link.href = require.toUrl(name);
+        (document.getElementsByTagName("head")[0]).appendChild(link);
+        return null;
+    }).bind(this);
+
+    unload_css = (function (names) {
+        var dummy1_sequence, dummy2_iter, dummy3_sequence, dummy4_iter, dummy5_sequence, dummy6_iter, el, href, name, to_remove;
+        if ((({}).toString.call(names).match(/\s([a-zA-Z]+)/)[1].toLowerCase() === 'string')) {
+            names = [names];
         }
-        meta.scpy3[key] = value;
+        to_remove = [];
+        dummy3_sequence = jQuery("link").toArray();
+        if ((typeof dummy3_sequence === "object") && (!Array.isArray(dummy3_sequence))) {
+            dummy3_sequence = Object.keys(dummy3_sequence);
+        }
+        for (dummy4_iter = 0; dummy4_iter < dummy3_sequence.length; dummy4_iter += 1) {
+            el = dummy3_sequence[dummy4_iter];
+            href = el.getAttribute("href");
+            dummy1_sequence = names;
+            if ((typeof dummy1_sequence === "object") && (!Array.isArray(dummy1_sequence))) {
+                dummy1_sequence = Object.keys(dummy1_sequence);
+            }
+            for (dummy2_iter = 0; dummy2_iter < dummy1_sequence.length; dummy2_iter += 1) {
+                name = dummy1_sequence[dummy2_iter];
+                if (((_pyfunc_truthy(_pyfunc_contains("scpy3", href))) && (_pyfunc_truthy(_pyfunc_contains(name, href))))) {
+                    _pymeth_append.call(to_remove, el);
+                    break;
+                }
+            }
+        }
+        dummy5_sequence = to_remove;
+        if ((typeof dummy5_sequence === "object") && (!Array.isArray(dummy5_sequence))) {
+            dummy5_sequence = Object.keys(dummy5_sequence);
+        }
+        for (dummy6_iter = 0; dummy6_iter < dummy5_sequence.length; dummy6_iter += 1) {
+            el = dummy5_sequence[dummy6_iter];
+            el.parentNode.removeChild(el);
+        }
         return null;
     }).bind(this);
 
     load_css("./style.css");
     main = (function () {
-        var dummy6_sequence, dummy7_iter, on_theme_changed, select, theme;
+        var dummy7_sequence, dummy8_iter, on_theme_changed, select, theme;
         on_theme_changed = (function () {
             var theme;
             theme = select.val();
@@ -122,12 +127,12 @@ load = function (Jupyter, require, events) {
         select = jQuery("<select/>").attr("id", "scpy3-theme-selector");
         select.addClass("form-control select-xs");
         _pymeth_append.call(select, jQuery("<optgroup label = \"Themes:\">"));
-        dummy6_sequence = themes;
-        if ((typeof dummy6_sequence === "object") && (!Array.isArray(dummy6_sequence))) {
-            dummy6_sequence = Object.keys(dummy6_sequence);
+        dummy7_sequence = themes;
+        if ((typeof dummy7_sequence === "object") && (!Array.isArray(dummy7_sequence))) {
+            dummy7_sequence = Object.keys(dummy7_sequence);
         }
-        for (dummy7_iter = 0; dummy7_iter < dummy6_sequence.length; dummy7_iter += 1) {
-            theme = dummy6_sequence[dummy7_iter];
+        for (dummy8_iter = 0; dummy8_iter < dummy7_sequence.length; dummy8_iter += 1) {
+            theme = dummy7_sequence[dummy8_iter];
             _pymeth_append.call(select, ((jQuery("<option/>").attr("value", theme)).text(theme)));
         }
         select.change(on_theme_changed);

@@ -68,6 +68,13 @@ load = function (Jupyter, events, require) {
         return null;
     }).bind(this);
 
+    show_message = (function (message, wait) {
+        var notification_widget;
+        notification_widget = Jupyter.notification_area.widget("notebook");
+        notification_widget.set_message(message, wait);
+        return null;
+    }).bind(this);
+
     register_actions = (function (actions, target) {
         var action, dummy1_sequence, key, km;
         target = (target === undefined) ? "command": target;
@@ -80,13 +87,6 @@ load = function (Jupyter, events, require) {
             km.actions.register(action, key, "scpy3");
             km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
         }
-        return null;
-    }).bind(this);
-
-    show_message = (function (message, wait) {
-        var notification_widget;
-        notification_widget = Jupyter.notification_area.widget("notebook");
-        notification_widget.set_message(message, wait);
         return null;
     }).bind(this);
 

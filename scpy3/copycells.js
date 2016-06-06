@@ -98,13 +98,6 @@ var imports, load;
 imports = ["base/js/namespace", "services/config", "base/js/utils"];
 load = function (Jupyter, configmod, utils) {
     var T, base_url, config, copy_config, get_level, main, register_actions, show_message, typeahead_form;
-    show_message = (function (message, wait) {
-        var notification_widget;
-        notification_widget = Jupyter.notification_area.widget("notebook");
-        notification_widget.set_message(message, wait);
-        return null;
-    }).bind(this);
-
     get_level = (function (cell) {
         var level, text;
         if ((!_pyfunc_equals(cell.cell_type, "markdown"))) {
@@ -139,6 +132,13 @@ load = function (Jupyter, configmod, utils) {
             _pymeth_append.call(el, child);
         }
         return el;
+    }).bind(this);
+
+    show_message = (function (message, wait) {
+        var notification_widget;
+        notification_widget = Jupyter.notification_area.widget("notebook");
+        notification_widget.set_message(message, wait);
+        return null;
     }).bind(this);
 
     register_actions = (function (actions, target) {
