@@ -1,0 +1,82 @@
+.reveal pre{
+    padding:10px !important;
+    overflow-x:hidden !important;
+    overflow-y:hidden !important;
+}
+
+.reveal pre code{
+    padding: 0px !important;
+}
+
+/* apply the same style to codemirror */
+.reveal .cm-s-ipython span.cm-keyword {
+  color: #008000;
+  font-weight: bold;
+}
+.reveal .cm-s-ipython span.cm-atom {
+  color: #88F;
+}
+.reveal .cm-s-ipython span.cm-number {
+  color: #080;
+}
+.reveal .cm-s-ipython span.cm-def {
+  color: #00f;
+}
+.reveal .cm-s-ipython span.cm-variable {
+  color: #000;
+}
+.reveal .cm-s-ipython span.cm-operator {
+  color: #AA22FF;
+  font-weight: bold;
+}
+.reveal .cm-s-ipython span.cm-variable-2 {
+  color: #1a1a1a;
+}
+.reveal .cm-s-ipython span.cm-variable-3 {
+  color: #333333;
+}
+.reveal .cm-s-ipython span.cm-comment {
+  color: #408080;
+  font-style: italic;
+}
+.reveal .cm-s-ipython span.cm-string {
+  color: #BA2121;
+}
+.reveal .cm-s-ipython span.cm-string-2 {
+  color: #f50;
+}
+.reveal .cm-s-ipython span.cm-meta {
+  color: #AA22FF;
+}
+.reveal .cm-s-ipython span.cm-qualifier {
+  color: #555;
+}
+.reveal .cm-s-ipython span.cm-builtin {
+  color: #008000;
+}
+.reveal .cm-s-ipython span.cm-bracket {
+  color: #997;
+}
+.reveal .cm-s-ipython span.cm-tag {
+  color: #170;
+}
+.reveal .cm-s-ipython span.cm-attribute {
+  color: #00c;
+}
+.reveal .cm-s-ipython span.cm-header {
+  color: blue;
+}
+.reveal .cm-s-ipython span.cm-quote {
+  color: #090;
+}
+.reveal .cm-s-ipython span.cm-link {
+  color: #00c;
+}
+.reveal .cm-s-ipython span.cm-error {
+  color: #f00;
+}
+.reveal .cm-s-ipython span.cm-tab {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAMCAYAAAAkuj5RAAAAAXNSR0IArs4c6QAAAGFJREFUSMft1LsRQFAQheHPowAKoACx3IgEKtaEHujDjORSgWTH/ZOdnZOcM/sgk/kFFWY0qV8foQwS4MKBCS3qR6ixBJvElOobYAtivseIE120FaowJPN75GMu8j/LfMwNjh4HUpwg4LUAAAAASUVORK5CYII=);
+  background-position: right;
+  background-repeat: no-repeat;
+}

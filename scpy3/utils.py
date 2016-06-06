@@ -190,3 +190,11 @@ def format_table(table):
             row_text = '|' + '|'.join([format_split(text, col_sizes[j] + 2) for j, text in enumerate(row)]) + '|'                
         res.append(row_text)
     return '\n'.join(res)
+
+def make_selector(label, options):
+    el = jQuery('<select/>')
+    el.addClass('form-control')
+    el.append(jQuery('<optgroup label = "%s:">' % label))
+    for item in options:
+        el.append(jQuery('<option/>').attr('value', item).text(item))
+    return el
