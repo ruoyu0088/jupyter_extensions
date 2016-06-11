@@ -98,77 +98,19 @@ var imports, load;
 imports = ["base/js/namespace", "services/config", "base/js/utils"];
 load = function (Jupyter, configmod, utils) {
     var T, base_url, config, copy_config, get_level, main, register_actions, show_message, typeahead_form;
-    get_level = (function (cell) {
-        var level, text;
-        if ((!_pyfunc_equals(cell.cell_type, "markdown"))) {
-            return 1000;
-        }
-        text = cell.get_text();
-        if (_pyfunc_truthy(_pymeth_startswith.call(text, "#"))) {
-            level = text.length - (_pymeth_lstrip.call(text, "#").length);
-            return level;
-        }
-        return 1000;
-    }).bind(this);
-
-    T = (function (tagname) {
-        var args, child, dummy1_, dummy2_sequence, dummy3_iter, el, klass;
-        args = Array.prototype.slice.call(arguments).slice(1);
-        klass = null;
-        if (_pyfunc_truthy(_pyfunc_contains(".", tagname))) {
-            dummy1_ = _pymeth_split.call(tagname, ".");
-            tagname = dummy1_[0];klass = dummy1_[1];
-        }
-        el = jQuery("<" + tagname + "/>");
-        if ((klass !== null)) {
-            el.addClass(klass);
-        }
-        dummy2_sequence = args;
-        if ((typeof dummy2_sequence === "object") && (!Array.isArray(dummy2_sequence))) {
-            dummy2_sequence = Object.keys(dummy2_sequence);
-        }
-        for (dummy3_iter = 0; dummy3_iter < dummy2_sequence.length; dummy3_iter += 1) {
-            child = dummy2_sequence[dummy3_iter];
-            _pymeth_append.call(el, child);
-        }
-        return el;
-    }).bind(this);
-
-    show_message = (function (message, wait) {
-        var notification_widget;
-        notification_widget = Jupyter.notification_area.widget("notebook");
-        notification_widget.set_message(message, wait);
-        return null;
-    }).bind(this);
-
-    register_actions = (function (actions, target) {
-        var action, dummy4_sequence, key, km;
-        target = (target === undefined) ? "command": target;
-        km = Jupyter.keyboard_manager;
-        dummy4_sequence = actions;
-        for (key in dummy4_sequence) {
-            if (!dummy4_sequence.hasOwnProperty(key)){ continue; }
-            action = dummy4_sequence[key];
-            key = _pymeth_replace.call(key, "_", "-");
-            km.actions.register(action, key, "scpy3");
-            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
-        }
-        return null;
-    }).bind(this);
-
     typeahead_form = (function () {
         var before_close, container, field, form, input_, mod, nb, on_show, search_button;
         nb = Jupyter.notebook;
-        form = T("form");
-        container = T("div.typeahead-container");
-        field = T("div.typeahead-field");
-        input_ = T("input").attr("type", "search");
-        search_button = (T("button", T("span.typeahead-search-icon"))).attr("type", "submit");
-        _pymeth_append.call(field, T("span.typeahead-query", input_));
-        _pymeth_append.call(field, T("span.typeahead-button", search_button));
+        form = new T("form");
+        container = new T("div.typeahead-container");
+        field = new T("div.typeahead-field");
+        input_ = (new T("input")).attr("type", "search");
+        search_button = (new T("button", new T("span.typeahead-search-icon"))).attr("type", "submit");
+        _pymeth_append.call(field, (new T("span.typeahead-query", input_)));
+        _pymeth_append.call(field, (new T("span.typeahead-button", search_button)));
         _pymeth_append.call(container, field);
         _pymeth_append.call(form, container);
-        mod = T("div.modal cmd-palette", T("div.modal-dialog", T("div.modal-content", T("div.modal-body", form))));
+        mod = new T("div.modal cmd-palette", new T("div.modal-dialog", new T("div.modal-content", new T("div.modal-body", form))));
         mod.modal({"show": false, "backdrop": true});
         on_show = (function () {
             var focus;
@@ -202,6 +144,64 @@ load = function (Jupyter, configmod, utils) {
 
         mod.on("hide.bs.modal", before_close);
         return [mod, input_];
+    }).bind(this);
+
+    register_actions = (function (actions, target) {
+        var action, dummy1_sequence, key, km;
+        target = (target === undefined) ? "command": target;
+        km = Jupyter.keyboard_manager;
+        dummy1_sequence = actions;
+        for (key in dummy1_sequence) {
+            if (!dummy1_sequence.hasOwnProperty(key)){ continue; }
+            action = dummy1_sequence[key];
+            key = _pymeth_replace.call(key, "_", "-");
+            km.actions.register(action, key, "scpy3");
+            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
+        }
+        return null;
+    }).bind(this);
+
+    T = (function (tagname) {
+        var args, child, dummy2_, dummy3_sequence, dummy4_iter, el, klass;
+        args = Array.prototype.slice.call(arguments).slice(1);
+        klass = null;
+        if (_pyfunc_truthy(_pyfunc_contains(".", tagname))) {
+            dummy2_ = _pymeth_split.call(tagname, ".");
+            tagname = dummy2_[0];klass = dummy2_[1];
+        }
+        el = jQuery("<" + tagname + "/>");
+        if ((klass !== null)) {
+            el.addClass(klass);
+        }
+        dummy3_sequence = args;
+        if ((typeof dummy3_sequence === "object") && (!Array.isArray(dummy3_sequence))) {
+            dummy3_sequence = Object.keys(dummy3_sequence);
+        }
+        for (dummy4_iter = 0; dummy4_iter < dummy3_sequence.length; dummy4_iter += 1) {
+            child = dummy3_sequence[dummy4_iter];
+            _pymeth_append.call(el, child);
+        }
+        return el;
+    }).bind(this);
+
+    show_message = (function (message, wait) {
+        var notification_widget;
+        notification_widget = Jupyter.notification_area.widget("notebook");
+        notification_widget.set_message(message, wait);
+        return null;
+    }).bind(this);
+
+    get_level = (function (cell) {
+        var level, text;
+        if ((!_pyfunc_equals(cell.cell_type, "markdown"))) {
+            return 1000;
+        }
+        text = cell.get_text();
+        if (_pyfunc_truthy(_pymeth_startswith.call(text, "#"))) {
+            level = text.length - (_pymeth_lstrip.call(text, "#").length);
+            return level;
+        }
+        return 1000;
     }).bind(this);
 
     base_url = utils.get_body_data("baseUrl");

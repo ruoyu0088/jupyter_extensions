@@ -135,17 +135,28 @@ load = function (Jupyter, dialog, configmod, utils, require) {
         return el;
     }).bind(this);
 
-    show_message = (function (message, wait) {
-        var notification_widget;
-        notification_widget = Jupyter.notification_area.widget("notebook");
-        notification_widget.set_message(message, wait);
-        return null;
-    }).bind(this);
-
-    config_save = (function (config) {
-        var url;
-        url = config.api_url();
-        utils.promising_ajax(url, {"cache": false, "type": "PUT", "data": JSON.stringify(config.data), "contentType": "application/json"});
+    show_dialog = (function (title, body, open_callback, buttons) {
+        var button, buttons_setting, callback, dialog_settings, dummy4_sequence, dummy5_iter, dummy6_target;
+        open_callback = (open_callback === undefined) ? null: open_callback;
+        buttons = (buttons === undefined) ? null: buttons;
+        dialog_settings = {"notebook": Jupyter.notebook, "keyboard_manager": Jupyter.keyboard_manager, "title": title, "body": body};
+        if ((open_callback !== null)) {
+            dialog_settings["open"] = open_callback;
+        }
+        if ((buttons !== null)) {
+            buttons_setting = {};
+            dummy4_sequence = buttons;
+            if ((typeof dummy4_sequence === "object") && (!Array.isArray(dummy4_sequence))) {
+                dummy4_sequence = Object.keys(dummy4_sequence);
+            }
+            for (dummy5_iter = 0; dummy5_iter < dummy4_sequence.length; dummy5_iter += 1) {
+                dummy6_target = dummy4_sequence[dummy5_iter];
+                button = dummy6_target[0]; callback = dummy6_target[1];
+                buttons_setting[button] = {"class": "btn-primary", "click": callback};
+            }
+            dialog_settings["buttons"] = buttons_setting;
+        }
+        dialog.modal(dialog_settings);
         return null;
     }).bind(this);
 
@@ -197,37 +208,15 @@ load = function (Jupyter, dialog, configmod, utils, require) {
         return [mod, input_];
     }).bind(this);
 
-    show_dialog = (function (title, body, open_callback, buttons) {
-        var button, buttons_setting, callback, dialog_settings, dummy4_sequence, dummy5_iter, dummy6_target;
-        open_callback = (open_callback === undefined) ? null: open_callback;
-        buttons = (buttons === undefined) ? null: buttons;
-        dialog_settings = {"notebook": Jupyter.notebook, "keyboard_manager": Jupyter.keyboard_manager, "title": title, "body": body};
-        if ((open_callback !== null)) {
-            dialog_settings["open"] = open_callback;
-        }
-        if ((buttons !== null)) {
-            buttons_setting = {};
-            dummy4_sequence = buttons;
-            if ((typeof dummy4_sequence === "object") && (!Array.isArray(dummy4_sequence))) {
-                dummy4_sequence = Object.keys(dummy4_sequence);
-            }
-            for (dummy5_iter = 0; dummy5_iter < dummy4_sequence.length; dummy5_iter += 1) {
-                dummy6_target = dummy4_sequence[dummy5_iter];
-                button = dummy6_target[0]; callback = dummy6_target[1];
-                buttons_setting[button] = {"class": "btn-primary", "click": callback};
-            }
-            dialog_settings["buttons"] = buttons_setting;
-        }
-        dialog.modal(dialog_settings);
-        return null;
-    }).bind(this);
-
-    firstline = (function (text) {
-        return _pymeth_split.call(text, "\n")[0];
-    }).bind(this);
-
     remove_firstline = (function (text) {
         return text.slice(_pymeth_find.call(text, "\n") + 1);
+    }).bind(this);
+
+    show_message = (function (message, wait) {
+        var notification_widget;
+        notification_widget = Jupyter.notification_area.widget("notebook");
+        notification_widget.set_message(message, wait);
+        return null;
     }).bind(this);
 
     register_actions = (function (actions, target) {
@@ -242,6 +231,17 @@ load = function (Jupyter, dialog, configmod, utils, require) {
             km.actions.register(action, key, "scpy3");
             km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
         }
+        return null;
+    }).bind(this);
+
+    firstline = (function (text) {
+        return _pymeth_split.call(text, "\n")[0];
+    }).bind(this);
+
+    config_save = (function (config) {
+        var url;
+        url = config.api_url();
+        utils.promising_ajax(url, {"cache": false, "type": "PUT", "data": JSON.stringify(config.data), "contentType": "application/json"});
         return null;
     }).bind(this);
 
