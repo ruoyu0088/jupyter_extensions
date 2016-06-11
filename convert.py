@@ -7,6 +7,19 @@ import inspect
 import textwrap
 import ast
 from flexx.pyscript import py2js
+import lesscpy
+from lesscpy.lessc import color
+
+# patch bug in lesscpy
+def _rgbatohex(self, rgba):
+    return '#%s' % ''.join(["%02x" % int(v) for v in
+                            [0xff
+                             if h > 0xff else
+                             0 if h < 0 else h
+                             for h in rgba]
+                            ])
+
+color._rgbatohex = _rgbatohex
 
 wrap_code = """(function(){
 %s
@@ -101,3 +114,9 @@ for fn_py in glob("*/*.py"):
         with open(fn_js, "wb") as f:
             f.write((wrap_code % code_js).encode('utf-8'))
     
+for fn_less in glob('**/*.less', recursive=True):
+    print(fn_less)
+    with open(fn_less) as f:
+        css = lesscpy.compile(f)
+    with open(fn_less.replace('.less', '.css'), 'w') as f:
+        f.write(css)
