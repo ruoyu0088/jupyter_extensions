@@ -22,10 +22,15 @@ def load(Jupyter, require, events):
         select.change(on_theme_changed)
         Jupyter.toolbar.element.append(select)
 
-        theme = get_metadata(Jupyter.notebook, 'theme')
-        if theme is not None:
-            select.val(theme)
-            on_theme_changed()
+        def set_theme():
+            theme = get_metadata(Jupyter.notebook, 'theme')
+            console.log(theme)
+            if theme is not None:
+                select.val(theme)
+                on_theme_changed()
+
+        events.on("notebook_loaded.Notebook", set_theme)
+        set_theme()
     
     return {"load_ipython_extension": main}
 

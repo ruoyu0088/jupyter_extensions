@@ -41,16 +41,6 @@ imports = ["base/js/namespace", "require", "base/js/events"];
 themes = ["default", "oceans16", "grade3", "space-legos", "doc-white", "doc-black"];
 load = function (Jupyter, require, events) {
     var get_metadata, load_css, main, set_metadata, unload_css;
-    set_metadata = (function (target, key, value) {
-        var meta;
-        meta = target.metadata;
-        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
-            meta.scpy3 = {};
-        }
-        meta.scpy3[key] = value;
-        return null;
-    }).bind(this);
-
     get_metadata = (function (target, key) {
         var meta;
         meta = target.metadata;
@@ -61,16 +51,6 @@ load = function (Jupyter, require, events) {
             return null;
         }
         return meta.scpy3[key];
-    }).bind(this);
-
-    load_css = (function (name) {
-        var link;
-        link = document.createElement("link");
-        link.type = "text/css";
-        link.rel = "stylesheet";
-        link.href = require.toUrl(name);
-        (document.getElementsByTagName("head")[0]).appendChild(link);
-        return null;
     }).bind(this);
 
     unload_css = (function (names) {
@@ -109,9 +89,29 @@ load = function (Jupyter, require, events) {
         return null;
     }).bind(this);
 
+    set_metadata = (function (target, key, value) {
+        var meta;
+        meta = target.metadata;
+        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
+            meta.scpy3 = {};
+        }
+        meta.scpy3[key] = value;
+        return null;
+    }).bind(this);
+
+    load_css = (function (name) {
+        var link;
+        link = document.createElement("link");
+        link.type = "text/css";
+        link.rel = "stylesheet";
+        link.href = require.toUrl(name);
+        (document.getElementsByTagName("head")[0]).appendChild(link);
+        return null;
+    }).bind(this);
+
     load_css("./style.css");
     main = (function () {
-        var dummy7_sequence, dummy8_iter, on_theme_changed, select, theme;
+        var dummy7_sequence, dummy8_iter, on_theme_changed, select, set_theme, theme;
         on_theme_changed = (function () {
             var theme;
             theme = select.val();
@@ -137,11 +137,19 @@ load = function (Jupyter, require, events) {
         }
         select.change(on_theme_changed);
         _pymeth_append.call(Jupyter.toolbar.element, select);
-        theme = get_metadata(Jupyter.notebook, "theme");
-        if ((theme !== null)) {
-            select.val(theme);
-            on_theme_changed();
-        }
+        set_theme = (function () {
+            var theme;
+            theme = get_metadata(Jupyter.notebook, "theme");
+            console.log(theme);
+            if ((theme !== null)) {
+                select.val(theme);
+                on_theme_changed();
+            }
+            return null;
+        }).bind(this);
+
+        events.on("notebook_loaded.Notebook", set_theme);
+        set_theme();
         return null;
     }).bind(this);
 
