@@ -60,6 +60,10 @@ var _pymeth_find = function (x, start, stop) { // nargs: 1 2 3
     if (i >= 0) return i + start;
     return -1;
 };
+var _pymeth_lower = function () { // nargs: 0
+    if (this.constructor !== String) return this.lower.apply(this, arguments);
+    return this.toLowerCase();
+};
 var _pymeth_lstrip = function (chars) { // nargs: 0 1
     if (this.constructor !== String) return this.lstrip.apply(this, arguments);
     chars = (chars === undefined) ? ' \t\r\n' : chars;
@@ -115,99 +119,40 @@ Themes = ["default", "beige", "blood", "night", "serif", "simple", "sky", "solar
 Transitions = ["none", "fade", "slide", "convex", "concave", "zoom"];
 Speeds = ["default", "slow", "fast"];
 load = function (Jupyter, dialog, configmod, utils, marked, require) {
-    var T, config_dialog, end_slide, get_level, get_metadata, get_option, header_flag, is_new_section, is_new_subsection, load_css, main, make_selector, register_actions, revealjs_loaded, set_metadata, show_dialog, start_section, start_slide, toc_flag, unload_css;
-    T = (function (tagname) {
-        var args, child, dummy1_, dummy2_sequence, dummy3_iter, el, klass;
-        args = Array.prototype.slice.call(arguments).slice(1);
-        klass = null;
-        if (_pyfunc_truthy(_pyfunc_contains(".", tagname))) {
-            dummy1_ = _pymeth_split.call(tagname, ".");
-            tagname = dummy1_[0];klass = dummy1_[1];
+    var T, config_dialog, end_slide, get_level, get_metadata, get_option, header_flag, is_new_section, is_new_subsection, load_css, main, make_selector, make_table, register_actions, revealjs_loaded, set_metadata, show_dialog, start_section, start_slide, toc_flag, unload_css;
+    make_table = (function (defs) {
+        var data, dummy1_sequence, dummy2_iter, dummy3_target, get_values, items, table, td, title, tr, type_, widget;
+        items = {};
+        table = new T("table");
+        dummy1_sequence = defs;
+        if ((typeof dummy1_sequence === "object") && (!Array.isArray(dummy1_sequence))) {
+            dummy1_sequence = Object.keys(dummy1_sequence);
         }
-        el = jQuery("<" + tagname + "/>");
-        if ((klass !== null)) {
-            el.addClass(klass);
+        for (dummy2_iter = 0; dummy2_iter < dummy1_sequence.length; dummy2_iter += 1) {
+            dummy3_target = dummy1_sequence[dummy2_iter];
+            title = dummy3_target[0]; type_ = dummy3_target[1]; data = dummy3_target[2];
+            tr = (new T("tr")).appendTo(table);
+            if (_pyfunc_equals(type_, "selector")) {
+                ((new T("td")).appendTo(tr)).html(title + ":");
+                td = (new T("td")).appendTo(tr);
+                widget = make_selector(title, data).appendTo(td);
+                widget.val(get_option(_pymeth_lower.call(title)));
+            }
+            items[title] = widget;
         }
-        dummy2_sequence = args;
-        if ((typeof dummy2_sequence === "object") && (!Array.isArray(dummy2_sequence))) {
-            dummy2_sequence = Object.keys(dummy2_sequence);
-        }
-        for (dummy3_iter = 0; dummy3_iter < dummy2_sequence.length; dummy3_iter += 1) {
-            child = dummy2_sequence[dummy3_iter];
-            _pymeth_append.call(el, child);
-        }
-        return el;
-    }).bind(this);
+        get_values = (function () {
+            var dummy4_sequence, item, key, res;
+            res = {};
+            dummy4_sequence = items;
+            for (key in dummy4_sequence) {
+                if (!dummy4_sequence.hasOwnProperty(key)){ continue; }
+                item = dummy4_sequence[key];
+                res[key] = item.val();
+            }
+            return res;
+        }).bind(this);
 
-    unload_css = (function (names) {
-        var dummy4_sequence, dummy5_iter, dummy6_sequence, dummy7_iter, dummy8_sequence, dummy9_iter, el, href, name, to_remove;
-        if ((({}).toString.call(names).match(/\s([a-zA-Z]+)/)[1].toLowerCase() === 'string')) {
-            names = [names];
-        }
-        to_remove = [];
-        dummy6_sequence = jQuery("link").toArray();
-        if ((typeof dummy6_sequence === "object") && (!Array.isArray(dummy6_sequence))) {
-            dummy6_sequence = Object.keys(dummy6_sequence);
-        }
-        for (dummy7_iter = 0; dummy7_iter < dummy6_sequence.length; dummy7_iter += 1) {
-            el = dummy6_sequence[dummy7_iter];
-            href = el.getAttribute("href");
-            dummy4_sequence = names;
-            if ((typeof dummy4_sequence === "object") && (!Array.isArray(dummy4_sequence))) {
-                dummy4_sequence = Object.keys(dummy4_sequence);
-            }
-            for (dummy5_iter = 0; dummy5_iter < dummy4_sequence.length; dummy5_iter += 1) {
-                name = dummy4_sequence[dummy5_iter];
-                if (((_pyfunc_truthy(_pyfunc_contains("scpy3", href))) && (_pyfunc_truthy(_pyfunc_contains(name, href))))) {
-                    _pymeth_append.call(to_remove, el);
-                    break;
-                }
-            }
-        }
-        dummy8_sequence = to_remove;
-        if ((typeof dummy8_sequence === "object") && (!Array.isArray(dummy8_sequence))) {
-            dummy8_sequence = Object.keys(dummy8_sequence);
-        }
-        for (dummy9_iter = 0; dummy9_iter < dummy8_sequence.length; dummy9_iter += 1) {
-            el = dummy8_sequence[dummy9_iter];
-            el.parentNode.removeChild(el);
-        }
-        return null;
-    }).bind(this);
-
-    set_metadata = (function (target, key, value) {
-        var meta;
-        meta = target.metadata;
-        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
-            meta.scpy3 = {};
-        }
-        meta.scpy3[key] = value;
-        return null;
-    }).bind(this);
-
-    show_dialog = (function (title, body, open_callback, buttons) {
-        var button, buttons_setting, callback, dialog_settings, dummy10_sequence, dummy11_iter, dummy12_target;
-        open_callback = (open_callback === undefined) ? null: open_callback;
-        buttons = (buttons === undefined) ? null: buttons;
-        dialog_settings = {"notebook": Jupyter.notebook, "keyboard_manager": Jupyter.keyboard_manager, "title": title, "body": body};
-        if ((open_callback !== null)) {
-            dialog_settings["open"] = open_callback;
-        }
-        if ((buttons !== null)) {
-            buttons_setting = {};
-            dummy10_sequence = buttons;
-            if ((typeof dummy10_sequence === "object") && (!Array.isArray(dummy10_sequence))) {
-                dummy10_sequence = Object.keys(dummy10_sequence);
-            }
-            for (dummy11_iter = 0; dummy11_iter < dummy10_sequence.length; dummy11_iter += 1) {
-                dummy12_target = dummy10_sequence[dummy11_iter];
-                button = dummy12_target[0]; callback = dummy12_target[1];
-                buttons_setting[button] = {"class": "btn-primary", "click": callback};
-            }
-            dialog_settings["buttons"] = buttons_setting;
-        }
-        dialog.modal(dialog_settings);
-        return null;
+        return {"table": table, "items": items, "get_values": get_values};
     }).bind(this);
 
     get_metadata = (function (target, key) {
@@ -220,22 +165,6 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
             return null;
         }
         return meta.scpy3[key];
-    }).bind(this);
-
-    make_selector = (function (label, options) {
-        var dummy13_sequence, dummy14_iter, el, item;
-        el = jQuery("<select/>");
-        el.addClass("form-control");
-        _pymeth_append.call(el, jQuery("<optgroup label = \"" + label + ":\">"));
-        dummy13_sequence = options;
-        if ((typeof dummy13_sequence === "object") && (!Array.isArray(dummy13_sequence))) {
-            dummy13_sequence = Object.keys(dummy13_sequence);
-        }
-        for (dummy14_iter = 0; dummy14_iter < dummy13_sequence.length; dummy14_iter += 1) {
-            item = dummy13_sequence[dummy14_iter];
-            _pymeth_append.call(el, ((jQuery("<option/>").attr("value", item)).text(item)));
-        }
-        return el;
     }).bind(this);
 
     get_level = (function (cell) {
@@ -251,6 +180,70 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
         return 1000;
     }).bind(this);
 
+    T = (function (tagname) {
+        var args, child, dummy5_, dummy6_sequence, dummy7_iter, el, klass;
+        args = Array.prototype.slice.call(arguments).slice(1);
+        klass = null;
+        if (_pyfunc_truthy(_pyfunc_contains(".", tagname))) {
+            dummy5_ = _pymeth_split.call(tagname, ".");
+            tagname = dummy5_[0];klass = dummy5_[1];
+        }
+        el = jQuery("<" + tagname + "/>");
+        if ((klass !== null)) {
+            el.addClass(klass);
+        }
+        dummy6_sequence = args;
+        if ((typeof dummy6_sequence === "object") && (!Array.isArray(dummy6_sequence))) {
+            dummy6_sequence = Object.keys(dummy6_sequence);
+        }
+        for (dummy7_iter = 0; dummy7_iter < dummy6_sequence.length; dummy7_iter += 1) {
+            child = dummy6_sequence[dummy7_iter];
+            _pymeth_append.call(el, child);
+        }
+        return el;
+    }).bind(this);
+
+    show_dialog = (function (title, body, open_callback, buttons) {
+        var button, buttons_setting, callback, dialog_settings, dummy10_target, dummy8_sequence, dummy9_iter;
+        open_callback = (open_callback === undefined) ? null: open_callback;
+        buttons = (buttons === undefined) ? null: buttons;
+        dialog_settings = {"notebook": Jupyter.notebook, "keyboard_manager": Jupyter.keyboard_manager, "title": title, "body": body};
+        if ((open_callback !== null)) {
+            dialog_settings["open"] = open_callback;
+        }
+        if ((buttons !== null)) {
+            buttons_setting = {};
+            dummy8_sequence = buttons;
+            if ((typeof dummy8_sequence === "object") && (!Array.isArray(dummy8_sequence))) {
+                dummy8_sequence = Object.keys(dummy8_sequence);
+            }
+            for (dummy9_iter = 0; dummy9_iter < dummy8_sequence.length; dummy9_iter += 1) {
+                dummy10_target = dummy8_sequence[dummy9_iter];
+                button = dummy10_target[0]; callback = dummy10_target[1];
+                buttons_setting[button] = {"class": "btn-primary", "click": callback};
+            }
+            dialog_settings["buttons"] = buttons_setting;
+        }
+        dialog.modal(dialog_settings);
+        return null;
+    }).bind(this);
+
+    make_selector = (function (label, options) {
+        var dummy11_sequence, dummy12_iter, el, item;
+        el = jQuery("<select/>");
+        el.addClass("form-control");
+        _pymeth_append.call(el, jQuery("<optgroup label = \"" + label + ":\">"));
+        dummy11_sequence = options;
+        if ((typeof dummy11_sequence === "object") && (!Array.isArray(dummy11_sequence))) {
+            dummy11_sequence = Object.keys(dummy11_sequence);
+        }
+        for (dummy12_iter = 0; dummy12_iter < dummy11_sequence.length; dummy12_iter += 1) {
+            item = dummy11_sequence[dummy12_iter];
+            _pymeth_append.call(el, ((jQuery("<option/>").attr("value", item)).text(item)));
+        }
+        return el;
+    }).bind(this);
+
     load_css = (function (name) {
         var link;
         link = document.createElement("link");
@@ -261,14 +254,60 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
         return null;
     }).bind(this);
 
+    unload_css = (function (names) {
+        var dummy13_sequence, dummy14_iter, dummy15_sequence, dummy16_iter, dummy17_sequence, dummy18_iter, el, href, name, to_remove;
+        if ((({}).toString.call(names).match(/\s([a-zA-Z]+)/)[1].toLowerCase() === 'string')) {
+            names = [names];
+        }
+        to_remove = [];
+        dummy15_sequence = jQuery("link").toArray();
+        if ((typeof dummy15_sequence === "object") && (!Array.isArray(dummy15_sequence))) {
+            dummy15_sequence = Object.keys(dummy15_sequence);
+        }
+        for (dummy16_iter = 0; dummy16_iter < dummy15_sequence.length; dummy16_iter += 1) {
+            el = dummy15_sequence[dummy16_iter];
+            href = el.getAttribute("href");
+            dummy13_sequence = names;
+            if ((typeof dummy13_sequence === "object") && (!Array.isArray(dummy13_sequence))) {
+                dummy13_sequence = Object.keys(dummy13_sequence);
+            }
+            for (dummy14_iter = 0; dummy14_iter < dummy13_sequence.length; dummy14_iter += 1) {
+                name = dummy13_sequence[dummy14_iter];
+                if (((_pyfunc_truthy(_pyfunc_contains("scpy3", href))) && (_pyfunc_truthy(_pyfunc_contains(name, href))))) {
+                    _pymeth_append.call(to_remove, el);
+                    break;
+                }
+            }
+        }
+        dummy17_sequence = to_remove;
+        if ((typeof dummy17_sequence === "object") && (!Array.isArray(dummy17_sequence))) {
+            dummy17_sequence = Object.keys(dummy17_sequence);
+        }
+        for (dummy18_iter = 0; dummy18_iter < dummy17_sequence.length; dummy18_iter += 1) {
+            el = dummy17_sequence[dummy18_iter];
+            el.parentNode.removeChild(el);
+        }
+        return null;
+    }).bind(this);
+
+    set_metadata = (function (target, key, value) {
+        var meta;
+        meta = target.metadata;
+        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
+            meta.scpy3 = {};
+        }
+        meta.scpy3[key] = value;
+        return null;
+    }).bind(this);
+
     register_actions = (function (actions, target) {
-        var action, dummy15_sequence, key, km;
+        var action, dummy19_sequence, key, km;
         target = (target === undefined) ? "command": target;
         km = Jupyter.keyboard_manager;
-        dummy15_sequence = actions;
-        for (key in dummy15_sequence) {
-            if (!dummy15_sequence.hasOwnProperty(key)){ continue; }
-            action = dummy15_sequence[key];
+        dummy19_sequence = actions;
+        for (key in dummy19_sequence) {
+            if (!dummy19_sequence.hasOwnProperty(key)){ continue; }
+            action = dummy19_sequence[key];
             key = _pymeth_replace.call(key, "_", "-");
             km.actions.register(action, key, "scpy3");
             km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
@@ -299,29 +338,27 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
     }).bind(this);
 
     config_dialog = (function () {
-        var dlg_body, el_speed, el_theme, el_transition, on_ok;
-        dlg_body = T("div");
-        el_theme = make_selector("Theme", Themes).appendTo(jQuery("<p>Theme:</p>").appendTo(dlg_body));
-        el_transition = make_selector("Transition", Transitions).appendTo(jQuery("<p>Transition:</p>").appendTo(dlg_body));
-        el_speed = make_selector("Speed", Speeds).appendTo(jQuery("<p>Speed:</p>").appendTo(dlg_body));
-        el_theme.val(get_option("theme"));
-        el_transition.val(get_option("transition"));
-        el_speed.val(get_option("speed"));
+        var defs, on_ok, tab;
+        defs = [["Theme", "selector", Themes], ["Transition", "selector", Transitions], ["Speed", "selector", Speeds]];
+        tab = make_table(defs);
         on_ok = (function () {
-            var metadata, nb;
+            var dummy20_sequence, key, metadata, nb, val;
             nb = Jupyter.notebook;
             metadata = get_metadata(nb, "slide");
             if ((metadata === null)) {
                 metadata = {};
             }
-            metadata["theme"] = el_theme.val();
-            metadata["transition"] = el_transition.val();
-            metadata["speed"] = el_speed.val();
+            dummy20_sequence = tab.get_values();
+            for (key in dummy20_sequence) {
+                if (!dummy20_sequence.hasOwnProperty(key)){ continue; }
+                val = dummy20_sequence[key];
+                metadata[_pymeth_lower.call(key)] = val;
+            }
             set_metadata(nb, "slide", metadata);
             return null;
         }).bind(this);
 
-        show_dialog("Reveal.js configuration", dlg_body, null, [["Ok", on_ok]]);
+        show_dialog("Reveal.js configuration", tab.table, null, [["Ok", on_ok]]);
         return null;
     }).bind(this);
 
@@ -344,8 +381,18 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
     }).bind(this);
 
     end_slide = (function () {
-        var cell_index, nb;
+        var cell_index, dummy21_sequence, dummy22_iter, el, idx, nb;
         nb = Jupyter.notebook;
+        dummy21_sequence = jQuery(".reveal [src-cell]").toArray();
+        if ((typeof dummy21_sequence === "object") && (!Array.isArray(dummy21_sequence))) {
+            dummy21_sequence = Object.keys(dummy21_sequence);
+        }
+        for (dummy22_iter = 0; dummy22_iter < dummy21_sequence.length; dummy22_iter += 1) {
+            el = dummy21_sequence[dummy22_iter];
+            el = jQuery(el);
+            idx = _pyfunc_int(el.attr("src-cell"));
+            el.appendTo(_pymeth_find.call((nb.get_cell(idx).element), ".output_area"));
+        }
         cell_index = _pyfunc_int((jQuery("section.present:last").attr("cellid")));
         nb.keyboard_manager.enable();
         unload_css("reveal.js/css/reveal.css");
@@ -365,7 +412,7 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
     }).bind(this);
 
     start_slide = (function () {
-        var cell, cells, cnt_section, cnt_subsection, dummy16_sequence, dummy17_iter, dummy18_target, el_reveal, el_section, el_slides, el_subsection, idx, nb, on_ready, process_code, process_markdown, selected_index;
+        var cell, cell_text, cells, cnt_section, cnt_subsection, dummy23_sequence, dummy24_iter, dummy25_target, el_reveal, el_section, el_slides, el_subsection, idx, nb, on_ready, process_code, process_markdown, selected_index;
         nb = Jupyter.notebook;
         nb.keyboard_manager.disable();
         load_css("./reveal.js/css/reveal.css");
@@ -386,12 +433,12 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
         cnt_subsection = -1;
         selected_index = nb.get_selected_index();
         start_section = [0, 0];
-        process_code = (function (cell) {
+        process_code = (function (idx, cell) {
             var _append_code_html, _append_code_output, code, mdcode;
             _append_code_output = (function () {
                 var el;
-                el = _pymeth_find.call(cell.element, ".output_area").clone();
-                (el.children().attr("class", "")).appendTo(el_subsection);
+                el = _pymeth_find.call(cell.element, ".output_area");
+                (el.children().attr("src-cell", idx)).appendTo(el_subsection);
                 return null;
             }).bind(this);
 
@@ -411,20 +458,24 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
             return null;
         }).bind(this);
 
-        process_markdown = (function (cell) {
+        process_markdown = (function (idx, cell) {
             var el;
             el = _pymeth_find.call(cell.element, ".rendered_html").clone();
             el.children().appendTo(el_subsection);
             return null;
         }).bind(this);
 
-        dummy16_sequence = _pyfunc_enumerate(cells);
-        if ((typeof dummy16_sequence === "object") && (!Array.isArray(dummy16_sequence))) {
-            dummy16_sequence = Object.keys(dummy16_sequence);
+        dummy23_sequence = _pyfunc_enumerate(cells);
+        if ((typeof dummy23_sequence === "object") && (!Array.isArray(dummy23_sequence))) {
+            dummy23_sequence = Object.keys(dummy23_sequence);
         }
-        for (dummy17_iter = 0; dummy17_iter < dummy16_sequence.length; dummy17_iter += 1) {
-            dummy18_target = dummy16_sequence[dummy17_iter];
-            idx = dummy18_target[0]; cell = dummy18_target[1];
+        for (dummy24_iter = 0; dummy24_iter < dummy23_sequence.length; dummy24_iter += 1) {
+            dummy25_target = dummy23_sequence[dummy24_iter];
+            idx = dummy25_target[0]; cell = dummy25_target[1];
+            cell_text = cell.get_text();
+            if (((_pyfunc_truthy(_pymeth_startswith.call(cell_text, "#%skip"))) || (_pyfunc_truthy(_pymeth_startswith.call(cell_text, "<!---skip"))) || ((_pyfunc_equals(_pymeth_strip.call(cell_text), ""))))) {
+                continue;
+            }
             if (_pyfunc_truthy(is_new_section(cell))) {
                 el_section = T("section").appendTo(el_slides);
                 cnt_section=_pyfunc_add(cnt_section, 1)
@@ -440,9 +491,9 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
             }
             if ((el_subsection !== null)) {
                 if (_pyfunc_equals(cell.cell_type, "markdown")) {
-                    process_markdown(cell);
+                    process_markdown(idx, cell);
                 } else if (_pyfunc_equals(cell.cell_type, "code")) {
-                    process_code(cell);
+                    process_code(idx, cell);
                 }
                 if ((_pyfunc_equals(el_subsection.attr("cellid"), undefined))) {
                     el_subsection.attr("cellid", idx);

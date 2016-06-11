@@ -24,7 +24,9 @@ Transitions = ['none', 'fade', 'slide', 'convex', 'concave', 'zoom']
 Speeds = ['default', 'slow', 'fast']
 
 def load(Jupyter, dialog, configmod, utils, marked, require):
-    from .utils import register_actions, T, get_level, load_css, unload_css, show_dialog, make_selector, get_metadata, set_metadata
+    from .utils import (register_actions, T, get_level, load_css, unload_css,
+                        show_dialog, make_selector, get_metadata, set_metadata,
+                        make_table)
     
     require([require.toUrl(url) for url in revealjs], revealjs_loaded)
     header_flag = None
@@ -44,29 +46,28 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
         return options[name]
     
     def config_dialog():
-        dlg_body = T('div')
-        el_theme = make_selector('Theme', Themes).appendTo(jQuery('<p>Theme:</p>').appendTo(dlg_body))
-        el_transition = make_selector('Transition', Transitions).appendTo(jQuery('<p>Transition:</p>').appendTo(dlg_body))
-        el_speed = make_selector('Speed', Speeds).appendTo(jQuery('<p>Speed:</p>').appendTo(dlg_body))
-        el_theme.val(get_option('theme'))
-        el_transition.val(get_option('transition'))
-        el_speed.val(get_option('speed'))
-        
+        defs = [
+            ["Theme", "selector", Themes],
+            ["Transition", "selector", Transitions],
+            ["Speed", "selector", Speeds]
+        ]
+        tab = make_table(defs)
+
         def on_ok():
             nb = Jupyter.notebook
             metadata = get_metadata(nb, 'slide')
             if metadata is None:
                 metadata = {}
-            metadata['theme'] = el_theme.val()
-            metadata['transition'] = el_transition.val()
-            metadata['speed'] = el_speed.val()
+            for key, val in tab.get_values().items():
+                metadata[key.lower()] = val
             set_metadata(nb, 'slide', metadata)
 
-        show_dialog('Reveal.js configuration', dlg_body, None, [["Ok", on_ok]])        
-    
+        show_dialog('Reveal.js configuration', tab.table, None, [["Ok", on_ok]])
+        
     def revealjs_loaded():
         console.log('revealjs loaded')
-    
+
+        
     def is_new_section(cell):
         return get_level(cell) <= 2
 
@@ -78,6 +79,12 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
 
     def end_slide():
         nb = Jupyter.notebook
+        
+        for el in jQuery('.reveal [src-cell]').toArray():
+            el = jQuery(el)
+            idx = int(el.attr('src-cell'))
+            el.appendTo(nb.get_cell(idx).element.find('.output_area'))
+
         cell_index = int(jQuery('section.present:last').attr('cellid'))
         nb.keyboard_manager.enable()
         unload_css('reveal.js/css/reveal.css')
@@ -120,10 +127,10 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
         selected_index = nb.get_selected_index()
         start_section = 0, 0
         
-        def process_code(cell):
+        def process_code(idx, cell):
             def _append_code_output():
-                el = cell.element.find('.output_area').clone()
-                el.children().attr('class', '').appendTo(el_subsection)
+                el = cell.element.find('.output_area')
+                el.children().attr('src-cell', idx).appendTo(el_subsection)
                 
             def _append_code_html(err, code_html):
                 jQuery(code_html).appendTo(el_subsection)
@@ -136,11 +143,15 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
             else:
                 _append_code_output()
 
-        def process_markdown(cell):
+        def process_markdown(idx, cell):
             el = cell.element.find('.rendered_html').clone()
             el.children().appendTo(el_subsection)
             
         for idx, cell in enumerate(cells):
+            cell_text = cell.get_text()
+            if cell_text.startswith('#%skip') or cell_text.startswith('<!---skip') or cell_text.strip() == '':
+                continue
+                
             if is_new_section(cell):
                 el_section = T('section').appendTo(el_slides)
                 cnt_section += 1
@@ -153,9 +164,9 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
                 console.log(start_section)
             if el_subsection is not None:
                 if cell.cell_type == 'markdown':
-                    process_markdown(cell)
+                    process_markdown(idx, cell)
                 elif cell.cell_type == 'code':
-                    process_code(cell)
+                    process_code(idx, cell)
 
                 if el_subsection.attr('cellid') == undefined:
                     el_subsection.attr('cellid', idx)

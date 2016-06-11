@@ -1,3 +1,11 @@
+.reveal div.output_subarea{
+    max-width: none;
+}
+
+.reveal table{
+    margin: 0 auto;
+}
+
 .reveal pre{
     padding:10px !important;
     overflow-x:hidden !important;
@@ -15,6 +23,27 @@
 
 .reveal pre code{
     padding: 0px !important;
+}
+
+.reveal table.dataframe, .reveal table {
+    color:#333333;
+    border-width: 1px;
+    border-color: #3A3A3A;
+    border-collapse: collapse;
+}
+.reveal table.dataframe th, .reveal table th {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #3A3A3A;
+    background-color: #B3B3B3;
+}
+.reveal table.dataframe td, .reveal table td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #3A3A3A;
+    background-color: #ffffff;
 }
 
 /* apply the same style to codemirror */
