@@ -198,3 +198,27 @@ def make_selector(label, options):
     for item in options:
         el.append(jQuery('<option/>').attr('value', item).text(item))
     return el
+
+def make_table(defs):
+    items = {}
+    table = T('table')
+    for title, type_, data in defs:
+        tr = T('tr').appendTo(table)
+        if type_ == "selector":
+            T('td').appendTo(tr).html(title + ":")
+            td = T('td').appendTo(tr)
+            widget = make_selector(title, data).appendTo(td)
+            widget.val(get_option(title.lower()))
+        items[title] = widget
+
+    def get_values():
+        res = {}
+        for key, item in items.items():
+            res[key] = item.val()
+        return res
+    
+    return {
+        "table": table,
+        "items": items,
+        "get_values": get_values
+    }
