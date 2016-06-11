@@ -28,6 +28,7 @@ where NAME is:
 * toc: add table of content
 * run_mdcell: run code in markdown cell and insert result into it
 * bookmark: add bookmark to cell
+* slide: add slide mode by reveal.js
 
 ## Convert code by `convert.py`
 
@@ -194,3 +195,11 @@ Add bookmark to cell, and jump to bookmarked cells quickly. Bookmarks are saved 
 * `Ctrl-Shift-1`, `Ctrl-Shift-2`, `Ctrl-Shift-3`: run makered cell
 * `Shfit-←`: Jump to previous bookmark
 * `Shfit-→`: Jump to next bookmark
+
+### slide
+
+Convert the notebook to presentation with reveal.js.
+
+* `p`: Start presentation.
+* `Alt-p`: Configure the reveal.js parameters.
+* `q`: Back to notebook mode in presentation mode.
