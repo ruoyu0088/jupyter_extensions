@@ -46,6 +46,14 @@
     background-color: #ffffff;
 }
 
+.reveal .bk-plot table th{
+    border: none;
+}
+
+.reveal .bk-plot table td{
+    border: none;
+}
+
 /* apply the same style to codemirror */
 .reveal .cm-s-ipython span.cm-keyword {
   color: #008000;
