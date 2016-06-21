@@ -53,11 +53,19 @@ var _pymeth_replace = function (s1, s2, count) {  // nargs: 2 3
     parts.push(this.slice(i));
     return parts.join('');
 };
-var N, imports, load;
-imports = ["base/js/namespace", "base/js/events", "require"];
+var N, imports, load, patch_code;
+imports = ["base/js/namespace", "base/js/events", "require", "notebook/js/tooltip", "base/js/utils"];
 N = 3;
-load = function (Jupyter, events, require) {
+patch_code = "\n\nTooltip.Tooltip.prototype._show = function(reply){\n        /**\n         * move the bubble if it is not hidden\n         * otherwise fade it\n         */\n        this._reply = reply;\n        var content = reply.content;\n        if (!content.found) {\n            // object not found, nothing to show\n            return;\n        }\n        this.name = content.name;\n\n        // do some math to have the tooltip arrow on more or less on left or right\n        // position of the editor\n        var cm_element = $(this.code_mirror.getWrapperElement());\n        var pos1 = cm_element.position();\n        var pos2 = cm_element.closest(\"div.cell\").position();\n        var cm_pos = {top:pos1.top + pos2.top, left:pos1.left + pos2.left};\n        // anchor and head positions are local within CodeMirror element\n        var anchor = this.code_mirror.cursorCoords(false, 'local');\n        var head = this.code_mirror.cursorCoords(true, 'local');\n        // locate the target at the center of anchor, head\n        var center_left = (head.left + anchor.left) / 2;\n        // locate the left edge of the tooltip, at most 450 px left of the arrow\n        var edge_left = Math.max(center_left - 450, 0);\n        // locate the arrow at the cursor. A 24 px offset seems necessary.\n        var arrow_left = center_left - edge_left - 24;\n        \n        // locate left, top within container element\n        var left = (cm_pos.left + edge_left) + 'px';\n        var top = (cm_pos.top + head.bottom + 10) + 'px';\n\n        if (this._hidden === false) {\n            this.tooltip.animate({\n                left: left,\n                top: top\n            });\n        } else {\n            this.tooltip.css({\n                left: left\n            });\n            this.tooltip.css({\n                top: top\n            });\n        }\n        this.arrow.animate({\n            'left': arrow_left + 'px'\n        });\n        \n        this._hidden = false;\n        this.tooltip.fadeIn('fast');\n        this.text.children().remove();\n        \n        // This should support rich data types, but only text/plain for now\n        // Any HTML within the docstring is escaped by the fixConsole() method.\n        var pre = $('<pre/>').html(utils.fixConsole(content.data['text/plain']));\n        this.text.append(pre);\n        // keep scroll top to be sure to always see the first line\n        this.text.scrollTop(0);\n};\n\n\n";
+load = function (Jupyter, events, require, Tooltip, utils) {
     var load_css, main, nb, next_bookmark, prev_bookmark, register_actions, run_bookmark, search_bookmark, show_message, toggle_bookmark;
+    show_message = (function (message, wait) {
+        var notification_widget;
+        notification_widget = Jupyter.notification_area.widget("notebook");
+        notification_widget.set_message(message, wait);
+        return null;
+    }).bind(this);
+
     load_css = (function (name) {
         var link;
         link = document.createElement("link");
@@ -65,13 +73,6 @@ load = function (Jupyter, events, require) {
         link.rel = "stylesheet";
         link.href = require.toUrl(name);
         (document.getElementsByTagName("head")[0]).appendChild(link);
-        return null;
-    }).bind(this);
-
-    show_message = (function (message, wait) {
-        var notification_widget;
-        notification_widget = Jupyter.notification_area.widget("notebook");
-        notification_widget.set_message(message, wait);
         return null;
     }).bind(this);
 
@@ -90,6 +91,7 @@ load = function (Jupyter, events, require) {
         return null;
     }).bind(this);
 
+    eval(patch_code);
     load_css("./bookmark.css");
     nb = Jupyter.notebook;
     toggle_bookmark = (function (mark_id) {

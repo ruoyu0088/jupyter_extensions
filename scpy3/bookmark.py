@@ -1,10 +1,79 @@
-imports = ['base/js/namespace', 'base/js/events', 'require']
+imports = ['base/js/namespace', 'base/js/events', 'require', 'notebook/js/tooltip', 'base/js/utils']
 
 N = 3
 
-def load(Jupyter, events, require):
+patch_code = """
+
+Tooltip.Tooltip.prototype._show = function(reply){
+        /**
+         * move the bubble if it is not hidden
+         * otherwise fade it
+         */
+        this._reply = reply;
+        var content = reply.content;
+        if (!content.found) {
+            // object not found, nothing to show
+            return;
+        }
+        this.name = content.name;
+
+        // do some math to have the tooltip arrow on more or less on left or right
+        // position of the editor
+        var cm_element = $(this.code_mirror.getWrapperElement());
+        var pos1 = cm_element.position();
+        var pos2 = cm_element.closest("div.cell").position();
+        var cm_pos = {top:pos1.top + pos2.top, left:pos1.left + pos2.left};
+        // anchor and head positions are local within CodeMirror element
+        var anchor = this.code_mirror.cursorCoords(false, 'local');
+        var head = this.code_mirror.cursorCoords(true, 'local');
+        // locate the target at the center of anchor, head
+        var center_left = (head.left + anchor.left) / 2;
+        // locate the left edge of the tooltip, at most 450 px left of the arrow
+        var edge_left = Math.max(center_left - 450, 0);
+        // locate the arrow at the cursor. A 24 px offset seems necessary.
+        var arrow_left = center_left - edge_left - 24;
+        
+        // locate left, top within container element
+        var left = (cm_pos.left + edge_left) + 'px';
+        var top = (cm_pos.top + head.bottom + 10) + 'px';
+
+        if (this._hidden === false) {
+            this.tooltip.animate({
+                left: left,
+                top: top
+            });
+        } else {
+            this.tooltip.css({
+                left: left
+            });
+            this.tooltip.css({
+                top: top
+            });
+        }
+        this.arrow.animate({
+            'left': arrow_left + 'px'
+        });
+        
+        this._hidden = false;
+        this.tooltip.fadeIn('fast');
+        this.text.children().remove();
+        
+        // This should support rich data types, but only text/plain for now
+        // Any HTML within the docstring is escaped by the fixConsole() method.
+        var pre = $('<pre/>').html(utils.fixConsole(content.data['text/plain']));
+        this.text.append(pre);
+        // keep scroll top to be sure to always see the first line
+        this.text.scrollTop(0);
+};
+
+
+"""
+
+def load(Jupyter, events, require, Tooltip, utils):
     from .utils import load_css, show_message, register_actions
 
+    eval(patch_code)
+    
     load_css('./bookmark.css')
     
     nb = Jupyter.notebook
