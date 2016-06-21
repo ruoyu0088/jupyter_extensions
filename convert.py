@@ -96,27 +96,34 @@ def replace_utils_ast(fn_py, code):
         if i not in del_lines:
             res.append(line)
     return "\n".join(res)
-        
-for fn_py in glob("*/*.py"):
-    if fn_py.endswith("utils.py"):
-        continue
-    
-    fn_js = fn_py.replace(".py", ".js")
-    if True or not path.exists(fn_js) or os.stat(fn_js).st_mtime < os.stat(fn_py).st_mtime:
-        print(fn_py)
 
-        with open(fn_py) as f:
-            code_py = f.read()
+def convert_all_py_to_js():
+    for fn_py in glob("*/*.py"):
+        if fn_py.endswith("utils.py"):
+            continue
 
-        code_py = replace_utils_ast(fn_py, code_py)
-        code_js = py2js(code_py, inline_stdlib=True)
+        fn_js = fn_py.replace(".py", ".js")
+        if not path.exists(fn_js) or os.stat(fn_js).st_mtime < os.stat(fn_py).st_mtime:
+            print(fn_py)
 
-        with open(fn_js, "wb") as f:
-            f.write((wrap_code % code_js).encode('utf-8'))
-    
-for fn_less in glob('**/*.less', recursive=True):
-    print(fn_less)
-    with open(fn_less) as f:
-        css = lesscpy.compile(f)
-    with open(fn_less.replace('.less', '.css'), 'w') as f:
-        f.write(css)
+            with open(fn_py) as f:
+                code_py = f.read()
+
+            code_py = replace_utils_ast(fn_py, code_py)
+            code_js = py2js(code_py, inline_stdlib=True)
+
+            with open(fn_js, "wb") as f:
+                f.write((wrap_code % code_js).encode('utf-8'))
+
+def convert_all_less_to_css():            
+    for fn_less in glob('**/*.less', recursive=True):
+        print(fn_less)
+        with open(fn_less) as f:
+            css = lesscpy.compile(f)
+        with open(fn_less.replace('.less', '.css'), 'w') as f:
+            f.write(css)
+
+
+if __name__ == '__main__':
+    convert_all_py_to_js()
+    convert_all_less_to_css()
