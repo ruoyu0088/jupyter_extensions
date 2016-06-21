@@ -70,10 +70,6 @@ var imports, load;
 imports = ["base/js/namespace", "require", "base/js/events"];
 load = function (Jupyter, require, events) {
     var main, nb, register_actions, replace, run_md_cell;
-    replace = (function (src, pattern, target) {
-        return String.prototype.replace.bind(src)(pattern, target)
-    }).bind(this);
-
     register_actions = (function (actions, target) {
         var action, dummy1_sequence, key, km;
         target = (target === undefined) ? "command": target;
@@ -87,6 +83,10 @@ load = function (Jupyter, require, events) {
             km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
         }
         return null;
+    }).bind(this);
+
+    replace = (function (src, pattern, target) {
+        return String.prototype.replace.bind(src)(pattern, target)
     }).bind(this);
 
     nb = Jupyter.notebook;

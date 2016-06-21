@@ -41,18 +41,6 @@ imports = ["base/js/namespace", "require", "base/js/events"];
 themes = ["default", "oceans16", "grade3", "space-legos", "doc-white", "doc-black"];
 load = function (Jupyter, require, events) {
     var get_metadata, load_css, main, set_metadata, unload_css;
-    get_metadata = (function (target, key) {
-        var meta;
-        meta = target.metadata;
-        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
-            return null;
-        }
-        if (_pyfunc_truthy(!_pyfunc_contains(key, meta.scpy3))) {
-            return null;
-        }
-        return meta.scpy3[key];
-    }).bind(this);
-
     unload_css = (function (names) {
         var dummy1_sequence, dummy2_iter, dummy3_sequence, dummy4_iter, dummy5_sequence, dummy6_iter, el, href, name, to_remove;
         if ((({}).toString.call(names).match(/\s([a-zA-Z]+)/)[1].toLowerCase() === 'string')) {
@@ -89,16 +77,6 @@ load = function (Jupyter, require, events) {
         return null;
     }).bind(this);
 
-    set_metadata = (function (target, key, value) {
-        var meta;
-        meta = target.metadata;
-        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
-            meta.scpy3 = {};
-        }
-        meta.scpy3[key] = value;
-        return null;
-    }).bind(this);
-
     load_css = (function (name) {
         var link;
         link = document.createElement("link");
@@ -106,6 +84,28 @@ load = function (Jupyter, require, events) {
         link.rel = "stylesheet";
         link.href = require.toUrl(name);
         (document.getElementsByTagName("head")[0]).appendChild(link);
+        return null;
+    }).bind(this);
+
+    get_metadata = (function (target, key) {
+        var meta;
+        meta = target.metadata;
+        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
+            return null;
+        }
+        if (_pyfunc_truthy(!_pyfunc_contains(key, meta.scpy3))) {
+            return null;
+        }
+        return meta.scpy3[key];
+    }).bind(this);
+
+    set_metadata = (function (target, key, value) {
+        var meta;
+        meta = target.metadata;
+        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
+            meta.scpy3 = {};
+        }
+        meta.scpy3[key] = value;
         return null;
     }).bind(this);
 

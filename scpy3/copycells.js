@@ -98,52 +98,24 @@ var imports, load;
 imports = ["base/js/namespace", "services/config", "base/js/utils"];
 load = function (Jupyter, configmod, utils) {
     var T, base_url, config, copy_config, get_level, main, register_actions, show_message, typeahead_form;
-    typeahead_form = (function () {
-        var before_close, container, field, form, input_, mod, nb, on_show, search_button;
-        nb = Jupyter.notebook;
-        form = new T("form");
-        container = new T("div.typeahead-container");
-        field = new T("div.typeahead-field");
-        input_ = (new T("input")).attr("type", "search");
-        search_button = (new T("button", new T("span.typeahead-search-icon"))).attr("type", "submit");
-        _pymeth_append.call(field, (new T("span.typeahead-query", input_)));
-        _pymeth_append.call(field, (new T("span.typeahead-button", search_button)));
-        _pymeth_append.call(container, field);
-        _pymeth_append.call(form, container);
-        mod = new T("div.modal cmd-palette", new T("div.modal-dialog", new T("div.modal-content", new T("div.modal-body", form))));
-        mod.modal({"show": false, "backdrop": true});
-        on_show = (function () {
-            var focus;
-            focus = (function () {
-                input_.focus();
-                return null;
-            }).bind(this);
+    show_message = (function (message, wait) {
+        var notification_widget;
+        notification_widget = Jupyter.notification_area.widget("notebook");
+        notification_widget.set_message(message, wait);
+        return null;
+    }).bind(this);
 
-            setTimeout(focus, 100);
-            return null;
-        }).bind(this);
-
-        mod.on("show.bs.modal", on_show);
-        nb.keyboard_manager.disable();
-        before_close = (function () {
-            var cell;
-            if (_pyfunc_truthy(before_close.ok)) {
-                return null;
-            }
-            cell = nb.get_selected_cell();
-            if (_pyfunc_truthy(cell)) {
-                cell.select();
-            }
-            if (_pyfunc_truthy(nb.keyboard_manager)) {
-                nb.keyboard_manager.enable();
-                nb.keyboard_manager.command_mode();
-            }
-            before_close.ok = true;
-            return null;
-        }).bind(this);
-
-        mod.on("hide.bs.modal", before_close);
-        return [mod, input_];
+    get_level = (function (cell) {
+        var level, text;
+        if ((!_pyfunc_equals(cell.cell_type, "markdown"))) {
+            return 1000;
+        }
+        text = cell.get_text();
+        if (_pyfunc_truthy(_pymeth_startswith.call(text, "#"))) {
+            level = text.length - (_pymeth_lstrip.call(text, "#").length);
+            return level;
+        }
+        return 1000;
     }).bind(this);
 
     register_actions = (function (actions, target) {
@@ -184,24 +156,52 @@ load = function (Jupyter, configmod, utils) {
         return el;
     }).bind(this);
 
-    show_message = (function (message, wait) {
-        var notification_widget;
-        notification_widget = Jupyter.notification_area.widget("notebook");
-        notification_widget.set_message(message, wait);
-        return null;
-    }).bind(this);
+    typeahead_form = (function () {
+        var before_close, container, field, form, input_, mod, nb, on_show, search_button;
+        nb = Jupyter.notebook;
+        form = T("form");
+        container = T("div.typeahead-container");
+        field = T("div.typeahead-field");
+        input_ = T("input").attr("type", "search");
+        search_button = (T("button", T("span.typeahead-search-icon"))).attr("type", "submit");
+        _pymeth_append.call(field, T("span.typeahead-query", input_));
+        _pymeth_append.call(field, T("span.typeahead-button", search_button));
+        _pymeth_append.call(container, field);
+        _pymeth_append.call(form, container);
+        mod = T("div.modal cmd-palette", T("div.modal-dialog", T("div.modal-content", T("div.modal-body", form))));
+        mod.modal({"show": false, "backdrop": true});
+        on_show = (function () {
+            var focus;
+            focus = (function () {
+                input_.focus();
+                return null;
+            }).bind(this);
 
-    get_level = (function (cell) {
-        var level, text;
-        if ((!_pyfunc_equals(cell.cell_type, "markdown"))) {
-            return 1000;
-        }
-        text = cell.get_text();
-        if (_pyfunc_truthy(_pymeth_startswith.call(text, "#"))) {
-            level = text.length - (_pymeth_lstrip.call(text, "#").length);
-            return level;
-        }
-        return 1000;
+            setTimeout(focus, 100);
+            return null;
+        }).bind(this);
+
+        mod.on("show.bs.modal", on_show);
+        nb.keyboard_manager.disable();
+        before_close = (function () {
+            var cell;
+            if (_pyfunc_truthy(before_close.ok)) {
+                return null;
+            }
+            cell = nb.get_selected_cell();
+            if (_pyfunc_truthy(cell)) {
+                cell.select();
+            }
+            if (_pyfunc_truthy(nb.keyboard_manager)) {
+                nb.keyboard_manager.enable();
+                nb.keyboard_manager.command_mode();
+            }
+            before_close.ok = true;
+            return null;
+        }).bind(this);
+
+        mod.on("hide.bs.modal", before_close);
+        return [mod, input_];
     }).bind(this);
 
     base_url = utils.get_body_data("baseUrl");

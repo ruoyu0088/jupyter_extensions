@@ -72,10 +72,6 @@ var imports, load;
 imports = ["base/js/namespace", "base/js/events", "require", "./jquery.side.menu"];
 load = function (Jupyter, events, require, _) {
     var goto_head, handle_resize, is_head_cell, load_css, main, mark_head, nb, next_head, prev_head, register_actions, remove_last_ch, toc, toggle_toc, update_marker, update_toc, update_toc_top;
-    is_head_cell = (function (cell) {
-        return _pyfunc_equals(cell.cell_type, "markdown") && (_pyfunc_truthy(_pymeth_startswith.call(cell.get_text(), "#")));
-    }).bind(this);
-
     load_css = (function (name) {
         var link;
         link = document.createElement("link");
@@ -84,6 +80,10 @@ load = function (Jupyter, events, require, _) {
         link.href = require.toUrl(name);
         (document.getElementsByTagName("head")[0]).appendChild(link);
         return null;
+    }).bind(this);
+
+    is_head_cell = (function (cell) {
+        return _pyfunc_equals(cell.cell_type, "markdown") && (_pyfunc_truthy(_pymeth_startswith.call(cell.get_text(), "#")));
     }).bind(this);
 
     register_actions = (function (actions, target) {

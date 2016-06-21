@@ -120,51 +120,40 @@ Transitions = ["none", "fade", "slide", "convex", "concave", "zoom"];
 Speeds = ["default", "slow", "fast"];
 load = function (Jupyter, dialog, configmod, utils, marked, require) {
     var T, config_dialog, end_slide, get_level, get_metadata, get_option, header_flag, is_new_section, is_new_subsection, load_css, main, make_selector, make_table, register_actions, revealjs_loaded, set_metadata, show_dialog, start_section, start_slide, toc_flag, unload_css;
-    make_table = (function (defs) {
-        var data, dummy1_sequence, dummy2_iter, dummy3_target, get_values, items, table, td, title, tr, type_, widget;
-        items = {};
-        table = new T("table");
-        dummy1_sequence = defs;
-        if ((typeof dummy1_sequence === "object") && (!Array.isArray(dummy1_sequence))) {
-            dummy1_sequence = Object.keys(dummy1_sequence);
+    unload_css = (function (names) {
+        var dummy1_sequence, dummy2_iter, dummy3_sequence, dummy4_iter, dummy5_sequence, dummy6_iter, el, href, name, to_remove;
+        if ((({}).toString.call(names).match(/\s([a-zA-Z]+)/)[1].toLowerCase() === 'string')) {
+            names = [names];
         }
-        for (dummy2_iter = 0; dummy2_iter < dummy1_sequence.length; dummy2_iter += 1) {
-            dummy3_target = dummy1_sequence[dummy2_iter];
-            title = dummy3_target[0]; type_ = dummy3_target[1]; data = dummy3_target[2];
-            tr = (new T("tr")).appendTo(table);
-            if (_pyfunc_equals(type_, "selector")) {
-                ((new T("td")).appendTo(tr)).html(title + ":");
-                td = (new T("td")).appendTo(tr);
-                widget = make_selector(title, data).appendTo(td);
-                widget.val(get_option(_pymeth_lower.call(title)));
+        to_remove = [];
+        dummy3_sequence = jQuery("link").toArray();
+        if ((typeof dummy3_sequence === "object") && (!Array.isArray(dummy3_sequence))) {
+            dummy3_sequence = Object.keys(dummy3_sequence);
+        }
+        for (dummy4_iter = 0; dummy4_iter < dummy3_sequence.length; dummy4_iter += 1) {
+            el = dummy3_sequence[dummy4_iter];
+            href = el.getAttribute("href");
+            dummy1_sequence = names;
+            if ((typeof dummy1_sequence === "object") && (!Array.isArray(dummy1_sequence))) {
+                dummy1_sequence = Object.keys(dummy1_sequence);
             }
-            items[title] = widget;
-        }
-        get_values = (function () {
-            var dummy4_sequence, item, key, res;
-            res = {};
-            dummy4_sequence = items;
-            for (key in dummy4_sequence) {
-                if (!dummy4_sequence.hasOwnProperty(key)){ continue; }
-                item = dummy4_sequence[key];
-                res[key] = item.val();
+            for (dummy2_iter = 0; dummy2_iter < dummy1_sequence.length; dummy2_iter += 1) {
+                name = dummy1_sequence[dummy2_iter];
+                if (((_pyfunc_truthy(_pyfunc_contains("scpy3", href))) && (_pyfunc_truthy(_pyfunc_contains(name, href))))) {
+                    _pymeth_append.call(to_remove, el);
+                    break;
+                }
             }
-            return res;
-        }).bind(this);
-
-        return {"table": table, "items": items, "get_values": get_values};
-    }).bind(this);
-
-    get_metadata = (function (target, key) {
-        var meta;
-        meta = target.metadata;
-        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
-            return null;
         }
-        if (_pyfunc_truthy(!_pyfunc_contains(key, meta.scpy3))) {
-            return null;
+        dummy5_sequence = to_remove;
+        if ((typeof dummy5_sequence === "object") && (!Array.isArray(dummy5_sequence))) {
+            dummy5_sequence = Object.keys(dummy5_sequence);
         }
-        return meta.scpy3[key];
+        for (dummy6_iter = 0; dummy6_iter < dummy5_sequence.length; dummy6_iter += 1) {
+            el = dummy5_sequence[dummy6_iter];
+            el.parentNode.removeChild(el);
+        }
+        return null;
     }).bind(this);
 
     get_level = (function (cell) {
@@ -180,31 +169,30 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
         return 1000;
     }).bind(this);
 
-    T = (function (tagname) {
-        var args, child, dummy5_, dummy6_sequence, dummy7_iter, el, klass;
-        args = Array.prototype.slice.call(arguments).slice(1);
-        klass = null;
-        if (_pyfunc_truthy(_pyfunc_contains(".", tagname))) {
-            dummy5_ = _pymeth_split.call(tagname, ".");
-            tagname = dummy5_[0];klass = dummy5_[1];
+    set_metadata = (function (target, key, value) {
+        var meta;
+        meta = target.metadata;
+        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
+            meta.scpy3 = {};
         }
-        el = jQuery("<" + tagname + "/>");
-        if ((klass !== null)) {
-            el.addClass(klass);
+        meta.scpy3[key] = value;
+        return null;
+    }).bind(this);
+
+    get_metadata = (function (target, key) {
+        var meta;
+        meta = target.metadata;
+        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
+            return null;
         }
-        dummy6_sequence = args;
-        if ((typeof dummy6_sequence === "object") && (!Array.isArray(dummy6_sequence))) {
-            dummy6_sequence = Object.keys(dummy6_sequence);
+        if (_pyfunc_truthy(!_pyfunc_contains(key, meta.scpy3))) {
+            return null;
         }
-        for (dummy7_iter = 0; dummy7_iter < dummy6_sequence.length; dummy7_iter += 1) {
-            child = dummy6_sequence[dummy7_iter];
-            _pymeth_append.call(el, child);
-        }
-        return el;
+        return meta.scpy3[key];
     }).bind(this);
 
     show_dialog = (function (title, body, open_callback, buttons) {
-        var button, buttons_setting, callback, dialog_settings, dummy10_target, dummy8_sequence, dummy9_iter;
+        var button, buttons_setting, callback, dialog_settings, dummy7_sequence, dummy8_iter, dummy9_target;
         open_callback = (open_callback === undefined) ? null: open_callback;
         buttons = (buttons === undefined) ? null: buttons;
         dialog_settings = {"notebook": Jupyter.notebook, "keyboard_manager": Jupyter.keyboard_manager, "title": title, "body": body};
@@ -213,13 +201,13 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
         }
         if ((buttons !== null)) {
             buttons_setting = {};
-            dummy8_sequence = buttons;
-            if ((typeof dummy8_sequence === "object") && (!Array.isArray(dummy8_sequence))) {
-                dummy8_sequence = Object.keys(dummy8_sequence);
+            dummy7_sequence = buttons;
+            if ((typeof dummy7_sequence === "object") && (!Array.isArray(dummy7_sequence))) {
+                dummy7_sequence = Object.keys(dummy7_sequence);
             }
-            for (dummy9_iter = 0; dummy9_iter < dummy8_sequence.length; dummy9_iter += 1) {
-                dummy10_target = dummy8_sequence[dummy9_iter];
-                button = dummy10_target[0]; callback = dummy10_target[1];
+            for (dummy8_iter = 0; dummy8_iter < dummy7_sequence.length; dummy8_iter += 1) {
+                dummy9_target = dummy7_sequence[dummy8_iter];
+                button = dummy9_target[0]; callback = dummy9_target[1];
                 buttons_setting[button] = {"class": "btn-primary", "click": callback};
             }
             dialog_settings["buttons"] = buttons_setting;
@@ -229,16 +217,16 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
     }).bind(this);
 
     make_selector = (function (label, options) {
-        var dummy11_sequence, dummy12_iter, el, item;
+        var dummy10_sequence, dummy11_iter, el, item;
         el = jQuery("<select/>");
         el.addClass("form-control");
         _pymeth_append.call(el, jQuery("<optgroup label = \"" + label + ":\">"));
-        dummy11_sequence = options;
-        if ((typeof dummy11_sequence === "object") && (!Array.isArray(dummy11_sequence))) {
-            dummy11_sequence = Object.keys(dummy11_sequence);
+        dummy10_sequence = options;
+        if ((typeof dummy10_sequence === "object") && (!Array.isArray(dummy10_sequence))) {
+            dummy10_sequence = Object.keys(dummy10_sequence);
         }
-        for (dummy12_iter = 0; dummy12_iter < dummy11_sequence.length; dummy12_iter += 1) {
-            item = dummy11_sequence[dummy12_iter];
+        for (dummy11_iter = 0; dummy11_iter < dummy10_sequence.length; dummy11_iter += 1) {
+            item = dummy10_sequence[dummy11_iter];
             _pymeth_append.call(el, ((jQuery("<option/>").attr("value", item)).text(item)));
         }
         return el;
@@ -254,65 +242,77 @@ load = function (Jupyter, dialog, configmod, utils, marked, require) {
         return null;
     }).bind(this);
 
-    unload_css = (function (names) {
-        var dummy13_sequence, dummy14_iter, dummy15_sequence, dummy16_iter, dummy17_sequence, dummy18_iter, el, href, name, to_remove;
-        if ((({}).toString.call(names).match(/\s([a-zA-Z]+)/)[1].toLowerCase() === 'string')) {
-            names = [names];
-        }
-        to_remove = [];
-        dummy15_sequence = jQuery("link").toArray();
-        if ((typeof dummy15_sequence === "object") && (!Array.isArray(dummy15_sequence))) {
-            dummy15_sequence = Object.keys(dummy15_sequence);
-        }
-        for (dummy16_iter = 0; dummy16_iter < dummy15_sequence.length; dummy16_iter += 1) {
-            el = dummy15_sequence[dummy16_iter];
-            href = el.getAttribute("href");
-            dummy13_sequence = names;
-            if ((typeof dummy13_sequence === "object") && (!Array.isArray(dummy13_sequence))) {
-                dummy13_sequence = Object.keys(dummy13_sequence);
-            }
-            for (dummy14_iter = 0; dummy14_iter < dummy13_sequence.length; dummy14_iter += 1) {
-                name = dummy13_sequence[dummy14_iter];
-                if (((_pyfunc_truthy(_pyfunc_contains("scpy3", href))) && (_pyfunc_truthy(_pyfunc_contains(name, href))))) {
-                    _pymeth_append.call(to_remove, el);
-                    break;
-                }
-            }
-        }
-        dummy17_sequence = to_remove;
-        if ((typeof dummy17_sequence === "object") && (!Array.isArray(dummy17_sequence))) {
-            dummy17_sequence = Object.keys(dummy17_sequence);
-        }
-        for (dummy18_iter = 0; dummy18_iter < dummy17_sequence.length; dummy18_iter += 1) {
-            el = dummy17_sequence[dummy18_iter];
-            el.parentNode.removeChild(el);
-        }
-        return null;
-    }).bind(this);
-
-    set_metadata = (function (target, key, value) {
-        var meta;
-        meta = target.metadata;
-        if (_pyfunc_truthy(!_pyfunc_contains("scpy3", meta))) {
-            meta.scpy3 = {};
-        }
-        meta.scpy3[key] = value;
-        return null;
-    }).bind(this);
-
     register_actions = (function (actions, target) {
-        var action, dummy19_sequence, key, km;
+        var action, dummy12_sequence, key, km;
         target = (target === undefined) ? "command": target;
         km = Jupyter.keyboard_manager;
-        dummy19_sequence = actions;
-        for (key in dummy19_sequence) {
-            if (!dummy19_sequence.hasOwnProperty(key)){ continue; }
-            action = dummy19_sequence[key];
+        dummy12_sequence = actions;
+        for (key in dummy12_sequence) {
+            if (!dummy12_sequence.hasOwnProperty(key)){ continue; }
+            action = dummy12_sequence[key];
             key = _pymeth_replace.call(key, "_", "-");
             km.actions.register(action, key, "scpy3");
             km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
         }
         return null;
+    }).bind(this);
+
+    T = (function (tagname) {
+        var args, child, dummy13_, dummy14_sequence, dummy15_iter, el, klass;
+        args = Array.prototype.slice.call(arguments).slice(1);
+        klass = null;
+        if (_pyfunc_truthy(_pyfunc_contains(".", tagname))) {
+            dummy13_ = _pymeth_split.call(tagname, ".");
+            tagname = dummy13_[0];klass = dummy13_[1];
+        }
+        el = jQuery("<" + tagname + "/>");
+        if ((klass !== null)) {
+            el.addClass(klass);
+        }
+        dummy14_sequence = args;
+        if ((typeof dummy14_sequence === "object") && (!Array.isArray(dummy14_sequence))) {
+            dummy14_sequence = Object.keys(dummy14_sequence);
+        }
+        for (dummy15_iter = 0; dummy15_iter < dummy14_sequence.length; dummy15_iter += 1) {
+            child = dummy14_sequence[dummy15_iter];
+            _pymeth_append.call(el, child);
+        }
+        return el;
+    }).bind(this);
+
+    make_table = (function (defs) {
+        var data, dummy16_sequence, dummy17_iter, dummy18_target, get_values, items, table, td, title, tr, type_, widget;
+        items = {};
+        table = T("table");
+        dummy16_sequence = defs;
+        if ((typeof dummy16_sequence === "object") && (!Array.isArray(dummy16_sequence))) {
+            dummy16_sequence = Object.keys(dummy16_sequence);
+        }
+        for (dummy17_iter = 0; dummy17_iter < dummy16_sequence.length; dummy17_iter += 1) {
+            dummy18_target = dummy16_sequence[dummy17_iter];
+            title = dummy18_target[0]; type_ = dummy18_target[1]; data = dummy18_target[2];
+            tr = T("tr").appendTo(table);
+            if (_pyfunc_equals(type_, "selector")) {
+                (T("td").appendTo(tr)).html(title + ":");
+                td = T("td").appendTo(tr);
+                widget = make_selector(title, data).appendTo(td);
+                widget.val(get_option(_pymeth_lower.call(title)));
+            }
+            items[title] = widget;
+        }
+        get_values = (function () {
+            var dummy19_sequence, item, key, res;
+            res = {};
+            dummy19_sequence = items;
+            for (key in dummy19_sequence) {
+                if (!dummy19_sequence.hasOwnProperty(key)){ continue; }
+                item = dummy19_sequence[key];
+                res[key] = item.val();
+            }
+            return res;
+        }).bind(this);
+
+        return {"table": table, "items": items, "get_values": get_values};
     }).bind(this);
 
     require((function list_comprehenson () {var res = [];var url, iter0, i0;iter0 = revealjs;if ((typeof iter0 === "object") && (!Array.isArray(iter0))) {iter0 = Object.keys(iter0);}for (i0=0; i0<iter0.length; i0++) {url = iter0[i0];{res.push(require.toUrl(url));}}return res;}).apply(this), revealjs_loaded);
