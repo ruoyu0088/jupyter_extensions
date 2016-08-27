@@ -26,12 +26,6 @@ var _pyfunc_equals = function equals (a, b) { // nargs: 2
         return iseq;
     } return a == b;
 };
-var _pyfunc_truthy = function (v) {
-    if (v === null || typeof v !== "object") {return v;}
-    else if (v.length !== undefined) {return v.length ? v : false;}
-    else if (v.byteLength !== undefined) {return v.byteLength ? v : false;} 
-    else {return Object.getOwnPropertyNames(v).length ? v : false;}
-};
 var _pymeth_append = function (x) { // nargs: 1
     if (!Array.isArray(this)) return this.append.apply(this, arguments);
     this.push(x);
@@ -71,13 +65,13 @@ imports = ["base/js/namespace", "require", "base/js/events"];
 load = function (Jupyter, require, events) {
     var main, nb, register_actions, replace, run_md_cell;
     register_actions = (function (actions, target) {
-        var action, dummy1_sequence, key, km;
+        var action, key, km, stub1_seq;
         target = (target === undefined) ? "command": target;
         km = Jupyter.keyboard_manager;
-        dummy1_sequence = actions;
-        for (key in dummy1_sequence) {
-            if (!dummy1_sequence.hasOwnProperty(key)){ continue; }
-            action = dummy1_sequence[key];
+        stub1_seq = actions;
+        for (key in stub1_seq) {
+            if (!stub1_seq.hasOwnProperty(key)){ continue; }
+            action = stub1_seq[key];
             key = _pymeth_replace.call(key, "_", "-");
             km.actions.register(action, key, "scpy3");
             km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
@@ -91,7 +85,7 @@ load = function (Jupyter, require, events) {
 
     nb = Jupyter.notebook;
     run_md_cell = (function () {
-        var callbacks, cell, code, dummy2_sequence, dummy3_iter, execute_reply_callback, md_code, options, output_callback, outputs, pattern, src;
+        var callbacks, cell, code, execute_reply_callback, md_code, options, output_callback, outputs, pattern, src, stub2_seq, stub3_itr;
         cell = nb.get_selected_cell();
         if ((!_pyfunc_equals(cell.cell_type, "markdown"))) {
             return null;
@@ -123,7 +117,7 @@ load = function (Jupyter, require, events) {
             if (_pyfunc_equals(msg.msg_type, "stream")) {
                 _pymeth_append.call(outputs, msg.content.text);
             } else if (_pyfunc_equals(msg.msg_type, "execute_result")) {
-                if (_pyfunc_truthy(_pyfunc_contains("text/plain", msg.content.data))) {
+                if (_pyfunc_contains("text/plain", msg.content.data)) {
                     _pymeth_append.call(outputs, msg.content.data["text/plain"]);
                 }
             }
@@ -132,12 +126,12 @@ load = function (Jupyter, require, events) {
 
         callbacks = {"shell": {"reply": execute_reply_callback}, "iopub": {"output": output_callback}};
         options = {"allow_stdin": false, "silent": false};
-        dummy2_sequence = _pymeth_find.call(cell.element, "code.language-python").toArray();
-        if ((typeof dummy2_sequence === "object") && (!Array.isArray(dummy2_sequence))) {
-            dummy2_sequence = Object.keys(dummy2_sequence);
+        stub2_seq = _pymeth_find.call(cell.element, "code.language-python").toArray();
+        if ((typeof stub2_seq === "object") && (!Array.isArray(stub2_seq))) {
+            stub2_seq = Object.keys(stub2_seq);
         }
-        for (dummy3_iter = 0; dummy3_iter < dummy2_sequence.length; dummy3_iter += 1) {
-            code = dummy2_sequence[dummy3_iter];
+        for (stub3_itr = 0; stub3_itr < stub2_seq.length; stub3_itr += 1) {
+            code = stub2_seq[stub3_itr];
             src = jQuery(code).text();
             outputs = [];
             nb.kernel.execute(src, callbacks, options);

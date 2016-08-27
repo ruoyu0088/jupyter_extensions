@@ -40,7 +40,8 @@ var _pyfunc_equals = function equals (a, b) { // nargs: 2
 var _pyfunc_truthy = function (v) {
     if (v === null || typeof v !== "object") {return v;}
     else if (v.length !== undefined) {return v.length ? v : false;}
-    else if (v.byteLength !== undefined) {return v.byteLength ? v : false;} 
+    else if (v.byteLength !== undefined) {return v.byteLength ? v : false;}
+    else if (v.constructor !== Object) {return true;}
     else {return Object.getOwnPropertyNames(v).length ? v : false;}
 };
 var _pymeth_append = function (x) { // nargs: 1
@@ -112,19 +113,15 @@ var imports, load;
 imports = ["base/js/namespace", "base/js/dialog", "services/config", "base/js/utils", "require"];
 load = function (Jupyter, dialog, configmod, utils, require) {
     var T, config, config_save, firstline, main, register_actions, remove_firstline, show_dialog, show_message, slice_config, typeahead_form;
-    remove_firstline = (function (text) {
-        return text.slice(_pymeth_find.call(text, "\n") + 1);
-    }).bind(this);
-
-    firstline = (function (text) {
-        return _pymeth_split.call(text, "\n")[0];
-    }).bind(this);
-
     show_message = (function (message, wait) {
         var notification_widget;
         notification_widget = Jupyter.notification_area.widget("notebook");
         notification_widget.set_message(message, wait);
         return null;
+    }).bind(this);
+
+    firstline = (function (text) {
+        return _pymeth_split.call(text, "\n")[0];
     }).bind(this);
 
     typeahead_form = (function () {
@@ -175,6 +172,44 @@ load = function (Jupyter, dialog, configmod, utils, require) {
         return [mod, input_];
     }).bind(this);
 
+    T = (function (tagname) {
+        var args, child, el, klass, stub1_, stub2_seq, stub3_itr;
+        args = Array.prototype.slice.call(arguments).slice(1);
+        klass = null;
+        if (_pyfunc_contains(".", tagname)) {
+            stub1_ = _pymeth_split.call(tagname, ".");
+            tagname = stub1_[0];klass = stub1_[1];
+        }
+        el = jQuery("<" + tagname + "/>");
+        if ((klass !== null)) {
+            el.addClass(klass);
+        }
+        stub2_seq = args;
+        if ((typeof stub2_seq === "object") && (!Array.isArray(stub2_seq))) {
+            stub2_seq = Object.keys(stub2_seq);
+        }
+        for (stub3_itr = 0; stub3_itr < stub2_seq.length; stub3_itr += 1) {
+            child = stub2_seq[stub3_itr];
+            _pymeth_append.call(el, child);
+        }
+        return el;
+    }).bind(this);
+
+    register_actions = (function (actions, target) {
+        var action, key, km, stub4_seq;
+        target = (target === undefined) ? "command": target;
+        km = Jupyter.keyboard_manager;
+        stub4_seq = actions;
+        for (key in stub4_seq) {
+            if (!stub4_seq.hasOwnProperty(key)){ continue; }
+            action = stub4_seq[key];
+            key = _pymeth_replace.call(key, "_", "-");
+            km.actions.register(action, key, "scpy3");
+            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
+        }
+        return null;
+    }).bind(this);
+
     config_save = (function (config) {
         var url;
         url = config.api_url();
@@ -183,7 +218,7 @@ load = function (Jupyter, dialog, configmod, utils, require) {
     }).bind(this);
 
     show_dialog = (function (title, body, open_callback, buttons) {
-        var button, buttons_setting, callback, dialog_settings, dummy1_sequence, dummy2_iter, dummy3_target;
+        var button, buttons_setting, callback, dialog_settings, stub5_seq, stub6_itr, stub7_tgt;
         open_callback = (open_callback === undefined) ? null: open_callback;
         buttons = (buttons === undefined) ? null: buttons;
         dialog_settings = {"notebook": Jupyter.notebook, "keyboard_manager": Jupyter.keyboard_manager, "title": title, "body": body};
@@ -192,13 +227,13 @@ load = function (Jupyter, dialog, configmod, utils, require) {
         }
         if ((buttons !== null)) {
             buttons_setting = {};
-            dummy1_sequence = buttons;
-            if ((typeof dummy1_sequence === "object") && (!Array.isArray(dummy1_sequence))) {
-                dummy1_sequence = Object.keys(dummy1_sequence);
+            stub5_seq = buttons;
+            if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) {
+                stub5_seq = Object.keys(stub5_seq);
             }
-            for (dummy2_iter = 0; dummy2_iter < dummy1_sequence.length; dummy2_iter += 1) {
-                dummy3_target = dummy1_sequence[dummy2_iter];
-                button = dummy3_target[0]; callback = dummy3_target[1];
+            for (stub6_itr = 0; stub6_itr < stub5_seq.length; stub6_itr += 1) {
+                stub7_tgt = stub5_seq[stub6_itr];
+                button = stub7_tgt[0]; callback = stub7_tgt[1];
                 buttons_setting[button] = {"class": "btn-primary", "click": callback};
             }
             dialog_settings["buttons"] = buttons_setting;
@@ -207,42 +242,8 @@ load = function (Jupyter, dialog, configmod, utils, require) {
         return null;
     }).bind(this);
 
-    register_actions = (function (actions, target) {
-        var action, dummy4_sequence, key, km;
-        target = (target === undefined) ? "command": target;
-        km = Jupyter.keyboard_manager;
-        dummy4_sequence = actions;
-        for (key in dummy4_sequence) {
-            if (!dummy4_sequence.hasOwnProperty(key)){ continue; }
-            action = dummy4_sequence[key];
-            key = _pymeth_replace.call(key, "_", "-");
-            km.actions.register(action, key, "scpy3");
-            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
-        }
-        return null;
-    }).bind(this);
-
-    T = (function (tagname) {
-        var args, child, dummy5_, dummy6_sequence, dummy7_iter, el, klass;
-        args = Array.prototype.slice.call(arguments).slice(1);
-        klass = null;
-        if (_pyfunc_truthy(_pyfunc_contains(".", tagname))) {
-            dummy5_ = _pymeth_split.call(tagname, ".");
-            tagname = dummy5_[0];klass = dummy5_[1];
-        }
-        el = jQuery("<" + tagname + "/>");
-        if ((klass !== null)) {
-            el.addClass(klass);
-        }
-        dummy6_sequence = args;
-        if ((typeof dummy6_sequence === "object") && (!Array.isArray(dummy6_sequence))) {
-            dummy6_sequence = Object.keys(dummy6_sequence);
-        }
-        for (dummy7_iter = 0; dummy7_iter < dummy6_sequence.length; dummy7_iter += 1) {
-            child = dummy6_sequence[dummy7_iter];
-            _pymeth_append.call(el, child);
-        }
-        return el;
+    remove_firstline = (function (text) {
+        return text.slice(_pymeth_find.call(text, "\n") + 1);
     }).bind(this);
 
     config = new configmod.ConfigSection("scpy3_slices", {base_url: utils.get_body_data("baseUrl")});
@@ -262,11 +263,11 @@ load = function (Jupyter, dialog, configmod, utils, require) {
             }).bind(this);
 
             on_ok = (function () {
-                var add_slice, code, dummy8_, group, name, text;
+                var add_slice, code, group, name, stub8_, text;
                 text = el_name.val();
-                if (_pyfunc_truthy(_pyfunc_contains(":", text))) {
-                    dummy8_ = _pymeth_split.call(text, ":");
-                    group = dummy8_[0];name = dummy8_[1];
+                if (_pyfunc_contains(":", text)) {
+                    stub8_ = _pymeth_split.call(text, ":");
+                    group = stub8_[0];name = stub8_[1];
                 } else {
                     group = "default";
                     name = text;
@@ -297,7 +298,7 @@ load = function (Jupyter, dialog, configmod, utils, require) {
 
             el_name.on("keypress", on_key);
             el_help = jQuery("<p>input slice name as \"group name : slice name\"</p>");
-            if (_pyfunc_truthy(_pymeth_startswith.call(code, "#%"))) {
+            if (_pymeth_startswith.call(code, "#%")) {
                 console.log(firstline(code));
                 key = firstline(code).slice(2);
                 el_name.val(key);
@@ -310,31 +311,31 @@ load = function (Jupyter, dialog, configmod, utils, require) {
         }).bind(this);
 
         load_slice = (function () {
-            var dummy9_, input_, mod, nb, on_key, on_mouse_enter, on_mouse_leave, on_navigate_after, on_result, on_submit, show_search, typeahead;
+            var input_, mod, nb, on_key, on_mouse_enter, on_mouse_leave, on_navigate_after, on_result, on_submit, show_search, stub9_, typeahead;
             typeahead = null;
             nb = Jupyter.notebook;
-            dummy9_ = typeahead_form();
-            mod = dummy9_[0];input_ = dummy9_[1];
+            stub9_ = typeahead_form();
+            mod = stub9_[0];input_ = stub9_[1];
             input_.attr("id", "scpy3-slice-typeahead");
             on_key = (function (event) {
-                var dummy10_else, dummy11_sequence, dummy12_iter, dummy13_target, i, item, items, key, remove_slice, res;
+                var i, item, items, key, remove_slice, res, stub10_els, stub11_seq, stub12_itr, stub13_tgt;
                 console.log(event);
                 if ((_pyfunc_equals(event.shiftKey, true) && _pyfunc_equals(event.ctrlKey, true) && _pyfunc_equals(event.keyCode, 11))) {
                     items = (_pymeth_find.call(typeahead.resultContainer, "li:not(.typeahead-group)")).toArray();
-                    dummy10_else = true;
-                    dummy11_sequence = _pyfunc_enumerate(items);
-                    if ((typeof dummy11_sequence === "object") && (!Array.isArray(dummy11_sequence))) {
-                        dummy11_sequence = Object.keys(dummy11_sequence);
+                    stub10_els = true;
+                    stub11_seq = _pyfunc_enumerate(items);
+                    if ((typeof stub11_seq === "object") && (!Array.isArray(stub11_seq))) {
+                        stub11_seq = Object.keys(stub11_seq);
                     }
-                    for (dummy12_iter = 0; dummy12_iter < dummy11_sequence.length; dummy12_iter += 1) {
-                        dummy13_target = dummy11_sequence[dummy12_iter];
-                        i = dummy13_target[0]; item = dummy13_target[1];
+                    for (stub12_itr = 0; stub12_itr < stub11_seq.length; stub12_itr += 1) {
+                        stub13_tgt = stub11_seq[stub12_itr];
+                        i = stub13_tgt[0]; item = stub13_tgt[1];
                         if (_pyfunc_truthy(jQuery(item).hasClass("active"))) {
                             res = typeahead.result[i];
                             jQuery(item).fadeTo("fast", 0.4);
-                            dummy10_else = false; break;
+                            stub10_els = false; break;
                         }
-                    } if (dummy10_else) {
+                    } if (stub10_els) {
                         return null;
                     }
                     key = _pyfunc_add((res.group + ":"), res.display);
@@ -392,14 +393,14 @@ load = function (Jupyter, dialog, configmod, utils, require) {
             }).bind(this);
 
             show_search = (function (slices) {
-                var dummy14_sequence, group, item, src;
+                var group, item, src, stub14_seq;
                 src = {};
-                dummy14_sequence = slices;
-                for (item in dummy14_sequence) {
-                    if (!dummy14_sequence.hasOwnProperty(item)){ continue; }
-                    item = dummy14_sequence[item];
+                stub14_seq = slices;
+                for (item in stub14_seq) {
+                    if (!stub14_seq.hasOwnProperty(item)){ continue; }
+                    item = stub14_seq[item];
                     group = item["group"];
-                    if (_pyfunc_truthy(!_pyfunc_contains(group, src))) {
+                    if ((!_pyfunc_contains(group, src))) {
                         src[group] = {"data": [], "display": "display"};
                     }
                     _pymeth_append.call((src[group]["data"]), {"display": item.name, "group": item.group, "code": item.code, "firstline": _pymeth_split.call(item.code, "\n")[0]});

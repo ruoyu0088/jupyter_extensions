@@ -31,7 +31,8 @@ var i, res = [];
 var _pyfunc_truthy = function (v) {
     if (v === null || typeof v !== "object") {return v;}
     else if (v.length !== undefined) {return v.length ? v : false;}
-    else if (v.byteLength !== undefined) {return v.byteLength ? v : false;} 
+    else if (v.byteLength !== undefined) {return v.byteLength ? v : false;}
+    else if (v.constructor !== Object) {return true;}
     else {return Object.getOwnPropertyNames(v).length ? v : false;}
 };
 var _pymeth_endswith = function (x) { // nargs: 1
@@ -72,6 +73,21 @@ var imports, load;
 imports = ["base/js/namespace", "base/js/events", "require", "./jquery.side.menu"];
 load = function (Jupyter, events, require, _) {
     var goto_head, handle_resize, is_head_cell, load_css, main, mark_head, nb, next_head, prev_head, register_actions, remove_last_ch, toc, toggle_toc, update_marker, update_toc, update_toc_top;
+    register_actions = (function (actions, target) {
+        var action, key, km, stub1_seq;
+        target = (target === undefined) ? "command": target;
+        km = Jupyter.keyboard_manager;
+        stub1_seq = actions;
+        for (key in stub1_seq) {
+            if (!stub1_seq.hasOwnProperty(key)){ continue; }
+            action = stub1_seq[key];
+            key = _pymeth_replace.call(key, "_", "-");
+            km.actions.register(action, key, "scpy3");
+            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
+        }
+        return null;
+    }).bind(this);
+
     load_css = (function (name) {
         var link;
         link = document.createElement("link");
@@ -83,22 +99,7 @@ load = function (Jupyter, events, require, _) {
     }).bind(this);
 
     is_head_cell = (function (cell) {
-        return _pyfunc_equals(cell.cell_type, "markdown") && (_pyfunc_truthy(_pymeth_startswith.call(cell.get_text(), "#")));
-    }).bind(this);
-
-    register_actions = (function (actions, target) {
-        var action, dummy1_sequence, key, km;
-        target = (target === undefined) ? "command": target;
-        km = Jupyter.keyboard_manager;
-        dummy1_sequence = actions;
-        for (key in dummy1_sequence) {
-            if (!dummy1_sequence.hasOwnProperty(key)){ continue; }
-            action = dummy1_sequence[key];
-            key = _pymeth_replace.call(key, "_", "-");
-            km.actions.register(action, key, "scpy3");
-            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
-        }
-        return null;
+        return _pyfunc_equals(cell.cell_type, "markdown") && ((_pymeth_startswith.call(cell.get_text(), "#")));
     }).bind(this);
 
     load_css("./side-menu.css");

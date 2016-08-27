@@ -39,7 +39,8 @@ var i, res = [];
 var _pyfunc_truthy = function (v) {
     if (v === null || typeof v !== "object") {return v;}
     else if (v.length !== undefined) {return v.length ? v : false;}
-    else if (v.byteLength !== undefined) {return v.byteLength ? v : false;} 
+    else if (v.byteLength !== undefined) {return v.byteLength ? v : false;}
+    else if (v.constructor !== Object) {return true;}
     else {return Object.getOwnPropertyNames(v).length ? v : false;}
 };
 var _pymeth_append = function (x) { // nargs: 1
@@ -111,7 +112,7 @@ load = function (Jupyter, configmod, utils) {
             return 1000;
         }
         text = cell.get_text();
-        if (_pyfunc_truthy(_pymeth_startswith.call(text, "#"))) {
+        if (_pymeth_startswith.call(text, "#")) {
             level = text.length - (_pymeth_lstrip.call(text, "#").length);
             return level;
         }
@@ -119,13 +120,13 @@ load = function (Jupyter, configmod, utils) {
     }).bind(this);
 
     register_actions = (function (actions, target) {
-        var action, dummy1_sequence, key, km;
+        var action, key, km, stub1_seq;
         target = (target === undefined) ? "command": target;
         km = Jupyter.keyboard_manager;
-        dummy1_sequence = actions;
-        for (key in dummy1_sequence) {
-            if (!dummy1_sequence.hasOwnProperty(key)){ continue; }
-            action = dummy1_sequence[key];
+        stub1_seq = actions;
+        for (key in stub1_seq) {
+            if (!stub1_seq.hasOwnProperty(key)){ continue; }
+            action = stub1_seq[key];
             key = _pymeth_replace.call(key, "_", "-");
             km.actions.register(action, key, "scpy3");
             km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
@@ -133,42 +134,19 @@ load = function (Jupyter, configmod, utils) {
         return null;
     }).bind(this);
 
-    T = (function (tagname) {
-        var args, child, dummy2_, dummy3_sequence, dummy4_iter, el, klass;
-        args = Array.prototype.slice.call(arguments).slice(1);
-        klass = null;
-        if (_pyfunc_truthy(_pyfunc_contains(".", tagname))) {
-            dummy2_ = _pymeth_split.call(tagname, ".");
-            tagname = dummy2_[0];klass = dummy2_[1];
-        }
-        el = jQuery("<" + tagname + "/>");
-        if ((klass !== null)) {
-            el.addClass(klass);
-        }
-        dummy3_sequence = args;
-        if ((typeof dummy3_sequence === "object") && (!Array.isArray(dummy3_sequence))) {
-            dummy3_sequence = Object.keys(dummy3_sequence);
-        }
-        for (dummy4_iter = 0; dummy4_iter < dummy3_sequence.length; dummy4_iter += 1) {
-            child = dummy3_sequence[dummy4_iter];
-            _pymeth_append.call(el, child);
-        }
-        return el;
-    }).bind(this);
-
     typeahead_form = (function () {
         var before_close, container, field, form, input_, mod, nb, on_show, search_button;
         nb = Jupyter.notebook;
-        form = T("form");
-        container = T("div.typeahead-container");
-        field = T("div.typeahead-field");
-        input_ = T("input").attr("type", "search");
-        search_button = (T("button", T("span.typeahead-search-icon"))).attr("type", "submit");
-        _pymeth_append.call(field, T("span.typeahead-query", input_));
-        _pymeth_append.call(field, T("span.typeahead-button", search_button));
+        form = new T("form");
+        container = new T("div.typeahead-container");
+        field = new T("div.typeahead-field");
+        input_ = (new T("input")).attr("type", "search");
+        search_button = (new T("button", new T("span.typeahead-search-icon"))).attr("type", "submit");
+        _pymeth_append.call(field, (new T("span.typeahead-query", input_)));
+        _pymeth_append.call(field, (new T("span.typeahead-button", search_button)));
         _pymeth_append.call(container, field);
         _pymeth_append.call(form, container);
-        mod = T("div.modal cmd-palette", T("div.modal-dialog", T("div.modal-content", T("div.modal-body", form))));
+        mod = new T("div.modal cmd-palette", new T("div.modal-dialog", new T("div.modal-content", new T("div.modal-body", form))));
         mod.modal({"show": false, "backdrop": true});
         on_show = (function () {
             var focus;
@@ -202,6 +180,29 @@ load = function (Jupyter, configmod, utils) {
 
         mod.on("hide.bs.modal", before_close);
         return [mod, input_];
+    }).bind(this);
+
+    T = (function (tagname) {
+        var args, child, el, klass, stub2_, stub3_seq, stub4_itr;
+        args = Array.prototype.slice.call(arguments).slice(1);
+        klass = null;
+        if (_pyfunc_contains(".", tagname)) {
+            stub2_ = _pymeth_split.call(tagname, ".");
+            tagname = stub2_[0];klass = stub2_[1];
+        }
+        el = jQuery("<" + tagname + "/>");
+        if ((klass !== null)) {
+            el.addClass(klass);
+        }
+        stub3_seq = args;
+        if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) {
+            stub3_seq = Object.keys(stub3_seq);
+        }
+        for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
+            child = stub3_seq[stub4_itr];
+            _pymeth_append.call(el, child);
+        }
+        return el;
     }).bind(this);
 
     base_url = utils.get_body_data("baseUrl");
@@ -244,14 +245,14 @@ load = function (Jupyter, configmod, utils) {
             var insert_cells, nb;
             nb = Jupyter.notebook;
             insert_cells = (function (cells_json) {
-                var cell, cell_json, current_cell, dummy5_sequence, dummy6_iter, i;
+                var cell, cell_json, current_cell, i, stub5_seq, stub6_itr;
                 current_cell = nb.get_selected_cell();
-                dummy5_sequence = cells_json;
-                if ((typeof dummy5_sequence === "object") && (!Array.isArray(dummy5_sequence))) {
-                    dummy5_sequence = Object.keys(dummy5_sequence);
+                stub5_seq = cells_json;
+                if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) {
+                    stub5_seq = Object.keys(stub5_seq);
                 }
-                for (dummy6_iter = 0; dummy6_iter < dummy5_sequence.length; dummy6_iter += 1) {
-                    cell_json = dummy5_sequence[dummy6_iter];
+                for (stub6_itr = 0; stub6_itr < stub5_seq.length; stub6_itr += 1) {
+                    cell_json = stub5_seq[stub6_itr];
                     cell = nb.insert_cell_below(cell_json.cell_type);
                     cell.fromJSON(cell_json);
                     cell.focus_cell();
@@ -285,9 +286,9 @@ load = function (Jupyter, configmod, utils) {
         }).bind(this);
 
         paste_selected_cell = (function (event) {
-            var dummy7_, input_, mod, on_submit, show_clipboard;
-            dummy7_ = typeahead_form();
-            mod = dummy7_[0];input_ = dummy7_[1];
+            var input_, mod, on_submit, show_clipboard, stub7_;
+            stub7_ = typeahead_form();
+            mod = stub7_[0];input_ = stub7_[1];
             input_.attr("id", "scpy3-paste-typeahead");
             on_submit = (function (node, query, result, result_count) {
                 var cell;
@@ -300,14 +301,14 @@ load = function (Jupyter, configmod, utils) {
             }).bind(this);
 
             show_clipboard = (function (cells) {
-                var cell, dummy8_sequence, dummy9_iter, src;
+                var cell, src, stub8_seq, stub9_itr;
                 src = {"Clipboard": {"data": [], "display": "display"}};
-                dummy8_sequence = cells;
-                if ((typeof dummy8_sequence === "object") && (!Array.isArray(dummy8_sequence))) {
-                    dummy8_sequence = Object.keys(dummy8_sequence);
+                stub8_seq = cells;
+                if ((typeof stub8_seq === "object") && (!Array.isArray(stub8_seq))) {
+                    stub8_seq = Object.keys(stub8_seq);
                 }
-                for (dummy9_iter = 0; dummy9_iter < dummy8_sequence.length; dummy9_iter += 1) {
-                    cell = dummy8_sequence[dummy9_iter];
+                for (stub9_itr = 0; stub9_itr < stub8_seq.length; stub9_itr += 1) {
+                    cell = stub8_seq[stub9_itr];
                     _pymeth_append.call(src.Clipboard.data, {"display": cell.source.slice(0,80), "cell": cell, "group": "Clipboard"});
                 }
                 input_.typeahead({"emptyTemplate": "Clipboard is empty", "maxItem": 100, "group": ["group", "{{group}}"], "minLength": 0, "searchOnFocus": true, "hint": true, "mustSelectItem": true, "template": "<pre style=\"background-color:transparent;border:none;\">{{display}} ...</pre>", "source": src, "callback": {"onSubmit": on_submit, "onClickAfter": on_submit}});

@@ -26,12 +26,6 @@ var _pyfunc_equals = function equals (a, b) { // nargs: 2
         return iseq;
     } return a == b;
 };
-var _pyfunc_truthy = function (v) {
-    if (v === null || typeof v !== "object") {return v;}
-    else if (v.length !== undefined) {return v.length ? v : false;}
-    else if (v.byteLength !== undefined) {return v.byteLength ? v : false;} 
-    else {return Object.getOwnPropertyNames(v).length ? v : false;}
-};
 var _pymeth_append = function (x) { // nargs: 1
     if (!Array.isArray(this)) return this.append.apply(this, arguments);
     this.push(x);
@@ -71,13 +65,13 @@ text_to_macros = function (text) {
 load = function (Jupyter, dialog, configmod, utils) {
     var base_url, config, key_handler, macros_config, main, on_ok, register_actions, show_macro_box;
     register_actions = (function (actions, target) {
-        var action, dummy1_sequence, key, km;
+        var action, key, km, stub1_seq;
         target = (target === undefined) ? "command": target;
         km = Jupyter.keyboard_manager;
-        dummy1_sequence = actions;
-        for (key in dummy1_sequence) {
-            if (!dummy1_sequence.hasOwnProperty(key)){ continue; }
-            action = dummy1_sequence[key];
+        stub1_seq = actions;
+        for (key in stub1_seq) {
+            if (!stub1_seq.hasOwnProperty(key)){ continue; }
+            action = stub1_seq[key];
             key = _pymeth_replace.call(key, "_", "-");
             km.actions.register(action, key, "scpy3");
             km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
@@ -140,7 +134,7 @@ load = function (Jupyter, dialog, configmod, utils) {
                     info = {"line": cursor.line, "ch": index};
                     if (_pyfunc_equals(cmd, "")) {
                         show_macro_box(macros);
-                    } else if (_pyfunc_truthy(_pyfunc_contains(cmd, macros))) {
+                    } else if (_pyfunc_contains(cmd, macros)) {
                         cm.replaceRange(macros[cmd], info, cursor);
                     }
                     return null;
@@ -150,7 +144,7 @@ load = function (Jupyter, dialog, configmod, utils) {
             index = cursor.ch - 1;
             while (index >= 0) {
                 cmd = line.slice(index,cursor.ch);
-                if (_pyfunc_truthy(_pyfunc_contains(cmd, macros))) {
+                if (_pyfunc_contains(cmd, macros)) {
                     info = {"line": cursor.line, "ch": index};
                     cm.replaceRange(macros[cmd], info, cursor);
                     return null;

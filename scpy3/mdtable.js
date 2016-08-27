@@ -45,12 +45,6 @@ var i, res = [];
     }
     return res;
 };
-var _pyfunc_truthy = function (v) {
-    if (v === null || typeof v !== "object") {return v;}
-    else if (v.length !== undefined) {return v.length ? v : false;}
-    else if (v.byteLength !== undefined) {return v.byteLength ? v : false;} 
-    else {return Object.getOwnPropertyNames(v).length ? v : false;}
-};
 var _pymeth_append = function (x) { // nargs: 1
     if (!Array.isArray(this)) return this.append.apply(this, arguments);
     this.push(x);
@@ -122,8 +116,23 @@ var imports, load;
 imports = ["base/js/namespace", "base/js/dialog", "services/config", "base/js/utils", "components/marked/lib/marked"];
 load = function (Jupyter, dialog, configmod, utils, marked) {
     var format_markdown_table, format_table, main, register_actions;
+    register_actions = (function (actions, target) {
+        var action, key, km, stub1_seq;
+        target = (target === undefined) ? "command": target;
+        km = Jupyter.keyboard_manager;
+        stub1_seq = actions;
+        for (key in stub1_seq) {
+            if (!stub1_seq.hasOwnProperty(key)){ continue; }
+            action = stub1_seq[key];
+            key = _pymeth_replace.call(key, "_", "-");
+            km.actions.register(action, key, "scpy3");
+            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
+        }
+        return null;
+    }).bind(this);
+
     format_table = (function (table) {
-        var col_sizes, dummy1_sequence, dummy2_iter, dummy3_sequence, dummy4_iter, dummy5_target, format_split, i, line, ncol, nrow, res, row, row_text, rows;
+        var col_sizes, format_split, i, line, ncol, nrow, res, row, row_text, rows, stub2_seq, stub3_itr, stub4_seq, stub5_itr, stub6_tgt;
         format_split = (function (text, size) {
             text = _pymeth_strip.call(text);
             if ((_pyfunc_equals(text[0], "-") && _pyfunc_equals(text[text.length -1], "-"))) {
@@ -139,13 +148,13 @@ load = function (Jupyter, dialog, configmod, utils, marked) {
         }).bind(this);
 
         rows = [];
-        dummy1_sequence = _pymeth_split.call(table, "\n");
-        if ((typeof dummy1_sequence === "object") && (!Array.isArray(dummy1_sequence))) {
-            dummy1_sequence = Object.keys(dummy1_sequence);
+        stub2_seq = _pymeth_split.call(table, "\n");
+        if ((typeof stub2_seq === "object") && (!Array.isArray(stub2_seq))) {
+            stub2_seq = Object.keys(stub2_seq);
         }
-        for (dummy2_iter = 0; dummy2_iter < dummy1_sequence.length; dummy2_iter += 1) {
-            line = dummy1_sequence[dummy2_iter];
-            if (_pyfunc_truthy(_pymeth_startswith.call(line, "|"))) {
+        for (stub3_itr = 0; stub3_itr < stub2_seq.length; stub3_itr += 1) {
+            line = stub2_seq[stub3_itr];
+            if (_pymeth_startswith.call(line, "|")) {
                 line = _pymeth_strip.call(_pymeth_strip.call(line), "|");
                 row = (function list_comprehenson () {var res = [];var text, iter0, i0;iter0 = _pymeth_split.call(line, "|");if ((typeof iter0 === "object") && (!Array.isArray(iter0))) {iter0 = Object.keys(iter0);}for (i0=0; i0<iter0.length; i0++) {text = iter0[i0];{res.push(_pymeth_strip.call(text));}}return res;}).apply(this);
                 _pymeth_append.call(rows, row);
@@ -159,13 +168,13 @@ load = function (Jupyter, dialog, configmod, utils, marked) {
         nrow = rows.length;
         col_sizes = (function list_comprehenson () {var res = [];var i, iter0, i0;iter0 = _pyfunc_range(0, ncol, 1);if ((typeof iter0 === "object") && (!Array.isArray(iter0))) {iter0 = Object.keys(iter0);}for (i0=0; i0<iter0.length; i0++) {i = iter0[i0];{res.push(Math.max.apply(null, (function list_comprehenson () {var res = [];var j, row, iter0, i0;iter0 = _pyfunc_enumerate(rows);if ((typeof iter0 === "object") && (!Array.isArray(iter0))) {iter0 = Object.keys(iter0);}for (i0=0; i0<iter0.length; i0++) {j = iter0[i0][0]; row = iter0[i0][1];if (!((!_pyfunc_equals(j, 1)))) {continue;}{res.push(row[i].length);}}return res;}).apply(this)));}}return res;}).apply(this);
         res = [];
-        dummy3_sequence = _pyfunc_enumerate(rows);
-        if ((typeof dummy3_sequence === "object") && (!Array.isArray(dummy3_sequence))) {
-            dummy3_sequence = Object.keys(dummy3_sequence);
+        stub4_seq = _pyfunc_enumerate(rows);
+        if ((typeof stub4_seq === "object") && (!Array.isArray(stub4_seq))) {
+            stub4_seq = Object.keys(stub4_seq);
         }
-        for (dummy4_iter = 0; dummy4_iter < dummy3_sequence.length; dummy4_iter += 1) {
-            dummy5_target = dummy3_sequence[dummy4_iter];
-            i = dummy5_target[0]; row = dummy5_target[1];
+        for (stub5_itr = 0; stub5_itr < stub4_seq.length; stub5_itr += 1) {
+            stub6_tgt = stub4_seq[stub5_itr];
+            i = stub6_tgt[0]; row = stub6_tgt[1];
             if ((!_pyfunc_equals(i, 1))) {
                 row_text = ("|" + (_pymeth_join.call("|", ((function list_comprehenson () {var res = [];var j, text, iter0, i0;iter0 = _pyfunc_enumerate(row);if ((typeof iter0 === "object") && (!Array.isArray(iter0))) {iter0 = Object.keys(iter0);}for (i0=0; i0<iter0.length; i0++) {j = iter0[i0][0]; text = iter0[i0][1];{res.push(_pymeth_center.call(text, (col_sizes[j] + 2)));}}return res;}).apply(this))))) + "|";
             } else {
@@ -174,21 +183,6 @@ load = function (Jupyter, dialog, configmod, utils, marked) {
             _pymeth_append.call(res, row_text);
         }
         return _pymeth_join.call("\n", res);
-    }).bind(this);
-
-    register_actions = (function (actions, target) {
-        var action, dummy6_sequence, key, km;
-        target = (target === undefined) ? "command": target;
-        km = Jupyter.keyboard_manager;
-        dummy6_sequence = actions;
-        for (key in dummy6_sequence) {
-            if (!dummy6_sequence.hasOwnProperty(key)){ continue; }
-            action = dummy6_sequence[key];
-            key = _pymeth_replace.call(key, "_", "-");
-            km.actions.register(action, key, "scpy3");
-            km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
-        }
-        return null;
     }).bind(this);
 
     format_markdown_table = (function (event) {
@@ -204,7 +198,7 @@ load = function (Jupyter, dialog, configmod, utils, marked) {
         while (true) {
             lineno=_pyfunc_add(lineno, 1)
             line = cm.getLine(lineno);
-            if (((line === null) || ((_pyfunc_equals(_pymeth_strip.call(line), ""))))) {
+            if (((line === null) || (_pyfunc_equals(_pymeth_strip.call(line), "")))) {
                 line_end = lineno - 1;
                 break;
             }
@@ -213,7 +207,7 @@ load = function (Jupyter, dialog, configmod, utils, marked) {
         while (true) {
             lineno -= 1;
             line = cm.getLine(lineno);
-            if (((line === null) || ((_pyfunc_equals(_pymeth_strip.call(line), ""))))) {
+            if (((line === null) || (_pyfunc_equals(_pymeth_strip.call(line), "")))) {
                 line_start = lineno + 1;
                 break;
             }

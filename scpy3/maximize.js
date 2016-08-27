@@ -2,7 +2,8 @@
 var _pyfunc_truthy = function (v) {
     if (v === null || typeof v !== "object") {return v;}
     else if (v.length !== undefined) {return v.length ? v : false;}
-    else if (v.byteLength !== undefined) {return v.byteLength ? v : false;} 
+    else if (v.byteLength !== undefined) {return v.byteLength ? v : false;}
+    else if (v.constructor !== Object) {return true;}
     else {return Object.getOwnPropertyNames(v).length ? v : false;}
 };
 var _pymeth_replace = function (s1, s2, count) {  // nargs: 2 3
@@ -26,13 +27,13 @@ imports = ["base/js/namespace", "base/js/events"];
 load = function (Jupyter, events) {
     var header, header_elements, main, maximize, normalize, register_actions;
     register_actions = (function (actions, target) {
-        var action, dummy1_sequence, key, km;
+        var action, key, km, stub1_seq;
         target = (target === undefined) ? "command": target;
         km = Jupyter.keyboard_manager;
-        dummy1_sequence = actions;
-        for (key in dummy1_sequence) {
-            if (!dummy1_sequence.hasOwnProperty(key)){ continue; }
-            action = dummy1_sequence[key];
+        stub1_seq = actions;
+        for (key in stub1_seq) {
+            if (!stub1_seq.hasOwnProperty(key)){ continue; }
+            action = stub1_seq[key];
             key = _pymeth_replace.call(key, "_", "-");
             km.actions.register(action, key, "scpy3");
             km[target + "_shortcuts"].add_shortcut(action.key, "scpy3:" + key);
