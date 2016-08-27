@@ -83,7 +83,8 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
         for el in jQuery('.reveal [src-cell]').toArray():
             el = jQuery(el)
             idx = int(el.attr('src-cell'))
-            el.appendTo(nb.get_cell(idx).element.find('.output_area'))
+            idx2 = int(el.attr('output-area'))
+            el.appendTo(nb.get_cell(idx).element.find('.output_area:eq(%d)' % idx2))
 
         cell_index = int(jQuery('section.present:last').attr('cellid'))
         nb.keyboard_manager.enable()
@@ -129,8 +130,8 @@ def load(Jupyter, dialog, configmod, utils, marked, require):
         
         def process_code(idx, cell):
             def _append_code_output():
-                el = cell.element.find('.output_area')
-                el.children().attr('src-cell', idx).appendTo(el_subsection)
+                for idx2, el in enumerate(cell.element.find('.output_area').toArray()):
+                    jQuery(el).children().attr('src-cell', idx).attr('output-area', idx2).appendTo(el_subsection)
                 
             def _append_code_html(err, code_html):
                 jQuery(code_html).appendTo(el_subsection)
